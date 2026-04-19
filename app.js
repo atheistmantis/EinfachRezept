@@ -55,7 +55,10 @@ function setupWebGLBackground() {
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error("WebGL program link error:", gl.getProgramInfoLog(program));
+    return;
+  }
   gl.useProgram(program);
 
   const positionBuffer = gl.createBuffer();
@@ -74,9 +77,10 @@ function setupWebGLBackground() {
   const timeLocation = gl.getUniformLocation(program, "u_time");
   const pointerLocation = gl.getUniformLocation(program, "u_pointer");
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  let dpr = window.devicePixelRatio || 1;
 
   function resize() {
-    const dpr = window.devicePixelRatio || 1;
+    dpr = window.devicePixelRatio || 1;
     canvas.width = Math.floor(window.innerWidth * dpr);
     canvas.height = Math.floor(window.innerHeight * dpr);
     canvas.style.width = "100%";
@@ -96,7 +100,7 @@ function setupWebGLBackground() {
     const t = (now - start) * 0.001;
     gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     gl.uniform1f(timeLocation, t);
-    gl.uniform2f(pointerLocation, pointer.x, pointer.y);
+    gl.uniform2f(pointerLocation, pointer.x * dpr, pointer.y * dpr);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     requestAnimationFrame(render);
   }
