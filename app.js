@@ -44,6 +44,7 @@ const DEFAULT_SITE_CONFIG = {
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
+      stepBackgroundImageUrl: "",
       items: ["Mildes Curry", "Gemüsepfanne", "Reissuppe"],
     },
     {
@@ -53,6 +54,7 @@ const DEFAULT_SITE_CONFIG = {
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
+      stepBackgroundImageUrl: "",
       items: ["Tomatensauce", "Pesto", "Gemüse-Nudeln"],
     },
   ],
@@ -62,7 +64,8 @@ const DEFAULT_SITE_CONFIG = {
     backgroundColor: "#02040a",
     overlayColor: "#080c14",
     overlayOpacity: 0.75,
-    backgroundImageUrl: "",
+    landingBackgroundImageUrl: "",
+    categoryBackgroundImageUrl: "",
   },
   webgl: {
     animationSpeed: 0.55,
@@ -203,6 +206,7 @@ function normalizeButtons(rawButtons) {
       backgroundColor: sanitizeColor(entry?.backgroundColor, ""),
       textColor: sanitizeColor(entry?.textColor, ""),
       imageUrl: sanitizeImageUrl(entry?.imageUrl),
+      stepBackgroundImageUrl: sanitizeImageUrl(entry?.stepBackgroundImageUrl || entry?.sectionBackgroundImageUrl || ""),
       items: Array.isArray(entry?.items) && entry.items.length
         ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
         : deepClone(fallbackSource.items),
@@ -224,6 +228,7 @@ function normalizeSiteConfig(rawConfig) {
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
+      stepBackgroundImageUrl: "",
       items: Array.isArray(rawConfig.riceItems) && rawConfig.riceItems.length ? rawConfig.riceItems : defaults.buttons[0].items,
     },
     {
@@ -233,6 +238,7 @@ function normalizeSiteConfig(rawConfig) {
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
+      stepBackgroundImageUrl: "",
       items: Array.isArray(rawConfig.pastaItems) && rawConfig.pastaItems.length
         ? rawConfig.pastaItems
         : defaults.buttons[1].items,
@@ -251,7 +257,16 @@ function normalizeSiteConfig(rawConfig) {
       backgroundColor: sanitizeString(rawConfig.theme?.backgroundColor, defaults.theme.backgroundColor),
       overlayColor: sanitizeString(rawConfig.theme?.overlayColor, defaults.theme.overlayColor),
       overlayOpacity: clamp(rawConfig.theme?.overlayOpacity, 0, 1, defaults.theme.overlayOpacity),
-      backgroundImageUrl: sanitizeImageUrl(rawConfig.theme?.backgroundImageUrl || rawConfig.backgroundImageUrl || ""),
+      landingBackgroundImageUrl: sanitizeImageUrl(
+        rawConfig.theme?.landingBackgroundImageUrl || rawConfig.theme?.backgroundImageUrl || rawConfig.backgroundImageUrl || "",
+      ),
+      categoryBackgroundImageUrl: sanitizeImageUrl(
+        rawConfig.theme?.categoryBackgroundImageUrl
+          || rawConfig.theme?.landingBackgroundImageUrl
+          || rawConfig.theme?.backgroundImageUrl
+          || rawConfig.backgroundImageUrl
+          || "",
+      ),
     },
     webgl: {
       animationSpeed: clamp(rawConfig.webgl?.animationSpeed, 0.05, 1.5, defaults.webgl.animationSpeed),
@@ -265,7 +280,9 @@ function applySiteConfig(config) {
   const title = document.getElementById("site-title");
   const subtitle = document.getElementById("subtitle");
   const startButton = document.getElementById("start-button");
+  const topSection = document.getElementById("top");
   const categoryTitle = document.getElementById("category-title");
+  const categorySection = document.getElementById("category");
   const categoryButtons = document.getElementById("category-buttons");
   const optionsContainer = document.getElementById("options-container");
 
@@ -273,6 +290,18 @@ function applySiteConfig(config) {
   if (subtitle) subtitle.textContent = config.subtitle;
   if (startButton) startButton.textContent = config.startLabel;
   if (categoryTitle) categoryTitle.textContent = config.categoryLabel;
+  if (topSection) {
+    topSection.style.setProperty(
+      "--section-bg-image",
+      config.theme.landingBackgroundImageUrl ? cssUrlValue(config.theme.landingBackgroundImageUrl) : "none",
+    );
+  }
+  if (categorySection) {
+    categorySection.style.setProperty(
+      "--section-bg-image",
+      config.theme.categoryBackgroundImageUrl ? cssUrlValue(config.theme.categoryBackgroundImageUrl) : "none",
+    );
+  }
 
   if (categoryButtons) {
     categoryButtons.replaceChildren(
@@ -303,6 +332,14 @@ function applySiteConfig(config) {
         const section = document.createElement("section");
         section.className = "panel options";
         section.id = `options-${buttonConfig.id || index + 1}`;
+        section.style.setProperty(
+          "--section-bg-image",
+          buttonConfig.stepBackgroundImageUrl
+            ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
+            : config.theme.categoryBackgroundImageUrl
+              ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
+              : "none",
+        );
 
         const heading = document.createElement("h3");
         heading.textContent = buttonConfig.title;
@@ -329,7 +366,7 @@ function applySiteConfig(config) {
   document.documentElement.style.setProperty("--bg-overlay", `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${config.theme.overlayOpacity})`);
   document.documentElement.style.setProperty(
     "--panel-bg-image",
-    config.theme.backgroundImageUrl ? cssUrlValue(config.theme.backgroundImageUrl) : "none",
+    config.theme.landingBackgroundImageUrl ? cssUrlValue(config.theme.landingBackgroundImageUrl) : "none",
   );
 }
 
@@ -569,6 +606,19 @@ function createButtonEditorItem(buttonConfig) {
   const imageStatus = document.createElement("p");
   imageStatus.className = "status";
   imageStatus.textContent = imageInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
+  const stepBackgroundLabel = document.createElement("label");
+  stepBackgroundLabel.textContent = "Schritt Hintergrundbild (optional)";
+  const stepBackgroundInput = document.createElement("input");
+  stepBackgroundInput.type = "hidden";
+  stepBackgroundInput.name = "buttonStepBackgroundImageUrl";
+  stepBackgroundInput.value = buttonConfig.stepBackgroundImageUrl || "";
+  const stepBackgroundFileInput = document.createElement("input");
+  stepBackgroundFileInput.type = "file";
+  stepBackgroundFileInput.name = "buttonStepBackgroundImageFile";
+  stepBackgroundFileInput.accept = "image/*";
+  const stepBackgroundStatus = document.createElement("p");
+  stepBackgroundStatus.className = "status";
+  stepBackgroundStatus.textContent = stepBackgroundInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
 
   const bgColorLabel = document.createElement("label");
   bgColorLabel.textContent = "Button Hintergrundfarbe";
@@ -601,7 +651,11 @@ function createButtonEditorItem(buttonConfig) {
   clearImage.type = "button";
   clearImage.className = "action-button ghost small clear-button-image";
   clearImage.textContent = "Bild entfernen";
-  controls.append(clearImage, remove);
+  const clearStepBackgroundImage = document.createElement("button");
+  clearStepBackgroundImage.type = "button";
+  clearStepBackgroundImage.className = "action-button ghost small clear-button-step-background-image";
+  clearStepBackgroundImage.textContent = "Schrittbild entfernen";
+  controls.append(clearImage, clearStepBackgroundImage, remove);
 
   imageFileInput.addEventListener("change", async () => {
     const file = imageFileInput.files?.[0];
@@ -621,6 +675,23 @@ function createButtonEditorItem(buttonConfig) {
     imageFileInput.value = "";
     imageStatus.textContent = "Kein Bild gewählt.";
   });
+  stepBackgroundFileInput.addEventListener("change", async () => {
+    const file = stepBackgroundFileInput.files?.[0];
+    if (!file) return;
+    try {
+      const fileDataUrl = await readImageFileAsDataUrl(file);
+      stepBackgroundInput.value = sanitizeImageUrl(fileDataUrl);
+      stepBackgroundStatus.textContent = stepBackgroundInput.value ? `Bild "${file.name}" geladen.` : "Ungültiges Bild.";
+    } catch {
+      stepBackgroundInput.value = "";
+      stepBackgroundStatus.textContent = "Bild konnte nicht geladen werden.";
+    }
+  });
+  clearStepBackgroundImage.addEventListener("click", () => {
+    stepBackgroundInput.value = "";
+    stepBackgroundFileInput.value = "";
+    stepBackgroundStatus.textContent = "Kein Bild gewählt.";
+  });
 
   item.append(
     title,
@@ -636,6 +707,10 @@ function createButtonEditorItem(buttonConfig) {
     imageInput,
     imageFileInput,
     imageStatus,
+    stepBackgroundLabel,
+    stepBackgroundInput,
+    stepBackgroundFileInput,
+    stepBackgroundStatus,
     itemsLabel,
     itemsInput,
     controls,
@@ -652,12 +727,19 @@ function populateEditorForm(config) {
   form.subtitle.value = config.subtitle;
   form.startLabel.value = config.startLabel;
   form.categoryLabel.value = config.categoryLabel;
-  form.backgroundImageUrl.value = config.theme.backgroundImageUrl;
+  form.backgroundImageUrl.value = config.theme.landingBackgroundImageUrl;
   const backgroundImageFileInput = document.getElementById("background-image-file-input");
   if (backgroundImageFileInput instanceof HTMLInputElement) backgroundImageFileInput.value = "";
   const backgroundImageStatus = document.getElementById("background-image-status");
   if (backgroundImageStatus) {
-    backgroundImageStatus.textContent = config.theme.backgroundImageUrl ? "Bild gesetzt." : "Kein Bild gewählt.";
+    backgroundImageStatus.textContent = config.theme.landingBackgroundImageUrl ? "Bild gesetzt." : "Kein Bild gewählt.";
+  }
+  form.categoryBackgroundImageUrl.value = config.theme.categoryBackgroundImageUrl;
+  const categoryBackgroundImageFileInput = document.getElementById("category-background-image-file-input");
+  if (categoryBackgroundImageFileInput instanceof HTMLInputElement) categoryBackgroundImageFileInput.value = "";
+  const categoryBackgroundImageStatus = document.getElementById("category-background-image-status");
+  if (categoryBackgroundImageStatus) {
+    categoryBackgroundImageStatus.textContent = config.theme.categoryBackgroundImageUrl ? "Bild gesetzt." : "Kein Bild gewählt.";
   }
   form.accentColor.value = config.theme.accentColor;
   form.textColor.value = config.theme.textColor;
@@ -679,6 +761,7 @@ function readButtonEditorList() {
     const backgroundColor = sanitizeColor(item.querySelector('[name="buttonBackgroundColor"]')?.value);
     const textColor = sanitizeColor(item.querySelector('[name="buttonTextColor"]')?.value);
     const imageUrl = sanitizeImageUrl(item.querySelector('[name="buttonImageUrl"]')?.value);
+    const stepBackgroundImageUrl = sanitizeImageUrl(item.querySelector('[name="buttonStepBackgroundImageUrl"]')?.value);
     const optionItems = sanitizeItems(
       item.querySelector('[name="buttonItems"]')?.value,
       DEFAULT_SITE_CONFIG.buttons[index % DEFAULT_SITE_CONFIG.buttons.length].items,
@@ -690,6 +773,7 @@ function readButtonEditorList() {
       backgroundColor,
       textColor,
       imageUrl,
+      stepBackgroundImageUrl,
       items: optionItems,
     };
   });
@@ -714,7 +798,8 @@ function readEditorForm(currentConfig) {
       backgroundColor: form.backgroundColor.value || DEFAULT_SITE_CONFIG.theme.backgroundColor,
       overlayColor: form.overlayColor.value || DEFAULT_SITE_CONFIG.theme.overlayColor,
       overlayOpacity: clamp(form.overlayOpacity.value, 0, 1, DEFAULT_SITE_CONFIG.theme.overlayOpacity),
-      backgroundImageUrl: sanitizeImageUrl(form.backgroundImageUrl.value),
+      landingBackgroundImageUrl: sanitizeImageUrl(form.backgroundImageUrl.value),
+      categoryBackgroundImageUrl: sanitizeImageUrl(form.categoryBackgroundImageUrl.value),
     },
     webgl: {
       animationSpeed: clamp(form.animationSpeed.value, 0.05, 1.5, DEFAULT_SITE_CONFIG.webgl.animationSpeed),
@@ -842,9 +927,12 @@ async function initApp() {
   const closeDockButton = document.getElementById("close-dock-button");
   const addCategoryButton = document.getElementById("add-category-button");
   const buttonEditList = document.getElementById("button-edit-list");
-  const backgroundImageFileInput = document.getElementById("background-image-file-input");
-  const clearBackgroundImageButton = document.getElementById("clear-background-image");
-  const backgroundImageStatus = document.getElementById("background-image-status");
+  const landingBackgroundImageFileInput = document.getElementById("background-image-file-input");
+  const clearLandingBackgroundImageButton = document.getElementById("clear-background-image");
+  const landingBackgroundImageStatus = document.getElementById("background-image-status");
+  const categoryBackgroundImageFileInput = document.getElementById("category-background-image-file-input");
+  const clearCategoryBackgroundImageButton = document.getElementById("clear-category-background-image");
+  const categoryBackgroundImageStatus = document.getElementById("category-background-image-status");
   const undoButton = document.getElementById("undo-button");
   const redoButton = document.getElementById("redo-button");
   let editorHistory = [deepClone(currentConfig)];
@@ -978,38 +1066,68 @@ async function initApp() {
         backgroundColor: sanitizeColor(currentConfig.theme.accentColor, "#00d4ff"),
         textColor: sanitizeColor(currentConfig.theme.textColor, "#ffffff"),
         imageUrl: "",
+        stepBackgroundImageUrl: "",
         items: ["Option 1"],
       }),
     );
     captureEditorSnapshot();
   });
 
-  backgroundImageFileInput?.addEventListener("change", async () => {
+  landingBackgroundImageFileInput?.addEventListener("change", async () => {
     if (!(editorForm instanceof HTMLFormElement)) return;
-    const file = backgroundImageFileInput.files?.[0];
+    const file = landingBackgroundImageFileInput.files?.[0];
     if (!file) return;
     try {
       const fileDataUrl = await readImageFileAsDataUrl(file);
       editorForm.backgroundImageUrl.value = sanitizeImageUrl(fileDataUrl);
-      if (backgroundImageStatus) {
-        backgroundImageStatus.textContent = editorForm.backgroundImageUrl.value
+      if (landingBackgroundImageStatus) {
+        landingBackgroundImageStatus.textContent = editorForm.backgroundImageUrl.value
           ? `Bild "${file.name}" geladen.`
           : "Ungültiges Bild.";
       }
       captureEditorSnapshot();
     } catch {
       editorForm.backgroundImageUrl.value = "";
-      if (backgroundImageStatus) backgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
+      if (landingBackgroundImageStatus) landingBackgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
     }
   });
 
-  clearBackgroundImageButton?.addEventListener("click", () => {
+  clearLandingBackgroundImageButton?.addEventListener("click", () => {
     if (!(editorForm instanceof HTMLFormElement)) return;
     editorForm.backgroundImageUrl.value = "";
-    if (backgroundImageFileInput instanceof HTMLInputElement) {
-      backgroundImageFileInput.value = "";
+    if (landingBackgroundImageFileInput instanceof HTMLInputElement) {
+      landingBackgroundImageFileInput.value = "";
     }
-    if (backgroundImageStatus) backgroundImageStatus.textContent = "Kein Bild gewählt.";
+    if (landingBackgroundImageStatus) landingBackgroundImageStatus.textContent = "Kein Bild gewählt.";
+    captureEditorSnapshot();
+  });
+
+  categoryBackgroundImageFileInput?.addEventListener("change", async () => {
+    if (!(editorForm instanceof HTMLFormElement)) return;
+    const file = categoryBackgroundImageFileInput.files?.[0];
+    if (!file) return;
+    try {
+      const fileDataUrl = await readImageFileAsDataUrl(file);
+      editorForm.categoryBackgroundImageUrl.value = sanitizeImageUrl(fileDataUrl);
+      if (categoryBackgroundImageStatus) {
+        categoryBackgroundImageStatus.textContent = editorForm.categoryBackgroundImageUrl.value
+          ? `Bild "${file.name}" geladen.`
+          : "Ungültiges Bild.";
+      }
+      captureEditorSnapshot();
+    } catch {
+      editorForm.categoryBackgroundImageUrl.value = "";
+      if (categoryBackgroundImageStatus) categoryBackgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
+    }
+  });
+
+  clearCategoryBackgroundImageButton?.addEventListener("click", () => {
+    if (!(editorForm instanceof HTMLFormElement)) return;
+    editorForm.categoryBackgroundImageUrl.value = "";
+    if (categoryBackgroundImageFileInput instanceof HTMLInputElement) {
+      categoryBackgroundImageFileInput.value = "";
+    }
+    if (categoryBackgroundImageStatus) categoryBackgroundImageStatus.textContent = "Kein Bild gewählt.";
     captureEditorSnapshot();
   });
 
