@@ -8,24 +8,107 @@
   </head>
   <body>
     <canvas id="bg" aria-hidden="true"></canvas>
+    <aside class="control-dock" aria-label="Seitenverwaltung">
+      <section class="control-card" aria-labelledby="login-title">
+        <h2 id="login-title">Login</h2>
+        <form id="login-form" class="stack">
+          <label for="login-username">Benutzername</label>
+          <input id="login-username" name="username" type="text" required autocomplete="username" />
+          <label for="login-password">Passwort</label>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+          />
+          <button type="submit" class="action-button small">Anmelden</button>
+        </form>
+        <p id="session-status" class="status" role="status" aria-live="polite">Nicht angemeldet.</p>
+        <button id="logout-button" type="button" class="action-button ghost small hidden">Abmelden</button>
+      </section>
+
+      <section class="control-card hidden" id="user-admin-panel" aria-labelledby="user-admin-title">
+        <h3 id="user-admin-title">Login erstellen</h3>
+        <form id="create-user-form" class="stack">
+          <label for="new-username">Neuer Benutzername</label>
+          <input id="new-username" name="new-username" type="text" minlength="3" required />
+          <label for="new-password">Neues Passwort</label>
+          <input id="new-password" name="new-password" type="password" minlength="8" required />
+          <label for="new-role">Rolle</label>
+          <select id="new-role" name="new-role">
+            <option value="editor">Editor</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button type="submit" class="action-button small">Benutzer speichern</button>
+        </form>
+      </section>
+
+      <section class="control-card hidden" id="editor-panel" aria-labelledby="editor-title">
+        <h3 id="editor-title">Design & Inhalte bearbeiten</h3>
+        <form id="editor-form" class="stack">
+          <label for="title-input">Titel</label>
+          <input id="title-input" name="title" type="text" />
+          <label for="subtitle-input">Untertitel</label>
+          <input id="subtitle-input" name="subtitle" type="text" />
+          <label for="start-label-input">Start-Button</label>
+          <input id="start-label-input" name="startLabel" type="text" />
+          <label for="category-label-input">Kategorie-Überschrift</label>
+          <input id="category-label-input" name="categoryLabel" type="text" />
+          <label for="rice-button-label-input">Basis-Button 1</label>
+          <input id="rice-button-label-input" name="riceButtonLabel" type="text" />
+          <label for="pasta-button-label-input">Basis-Button 2</label>
+          <input id="pasta-button-label-input" name="pastaButtonLabel" type="text" />
+          <label for="rice-title-input">Reis Optionen Titel</label>
+          <input id="rice-title-input" name="riceTitle" type="text" />
+          <label for="pasta-title-input">Nudeln Optionen Titel</label>
+          <input id="pasta-title-input" name="pastaTitle" type="text" />
+          <label for="accent-color-input">Akzentfarbe</label>
+          <input id="accent-color-input" name="accentColor" type="color" />
+          <label for="text-color-input">Textfarbe</label>
+          <input id="text-color-input" name="textColor" type="color" />
+          <label for="bg-color-input">Hintergrundfarbe</label>
+          <input id="bg-color-input" name="backgroundColor" type="color" />
+          <label for="overlay-color-input">Overlay-Farbe</label>
+          <input id="overlay-color-input" name="overlayColor" type="color" />
+          <label for="overlay-opacity-input">Overlay-Stärke</label>
+          <input id="overlay-opacity-input" name="overlayOpacity" type="range" min="0" max="1" step="0.01" />
+          <label for="animation-speed-input">Animationsgeschwindigkeit</label>
+          <input id="animation-speed-input" name="animationSpeed" type="range" min="0.05" max="1.5" step="0.05" />
+          <label for="wave-strength-input">Flow-Stärke</label>
+          <input id="wave-strength-input" name="waveStrength" type="range" min="0.1" max="1.8" step="0.05" />
+          <label for="glow-strength-input">Glow-Stärke</label>
+          <input id="glow-strength-input" name="glowStrength" type="range" min="0.05" max="1" step="0.01" />
+          <label for="rice-items-input">Reis Einträge (je Zeile ein Eintrag)</label>
+          <textarea id="rice-items-input" name="riceItems" rows="4"></textarea>
+          <label for="pasta-items-input">Nudeln Einträge (je Zeile ein Eintrag)</label>
+          <textarea id="pasta-items-input" name="pastaItems" rows="4"></textarea>
+          <div class="button-grid">
+            <button type="submit" class="action-button small">Änderungen speichern</button>
+            <button id="reset-button" type="button" class="action-button ghost small">Standard wiederherstellen</button>
+          </div>
+        </form>
+      </section>
+    </aside>
+
     <main>
       <section class="panel hero" id="top" aria-labelledby="site-title">
         <h1 id="site-title">EinfachRezept</h1>
-        <p class="subtitle">Einfach. Schnell. Gut lesbar.</p>
+        <p class="subtitle" id="subtitle">Einfach. Schnell. Gut lesbar.</p>
         <button id="start-button" class="action-button">START</button>
       </section>
 
       <section class="panel" id="category" aria-labelledby="category-title">
         <h2 id="category-title">Wähle eine Basis</h2>
         <div class="button-grid">
-          <button class="action-button option-button" data-target="reis-options">Reis</button>
-          <button class="action-button option-button" data-target="nudeln-options">Nudeln</button>
+          <button id="rice-button" class="action-button option-button" data-target="reis-options">Reis</button>
+          <button id="pasta-button" class="action-button option-button" data-target="nudeln-options">Nudeln</button>
         </div>
       </section>
 
       <section class="panel options" id="reis-options" aria-labelledby="reis-title">
         <h3 id="reis-title">Reis Optionen</h3>
-        <ul>
+        <ul id="rice-list">
           <li>Mildes Curry</li>
           <li>Gemüsepfanne</li>
           <li>Reissuppe</li>
@@ -34,7 +117,7 @@
 
       <section class="panel options" id="nudeln-options" aria-labelledby="nudeln-title">
         <h3 id="nudeln-title">Nudeln Optionen</h3>
-        <ul>
+        <ul id="pasta-list">
           <li>Tomatensauce</li>
           <li>Pesto</li>
           <li>Gemüse-Nudeln</li>

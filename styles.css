@@ -4,6 +4,7 @@
   --text: #ffffff;
   --accent: #00d4ff;
   --accent-contrast: #00111a;
+  --background: #02040a;
 }
 
 * {
@@ -18,7 +19,7 @@ body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   color: var(--text);
-  background: #02040a;
+  background: var(--background);
 }
 
 #bg {
@@ -31,6 +32,7 @@ body {
 
 main {
   position: relative;
+  margin-left: min(31rem, 40vw);
 }
 
 .panel {
@@ -87,6 +89,18 @@ h3 {
   outline: none;
 }
 
+.action-button.small {
+  min-width: 0;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-width: 2px;
+}
+
+.action-button.ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
 .button-grid {
   display: flex;
   flex-wrap: wrap;
@@ -118,6 +132,72 @@ li {
   border: 2px solid rgba(255, 255, 255, 0.22);
 }
 
+.control-dock {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100svh;
+  width: min(31rem, 40vw);
+  z-index: 3;
+  padding: 1rem;
+  overflow: auto;
+  background: linear-gradient(180deg, rgba(1, 3, 8, 0.9), rgba(3, 8, 18, 0.78));
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.control-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.8rem;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.control-card h2,
+.control-card h3 {
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+}
+
+.stack {
+  display: grid;
+  gap: 0.45rem;
+}
+
+label {
+  font-size: 0.85rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  padding: 0.55rem 0.65rem;
+}
+
+input[type="color"] {
+  min-height: 2.35rem;
+  padding: 0.3rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.status {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+.hidden {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -125,5 +205,20 @@ li {
 
   .action-button {
     transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .control-dock {
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  main {
+    margin-left: 0;
   }
 }
