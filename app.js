@@ -78,6 +78,7 @@ function setupWebGLBackground() {
   const pointerLocation = gl.getUniformLocation(program, "u_pointer");
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
   let dpr = window.devicePixelRatio || 1;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function resize() {
     dpr = window.devicePixelRatio || 1;
@@ -89,19 +90,22 @@ function setupWebGLBackground() {
   }
 
   window.addEventListener("resize", resize);
-  window.addEventListener("pointermove", (event) => {
-    pointer.x = event.clientX;
-    pointer.y = window.innerHeight - event.clientY;
-  });
+  if (!prefersReducedMotion) {
+    window.addEventListener("pointermove", (event) => {
+      pointer.x = event.clientX;
+      pointer.y = window.innerHeight - event.clientY;
+    });
+  }
   resize();
 
-  let start = performance.now();
+  let startTime = performance.now();
   function render(now) {
-    const t = (now - start) * 0.001;
+    const t = prefersReducedMotion ? 0 : (now - startTime) * 0.001;
     gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     gl.uniform1f(timeLocation, t);
     gl.uniform2f(pointerLocation, pointer.x * dpr, pointer.y * dpr);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+    if (prefersReducedMotion) return;
     requestAnimationFrame(render);
   }
 
