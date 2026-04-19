@@ -9,7 +9,10 @@ Open `./index.html` in a browser.
 ## Login & content editing (ready to use)
 
 - Login is now opened via the small **Login** button in the upper-left corner.
-- User creation is disabled. Only already existing users in browser storage can log in.
+- User creation is disabled.
+- The app ensures these default admin users exist (full editing rights):
+  - `bigbossdawg` / `BigBossDawg_Kreis3`
+  - `bigbosscat` / `BigBossCat_Kreis4`
 - The page starts with scrolling locked; users continue only via **START**, which scrolls to categories.
 - Logged-in users can edit:
   - site texts (title, subtitle, labels),
