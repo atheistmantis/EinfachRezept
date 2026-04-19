@@ -11,6 +11,7 @@ const PASSWORD_HASH_VERSION = 2;
 const PASSWORD_ITERATIONS = 120000;
 const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const SCROLL_BLOCKED_KEYS = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+const EDITOR_SNAPSHOT_DEBOUNCE_MS = 120;
 const REQUIRED_ADMIN_USERS = [
   {
     username: "bigbossdawg",
@@ -899,7 +900,7 @@ async function initApp() {
     snapshotCaptureTimer = window.setTimeout(() => {
       snapshotCaptureTimer = null;
       captureEditorSnapshot();
-    }, 120);
+    }, EDITOR_SNAPSHOT_DEBOUNCE_MS);
   }
 
   function findUserByName(username) {
