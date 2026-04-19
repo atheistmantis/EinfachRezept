@@ -11,6 +11,7 @@ const PASSWORD_HASH_VERSION = 2;
 const PASSWORD_ITERATIONS = 120000;
 const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const SCROLL_BLOCKED_KEYS = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+const EDITOR_SNAPSHOT_DEBOUNCE_MS = 120;
 const REQUIRED_ADMIN_USERS = [
   {
     username: "bigbossdawg",
@@ -489,8 +490,18 @@ function initNavigation() {
   const startButton = document.getElementById("start-button");
   const categorySection = document.getElementById("category");
   const categoryButtons = document.getElementById("category-buttons");
-  const lockScroll = (event) => event.preventDefault();
+  const isInsideControlDock = (target) => target instanceof Element && Boolean(target.closest("#control-dock"));
+  const isEditableTarget = (target) => {
+    if (!(target instanceof HTMLElement)) return false;
+    if (target.isContentEditable) return true;
+    return ["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(target.tagName);
+  };
+  const lockScroll = (event) => {
+    if (isInsideControlDock(event.target)) return;
+    event.preventDefault();
+  };
   const lockScrollKeys = (event) => {
+    if (isInsideControlDock(event.target) || isEditableTarget(event.target)) return;
     if (SCROLL_BLOCKED_KEYS.includes(event.key)) event.preventDefault();
   };
   let startClicked = false;
@@ -828,11 +839,17 @@ async function initApp() {
   const editorPanel = document.getElementById("editor-panel");
   const editorForm = document.getElementById("editor-form");
   const resetButton = document.getElementById("reset-button");
+  const closeDockButton = document.getElementById("close-dock-button");
   const addCategoryButton = document.getElementById("add-category-button");
   const buttonEditList = document.getElementById("button-edit-list");
   const backgroundImageFileInput = document.getElementById("background-image-file-input");
   const clearBackgroundImageButton = document.getElementById("clear-background-image");
   const backgroundImageStatus = document.getElementById("background-image-status");
+  const undoButton = document.getElementById("undo-button");
+  const redoButton = document.getElementById("redo-button");
+  let editorHistory = [deepClone(currentConfig)];
+  let editorHistoryIndex = 0;
+  let snapshotCaptureTimer = null;
 
   function setVisibility(element, isVisible) {
     if (!element) return;
@@ -842,8 +859,48 @@ async function initApp() {
 
   function setDockVisibility(isVisible) {
     setVisibility(controlDock, isVisible);
+    setVisibility(loginToggle, !isVisible);
     loginToggle?.setAttribute("aria-expanded", String(isVisible));
     document.body.classList.toggle("dock-open", isVisible);
+  }
+
+  function updateHistoryButtons() {
+    if (undoButton instanceof HTMLButtonElement) undoButton.disabled = editorHistoryIndex <= 0;
+    if (redoButton instanceof HTMLButtonElement) redoButton.disabled = editorHistoryIndex >= editorHistory.length - 1;
+  }
+
+  function applyEditorSnapshot(snapshot) {
+    currentConfig = normalizeSiteConfig(snapshot);
+    applySiteConfig(currentConfig);
+    populateEditorForm(currentConfig);
+    hideAllOptionSections();
+  }
+
+  function pushEditorHistory(snapshot) {
+    const normalizedSnapshot = normalizeSiteConfig(snapshot);
+    const currentSnapshot = editorHistory[editorHistoryIndex];
+    if (currentSnapshot && JSON.stringify(currentSnapshot) === JSON.stringify(normalizedSnapshot)) {
+      updateHistoryButtons();
+      return;
+    }
+    editorHistory = editorHistory.slice(0, editorHistoryIndex + 1);
+    editorHistory.push(deepClone(normalizedSnapshot));
+    editorHistoryIndex = editorHistory.length - 1;
+    updateHistoryButtons();
+  }
+
+  function captureEditorSnapshot() {
+    if (!activeSession) return;
+    pushEditorHistory(readEditorForm(currentConfig));
+  }
+
+  function scheduleEditorSnapshot() {
+    if (!activeSession) return;
+    if (snapshotCaptureTimer) window.clearTimeout(snapshotCaptureTimer);
+    snapshotCaptureTimer = window.setTimeout(() => {
+      snapshotCaptureTimer = null;
+      captureEditorSnapshot();
+    }, EDITOR_SNAPSHOT_DEBOUNCE_MS);
   }
 
   function findUserByName(username) {
@@ -870,7 +927,6 @@ async function initApp() {
       setVisibility(editorPanel, false);
       setVisibility(loginForm, false);
       setVisibility(logoutButton, false);
-      setVisibility(loginToggle, true);
       setDockVisibility(false);
       return;
     }
@@ -880,7 +936,6 @@ async function initApp() {
       setVisibility(editorPanel, false);
       setVisibility(loginForm, true);
       setVisibility(logoutButton, false);
-      setVisibility(loginToggle, true);
       setDockVisibility(false);
       return;
     }
@@ -889,13 +944,18 @@ async function initApp() {
     setVisibility(editorPanel, true);
     setVisibility(loginForm, false);
     setVisibility(logoutButton, true);
-    setVisibility(loginToggle, false);
     setDockVisibility(true);
+    editorHistory = [deepClone(currentConfig)];
+    editorHistoryIndex = 0;
+    updateHistoryButtons();
   }
 
   loginToggle?.addEventListener("click", () => {
-    const isOpen = controlDock ? !controlDock.classList.contains("hidden") : false;
-    setDockVisibility(!isOpen);
+    setDockVisibility(true);
+  });
+
+  closeDockButton?.addEventListener("click", () => {
+    setDockVisibility(false);
   });
 
   buttonEditList?.addEventListener("click", (event) => {
@@ -905,6 +965,7 @@ async function initApp() {
     if (allItems.length <= 1) return;
     const item = removeButton.closest(".button-edit-item");
     item?.remove();
+    captureEditorSnapshot();
   });
 
   addCategoryButton?.addEventListener("click", () => {
@@ -920,6 +981,7 @@ async function initApp() {
         items: ["Option 1"],
       }),
     );
+    captureEditorSnapshot();
   });
 
   backgroundImageFileInput?.addEventListener("change", async () => {
@@ -934,6 +996,7 @@ async function initApp() {
           ? `Bild "${file.name}" geladen.`
           : "Ungültiges Bild.";
       }
+      captureEditorSnapshot();
     } catch {
       editorForm.backgroundImageUrl.value = "";
       if (backgroundImageStatus) backgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
@@ -947,6 +1010,7 @@ async function initApp() {
       backgroundImageFileInput.value = "";
     }
     if (backgroundImageStatus) backgroundImageStatus.textContent = "Kein Bild gewählt.";
+    captureEditorSnapshot();
   });
 
   loginForm?.addEventListener("submit", async (event) => {
@@ -1001,7 +1065,13 @@ async function initApp() {
     applySiteConfig(currentConfig);
     saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
     hideAllOptionSections();
+    pushEditorHistory(currentConfig);
     sessionStatus.textContent = "Änderungen gespeichert.";
+  });
+
+  editorForm?.addEventListener("input", (event) => {
+    if (event.target instanceof HTMLInputElement && event.target.type === "file") return;
+    scheduleEditorSnapshot();
   });
 
   resetButton?.addEventListener("click", () => {
@@ -1014,7 +1084,32 @@ async function initApp() {
     populateEditorForm(currentConfig);
     saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
     hideAllOptionSections();
+    pushEditorHistory(currentConfig);
     sessionStatus.textContent = "Standardwerte wiederhergestellt.";
+  });
+
+  undoButton?.addEventListener("click", () => {
+    if (!activeSession) {
+      sessionStatus.textContent = "Bitte zuerst anmelden.";
+      return;
+    }
+    if (editorHistoryIndex <= 0) return;
+    editorHistoryIndex -= 1;
+    applyEditorSnapshot(editorHistory[editorHistoryIndex]);
+    updateHistoryButtons();
+    sessionStatus.textContent = "Änderung rückgängig gemacht.";
+  });
+
+  redoButton?.addEventListener("click", () => {
+    if (!activeSession) {
+      sessionStatus.textContent = "Bitte zuerst anmelden.";
+      return;
+    }
+    if (editorHistoryIndex >= editorHistory.length - 1) return;
+    editorHistoryIndex += 1;
+    applyEditorSnapshot(editorHistory[editorHistoryIndex]);
+    updateHistoryButtons();
+    sessionStatus.textContent = "Änderung wiederhergestellt.";
   });
 
   renderSessionState();
