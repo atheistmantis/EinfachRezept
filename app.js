@@ -11,6 +11,24 @@ const PASSWORD_HASH_VERSION = 2;
 const PASSWORD_ITERATIONS = 120000;
 const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 const SCROLL_BLOCKED_KEYS = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+const REQUIRED_ADMIN_USERS = [
+  {
+    username: "bigbossdawg",
+    role: "admin",
+    passwordHash: "1ed8fafeb3572c1bc1e4ebc79197a492548fe8f7c975d28d207726df3c34521d",
+    passwordSalt: "cb41915957849aefe7a31c458f5f7fc0",
+    passwordIterations: PASSWORD_ITERATIONS,
+    passwordHashVersion: PASSWORD_HASH_VERSION,
+  },
+  {
+    username: "bigbosscat",
+    role: "admin",
+    passwordHash: "92a1c04904491689bb89540b8dcace8d428135fbc93934b91fac7c2d57759c0f",
+    passwordSalt: "b9ab67211a39bdd4bccffbc9dd36936f",
+    passwordIterations: PASSWORD_ITERATIONS,
+    passwordHashVersion: PASSWORD_HASH_VERSION,
+  },
+];
 
 const DEFAULT_SITE_CONFIG = {
   title: "EinfachRezept",
@@ -704,9 +722,47 @@ async function verifyPassword(user, password) {
   return false;
 }
 
+function ensureRequiredAdminUsers(existingUsers) {
+  const users = Array.isArray(existingUsers) ? [...existingUsers] : [];
+  let hasChanges = false;
+
+  for (const requiredAdmin of REQUIRED_ADMIN_USERS) {
+    const userIndex = users.findIndex((entry) => entry.username === requiredAdmin.username);
+    const existingUser = userIndex >= 0 ? users[userIndex] : null;
+    const shouldUpdate =
+      !existingUser ||
+      existingUser.role !== requiredAdmin.role ||
+      existingUser.passwordHash !== requiredAdmin.passwordHash ||
+      existingUser.passwordSalt !== requiredAdmin.passwordSalt ||
+      existingUser.passwordIterations !== requiredAdmin.passwordIterations ||
+      existingUser.passwordHashVersion !== requiredAdmin.passwordHashVersion;
+
+    if (!shouldUpdate) continue;
+    const nextUser = {
+      ...(existingUser ?? {}),
+      ...requiredAdmin,
+    };
+
+    if (existingUser) {
+      users[userIndex] = nextUser;
+    } else {
+      users.push(nextUser);
+    }
+
+    hasChanges = true;
+  }
+
+  return { users, hasChanges };
+}
+
 async function initApp() {
   let users = getStoredJSON(STORAGE_KEYS.users, []);
   if (!Array.isArray(users)) users = [];
+  const ensuredAdmins = ensureRequiredAdminUsers(users);
+  users = ensuredAdmins.users;
+  if (ensuredAdmins.hasChanges) {
+    saveStoredJSON(STORAGE_KEYS.users, users);
+  }
 
   let currentConfig = normalizeSiteConfig(getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG)));
   applySiteConfig(currentConfig);
