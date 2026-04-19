@@ -23,6 +23,11 @@ body {
   background: var(--background);
 }
 
+body.landing-scroll-locked {
+  overflow: hidden;
+  height: 100svh;
+}
+
 #bg {
   position: fixed;
   inset: 0;
