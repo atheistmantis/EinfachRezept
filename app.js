@@ -260,7 +260,7 @@ function setupWebGLBackground(getVisualSettings) {
   }
   resize();
 
-  const startTime = performance.now();
+  let startTime = performance.now();
 
   function render(now) {
     const visualSettings = getVisualSettings();
