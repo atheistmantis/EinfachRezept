@@ -7,11 +7,9 @@ const STORAGE_KEYS = {
   siteConfig: "einfachrezept_site_config_v1",
 };
 
-const DEFAULT_ADMIN = {
-  username: "admin",
-  password: "Admin@12345",
-  role: "admin",
-};
+const PASSWORD_HASH_VERSION = 2;
+const PASSWORD_ITERATIONS = 120000;
+const MIN_PASSWORD_LENGTH = 10;
 
 const DEFAULT_SITE_CONFIG = {
   title: "EinfachRezept",
@@ -67,6 +65,16 @@ function sanitizeItems(multilineValue, fallbackItems) {
     .map((entry) => entry.trim())
     .filter(Boolean);
   return items.length ? items : fallbackItems;
+}
+
+function isStrongPassword(password) {
+  return (
+    password.length >= MIN_PASSWORD_LENGTH &&
+    /[a-z]/.test(password) &&
+    /[A-Z]/.test(password) &&
+    /\d/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
 }
 
 function hexToRgb(hex) {
@@ -352,25 +360,67 @@ function readEditorForm(currentConfig) {
   };
 }
 
-async function hashPassword(password) {
-  const encoded = new TextEncoder().encode(password);
-  const digest = await crypto.subtle.digest("SHA-256", encoded);
-  return Array.from(new Uint8Array(digest))
+function toHex(buffer) {
+  return Array.from(new Uint8Array(buffer))
     .map((byte) => byte.toString(16).padStart(2, "0"))
     .join("");
 }
 
-async function ensureDefaultAdmin() {
-  const users = getStoredJSON(STORAGE_KEYS.users, []);
-  if (users.length) return users;
-  const hashedPassword = await hashPassword(DEFAULT_ADMIN.password);
-  const seededUsers = [{ username: DEFAULT_ADMIN.username, passwordHash: hashedPassword, role: DEFAULT_ADMIN.role }];
-  saveStoredJSON(STORAGE_KEYS.users, seededUsers);
-  return seededUsers;
+function fromHex(hexString) {
+  const pairs = hexString.match(/.{1,2}/g) ?? [];
+  return new Uint8Array(pairs.map((pair) => Number.parseInt(pair, 16)));
+}
+
+function createSalt() {
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+  return toHex(salt);
+}
+
+async function derivePbkdf2Hash(password, saltHex, iterations = PASSWORD_ITERATIONS) {
+  const keyMaterial = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, [
+    "deriveBits",
+  ]);
+  const bits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: fromHex(saltHex),
+      iterations,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    256,
+  );
+  return toHex(bits);
+}
+
+async function createPasswordRecord(password) {
+  const salt = createSalt();
+  const hash = await derivePbkdf2Hash(password, salt);
+  return {
+    passwordHash: hash,
+    passwordSalt: salt,
+    passwordIterations: PASSWORD_ITERATIONS,
+    passwordHashVersion: PASSWORD_HASH_VERSION,
+  };
+}
+
+async function verifyPassword(user, password) {
+  if (user.passwordHashVersion === PASSWORD_HASH_VERSION && user.passwordSalt) {
+    const computedHash = await derivePbkdf2Hash(password, user.passwordSalt, user.passwordIterations || PASSWORD_ITERATIONS);
+    return user.passwordHash === computedHash;
+  }
+
+  if (user.passwordHash && !user.passwordSalt) {
+    const legacyDigest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
+    return user.passwordHash === toHex(legacyDigest);
+  }
+
+  return false;
 }
 
 async function initApp() {
-  let users = await ensureDefaultAdmin();
+  let users = getStoredJSON(STORAGE_KEYS.users, []);
   let currentConfig = getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG));
   if (!currentConfig || typeof currentConfig !== "object") {
     currentConfig = deepClone(DEFAULT_SITE_CONFIG);
@@ -381,6 +431,8 @@ async function initApp() {
   initNavigation();
 
   const loginForm = document.getElementById("login-form");
+  const setupPanel = document.getElementById("setup-panel");
+  const firstAdminForm = document.getElementById("first-admin-form");
   const logoutButton = document.getElementById("logout-button");
   const sessionStatus = document.getElementById("session-status");
   const editorPanel = document.getElementById("editor-panel");
@@ -388,6 +440,12 @@ async function initApp() {
   const editorForm = document.getElementById("editor-form");
   const createUserForm = document.getElementById("create-user-form");
   const resetButton = document.getElementById("reset-button");
+
+  function setVisibility(element, isVisible) {
+    if (!element) return;
+    element.classList.toggle("hidden", !isVisible);
+    element.setAttribute("aria-hidden", String(!isVisible));
+  }
 
   function findUserByName(username) {
     return users.find((user) => user.username === username);
@@ -403,27 +461,69 @@ async function initApp() {
   let activeSession = readSessionUser();
 
   function renderSessionState() {
-    if (!sessionStatus || !editorPanel || !logoutButton || !userAdminPanel) return;
+    if (!sessionStatus) return;
+    const hasUsers = users.length > 0;
+    setVisibility(setupPanel, !hasUsers);
+    setVisibility(loginForm, hasUsers);
+
+    if (!hasUsers) {
+      activeSession = null;
+      localStorage.removeItem(STORAGE_KEYS.session);
+      sessionStatus.textContent = "Erstelle zuerst einen Admin-Login.";
+      setVisibility(editorPanel, false);
+      setVisibility(userAdminPanel, false);
+      setVisibility(logoutButton, false);
+      return;
+    }
+
     if (!activeSession) {
       sessionStatus.textContent = "Nicht angemeldet.";
-      editorPanel.classList.add("hidden");
-      userAdminPanel.classList.add("hidden");
-      logoutButton.classList.add("hidden");
+      setVisibility(editorPanel, false);
+      setVisibility(userAdminPanel, false);
+      setVisibility(logoutButton, false);
       return;
     }
 
     sessionStatus.textContent = `Angemeldet als ${activeSession.username} (${activeSession.role}).`;
-    editorPanel.classList.remove("hidden");
-    logoutButton.classList.remove("hidden");
+    setVisibility(editorPanel, true);
+    setVisibility(logoutButton, true);
     if (activeSession.role === "admin") {
-      userAdminPanel.classList.remove("hidden");
+      setVisibility(userAdminPanel, true);
     } else {
-      userAdminPanel.classList.add("hidden");
+      setVisibility(userAdminPanel, false);
     }
   }
 
+  firstAdminForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (users.length > 0) return;
+
+    const formData = new FormData(firstAdminForm);
+    const username = sanitizeString(formData.get("first-admin-username"), "");
+    const password = String(formData.get("first-admin-password") ?? "");
+    const passwordConfirm = String(formData.get("first-admin-password-confirm") ?? "");
+
+    if (!username || !password || password !== passwordConfirm || !isStrongPassword(password)) {
+      sessionStatus.textContent =
+        "Admin konnte nicht erstellt werden. Nutze ein starkes Passwort (Groß/Klein/Zahl/Sonderzeichen, min. 10).";
+      return;
+    }
+
+    const passwordRecord = await createPasswordRecord(password);
+    users = [{ username, role: "admin", ...passwordRecord }];
+    saveStoredJSON(STORAGE_KEYS.users, users);
+    firstAdminForm.reset();
+    sessionStatus.textContent = `Admin "${username}" erstellt. Bitte einloggen.`;
+    renderSessionState();
+  });
+
   loginForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (!users.length) {
+      sessionStatus.textContent = "Bitte zuerst einen Admin anlegen.";
+      return;
+    }
+
     const formData = new FormData(loginForm);
     const username = sanitizeString(formData.get("username"), "");
     const password = String(formData.get("password") ?? "");
@@ -434,10 +534,16 @@ async function initApp() {
       return;
     }
 
-    const passwordHash = await hashPassword(password);
-    if (user.passwordHash !== passwordHash) {
+    const isValidPassword = await verifyPassword(user, password);
+    if (!isValidPassword) {
       sessionStatus.textContent = "Login fehlgeschlagen.";
       return;
+    }
+
+    if (user.passwordHashVersion !== PASSWORD_HASH_VERSION || !user.passwordSalt) {
+      const upgradedRecord = await createPasswordRecord(password);
+      users = users.map((entry) => (entry.username === user.username ? { ...entry, ...upgradedRecord } : entry));
+      saveStoredJSON(STORAGE_KEYS.users, users);
     }
 
     activeSession = { username: user.username, role: user.role };
@@ -461,8 +567,8 @@ async function initApp() {
     const password = String(formData.get("new-password") ?? "");
     const role = formData.get("new-role") === "admin" ? "admin" : "editor";
 
-    if (!username || password.length < 8) {
-      sessionStatus.textContent = "Benutzer konnte nicht erstellt werden.";
+    if (!username || !isStrongPassword(password)) {
+      sessionStatus.textContent = "Benutzer konnte nicht erstellt werden. Passwort ist zu schwach.";
       return;
     }
     if (findUserByName(username)) {
@@ -470,8 +576,8 @@ async function initApp() {
       return;
     }
 
-    const passwordHash = await hashPassword(password);
-    users = [...users, { username, passwordHash, role }];
+    const passwordRecord = await createPasswordRecord(password);
+    users = [...users, { username, role, ...passwordRecord }];
     saveStoredJSON(STORAGE_KEYS.users, users);
     createUserForm.reset();
     sessionStatus.textContent = `Benutzer "${username}" erstellt.`;

@@ -9,6 +9,25 @@
   <body>
     <canvas id="bg" aria-hidden="true"></canvas>
     <aside class="control-dock" aria-label="Seitenverwaltung">
+      <section class="control-card hidden" id="setup-panel" aria-labelledby="setup-title" aria-hidden="true">
+        <h2 id="setup-title">Erststart: Admin erstellen</h2>
+        <form id="first-admin-form" class="stack">
+          <label for="first-admin-username">Admin Benutzername</label>
+          <input id="first-admin-username" name="first-admin-username" type="text" minlength="3" required />
+          <label for="first-admin-password">Admin Passwort</label>
+          <input id="first-admin-password" name="first-admin-password" type="password" minlength="8" required />
+          <label for="first-admin-password-confirm">Passwort wiederholen</label>
+          <input
+            id="first-admin-password-confirm"
+            name="first-admin-password-confirm"
+            type="password"
+            minlength="8"
+            required
+          />
+          <button type="submit" class="action-button small">Admin anlegen</button>
+        </form>
+      </section>
+
       <section class="control-card" aria-labelledby="login-title">
         <h2 id="login-title">Login</h2>
         <form id="login-form" class="stack">
@@ -28,7 +47,7 @@
         <button id="logout-button" type="button" class="action-button ghost small hidden">Abmelden</button>
       </section>
 
-      <section class="control-card hidden" id="user-admin-panel" aria-labelledby="user-admin-title">
+      <section class="control-card hidden" id="user-admin-panel" aria-labelledby="user-admin-title" aria-hidden="true">
         <h3 id="user-admin-title">Login erstellen</h3>
         <form id="create-user-form" class="stack">
           <label for="new-username">Neuer Benutzername</label>
@@ -44,7 +63,7 @@
         </form>
       </section>
 
-      <section class="control-card hidden" id="editor-panel" aria-labelledby="editor-title">
+      <section class="control-card hidden" id="editor-panel" aria-labelledby="editor-title" aria-hidden="true">
         <h3 id="editor-title">Design & Inhalte bearbeiten</h3>
         <form id="editor-form" class="stack">
           <label for="title-input">Titel</label>
