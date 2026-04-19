@@ -9,6 +9,8 @@ const STORAGE_KEYS = {
 
 const PASSWORD_HASH_VERSION = 2;
 const PASSWORD_ITERATIONS = 120000;
+const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+const SCROLL_BLOCKED_KEYS = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
 
 const DEFAULT_SITE_CONFIG = {
   title: "EinfachRezept",
@@ -81,10 +83,12 @@ function sanitizeItems(multilineValue, fallbackItems) {
   return items.length ? items : fallbackItems;
 }
 
-function sanitizeColor(value, fallback = "") {
-  const cleaned = String(value ?? "").trim();
-  if (!cleaned) return fallback;
-  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(cleaned) ? cleaned : fallback;
+function sanitizeColor(colorValue, fallback = "") {
+  const cleaned = String(colorValue ?? "").trim();
+  const fallbackColor = String(fallback ?? "").trim();
+  const safeFallback = HEX_COLOR_REGEX.test(fallbackColor) ? fallbackColor : "";
+  if (!cleaned) return safeFallback;
+  return HEX_COLOR_REGEX.test(cleaned) ? cleaned : safeFallback;
 }
 
 function clamp(value, min, max, fallback) {
@@ -456,8 +460,7 @@ function initNavigation() {
   const categoryButtons = document.getElementById("category-buttons");
   const lockScroll = (event) => event.preventDefault();
   const lockScrollKeys = (event) => {
-    const blocked = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
-    if (blocked.includes(event.key)) event.preventDefault();
+    if (SCROLL_BLOCKED_KEYS.includes(event.key)) event.preventDefault();
   };
   let startClicked = false;
 
@@ -524,14 +527,14 @@ function createButtonEditorItem(buttonConfig) {
   const bgColorInput = document.createElement("input");
   bgColorInput.type = "color";
   bgColorInput.name = "buttonBackgroundColor";
-  bgColorInput.value = sanitizeColor(buttonConfig.backgroundColor, DEFAULT_SITE_CONFIG.theme.accentColor);
+  bgColorInput.value = sanitizeColor(buttonConfig.backgroundColor, "#00d4ff");
 
   const textColorLabel = document.createElement("label");
   textColorLabel.textContent = "Button Textfarbe";
   const textColorInput = document.createElement("input");
   textColorInput.type = "color";
   textColorInput.name = "buttonTextColor";
-  textColorInput.value = sanitizeColor(buttonConfig.textColor, DEFAULT_SITE_CONFIG.theme.textColor);
+  textColorInput.value = sanitizeColor(buttonConfig.textColor, "#ffffff");
 
   const itemsLabel = document.createElement("label");
   itemsLabel.textContent = "Optionen Einträge (je Zeile ein Eintrag)";
@@ -796,8 +799,8 @@ async function initApp() {
         id: crypto.randomUUID(),
         label: "Neuer Button",
         title: "Neue Optionen",
-        backgroundColor: currentConfig.theme.accentColor,
-        textColor: currentConfig.theme.textColor,
+        backgroundColor: sanitizeColor(currentConfig.theme.accentColor, "#00d4ff"),
+        textColor: sanitizeColor(currentConfig.theme.textColor, "#ffffff"),
         imageUrl: "",
         items: ["Option 1"],
       }),
