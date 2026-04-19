@@ -143,6 +143,19 @@ function cssUrlValue(url) {
   return `url("${String(url).replace(/["\\\n\r\f]/g, "\\$&")}")`;
 }
 
+function readImageFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type?.startsWith("image/")) {
+      reject(new Error("Invalid image file."));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(new Error("Unable to read image file."));
+    reader.readAsDataURL(file);
+  });
+}
+
 function hexToRgb(hex) {
   const cleaned = String(hex ?? "").replace(/^#/, "");
   const normalized = cleaned.length === 3 ? cleaned.split("").map((char) => char + char).join("") : cleaned;
@@ -533,12 +546,18 @@ function createButtonEditorItem(buttonConfig) {
   sectionInput.value = buttonConfig.title;
 
   const imageLabel = document.createElement("label");
-  imageLabel.textContent = "Button Hintergrundbild URL (optional)";
+  imageLabel.textContent = "Button Hintergrundbild (optional)";
   const imageInput = document.createElement("input");
-  imageInput.type = "url";
+  imageInput.type = "hidden";
   imageInput.name = "buttonImageUrl";
-  imageInput.placeholder = "https://...";
   imageInput.value = buttonConfig.imageUrl;
+  const imageFileInput = document.createElement("input");
+  imageFileInput.type = "file";
+  imageFileInput.name = "buttonImageFile";
+  imageFileInput.accept = "image/*";
+  const imageStatus = document.createElement("p");
+  imageStatus.className = "status";
+  imageStatus.textContent = imageInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
 
   const bgColorLabel = document.createElement("label");
   bgColorLabel.textContent = "Button Hintergrundfarbe";
@@ -567,7 +586,30 @@ function createButtonEditorItem(buttonConfig) {
   remove.type = "button";
   remove.className = "action-button ghost small remove-button-item";
   remove.textContent = "Entfernen";
-  controls.append(remove);
+  const clearImage = document.createElement("button");
+  clearImage.type = "button";
+  clearImage.className = "action-button ghost small clear-button-image";
+  clearImage.textContent = "Bild entfernen";
+  controls.append(clearImage, remove);
+
+  imageFileInput.addEventListener("change", async () => {
+    const file = imageFileInput.files?.[0];
+    if (!file) return;
+    try {
+      const fileDataUrl = await readImageFileAsDataUrl(file);
+      imageInput.value = sanitizeImageUrl(fileDataUrl);
+      imageStatus.textContent = imageInput.value ? `Bild "${file.name}" geladen.` : "Ungültiges Bild.";
+    } catch {
+      imageInput.value = "";
+      imageStatus.textContent = "Bild konnte nicht geladen werden.";
+    }
+  });
+
+  clearImage.addEventListener("click", () => {
+    imageInput.value = "";
+    imageFileInput.value = "";
+    imageStatus.textContent = "Kein Bild gewählt.";
+  });
 
   item.append(
     title,
@@ -581,6 +623,8 @@ function createButtonEditorItem(buttonConfig) {
     textColorInput,
     imageLabel,
     imageInput,
+    imageFileInput,
+    imageStatus,
     itemsLabel,
     itemsInput,
     controls,
@@ -598,6 +642,12 @@ function populateEditorForm(config) {
   form.startLabel.value = config.startLabel;
   form.categoryLabel.value = config.categoryLabel;
   form.backgroundImageUrl.value = config.theme.backgroundImageUrl;
+  const backgroundImageFileInput = document.getElementById("background-image-file-input");
+  if (backgroundImageFileInput instanceof HTMLInputElement) backgroundImageFileInput.value = "";
+  const backgroundImageStatus = document.getElementById("background-image-status");
+  if (backgroundImageStatus) {
+    backgroundImageStatus.textContent = config.theme.backgroundImageUrl ? "Bild gesetzt." : "Kein Bild gewählt.";
+  }
   form.accentColor.value = config.theme.accentColor;
   form.textColor.value = config.theme.textColor;
   form.backgroundColor.value = config.theme.backgroundColor;
@@ -780,6 +830,9 @@ async function initApp() {
   const resetButton = document.getElementById("reset-button");
   const addCategoryButton = document.getElementById("add-category-button");
   const buttonEditList = document.getElementById("button-edit-list");
+  const backgroundImageFileInput = document.getElementById("background-image-file-input");
+  const clearBackgroundImageButton = document.getElementById("clear-background-image");
+  const backgroundImageStatus = document.getElementById("background-image-status");
 
   function setVisibility(element, isVisible) {
     if (!element) return;
@@ -817,6 +870,8 @@ async function initApp() {
       setVisibility(editorPanel, false);
       setVisibility(loginForm, false);
       setVisibility(logoutButton, false);
+      setVisibility(loginToggle, true);
+      setDockVisibility(false);
       return;
     }
 
@@ -825,6 +880,8 @@ async function initApp() {
       setVisibility(editorPanel, false);
       setVisibility(loginForm, true);
       setVisibility(logoutButton, false);
+      setVisibility(loginToggle, true);
+      setDockVisibility(false);
       return;
     }
 
@@ -832,6 +889,8 @@ async function initApp() {
     setVisibility(editorPanel, true);
     setVisibility(loginForm, false);
     setVisibility(logoutButton, true);
+    setVisibility(loginToggle, false);
+    setDockVisibility(true);
   }
 
   loginToggle?.addEventListener("click", () => {
@@ -861,6 +920,33 @@ async function initApp() {
         items: ["Option 1"],
       }),
     );
+  });
+
+  backgroundImageFileInput?.addEventListener("change", async () => {
+    if (!(editorForm instanceof HTMLFormElement)) return;
+    const file = backgroundImageFileInput.files?.[0];
+    if (!file) return;
+    try {
+      const fileDataUrl = await readImageFileAsDataUrl(file);
+      editorForm.backgroundImageUrl.value = sanitizeImageUrl(fileDataUrl);
+      if (backgroundImageStatus) {
+        backgroundImageStatus.textContent = editorForm.backgroundImageUrl.value
+          ? `Bild "${file.name}" geladen.`
+          : "Ungültiges Bild.";
+      }
+    } catch {
+      editorForm.backgroundImageUrl.value = "";
+      if (backgroundImageStatus) backgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
+    }
+  });
+
+  clearBackgroundImageButton?.addEventListener("click", () => {
+    if (!(editorForm instanceof HTMLFormElement)) return;
+    editorForm.backgroundImageUrl.value = "";
+    if (backgroundImageFileInput instanceof HTMLInputElement) {
+      backgroundImageFileInput.value = "";
+    }
+    if (backgroundImageStatus) backgroundImageStatus.textContent = "Kein Bild gewählt.";
   });
 
   loginForm?.addEventListener("submit", async (event) => {
@@ -932,7 +1018,6 @@ async function initApp() {
   });
 
   renderSessionState();
-  setDockVisibility(false);
 }
 
 initApp();

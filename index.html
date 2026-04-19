@@ -42,8 +42,11 @@
           <input id="start-label-input" name="startLabel" type="text" />
           <label for="category-label-input">Kategorie-Überschrift</label>
           <input id="category-label-input" name="categoryLabel" type="text" />
-          <label for="background-image-input">Hintergrundbild URL (optional)</label>
-          <input id="background-image-input" name="backgroundImageUrl" type="url" placeholder="https://..." />
+          <label for="background-image-file-input">Hintergrundbild hochladen (optional)</label>
+          <input id="background-image-input" name="backgroundImageUrl" type="hidden" />
+          <input id="background-image-file-input" name="backgroundImageFile" type="file" accept="image/*" />
+          <p id="background-image-status" class="status">Kein Bild gewählt.</p>
+          <button id="clear-background-image" type="button" class="action-button ghost small">Bild entfernen</button>
           <label for="accent-color-input">Akzentfarbe</label>
           <input id="accent-color-input" name="accentColor" type="color" />
           <label for="text-color-input">Textfarbe</label>
