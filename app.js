@@ -1063,11 +1063,6 @@ async function initApp() {
     captureEditorSnapshot();
   });
 
-  editorForm?.addEventListener("change", (event) => {
-    if (event.target instanceof HTMLInputElement && event.target.type === "file") return;
-    captureEditorSnapshot();
-  });
-
   resetButton?.addEventListener("click", () => {
     if (!activeSession) {
       sessionStatus.textContent = "Bitte zuerst anmelden.";
