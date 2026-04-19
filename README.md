@@ -10,9 +10,11 @@ Open `./index.html` in a browser.
 
 - Login is now opened via the small **Login** button in the upper-left corner.
 - User creation is disabled. Only already existing users in browser storage can log in.
+- The page starts with scrolling locked; users continue only via **START**, which scrolls to categories.
 - Logged-in users can edit:
   - site texts (title, subtitle, labels),
   - category buttons (add/remove buttons, rename buttons, edit option lists),
+  - per-category button colors (button background + text color),
   - optional image URL per category button (image is shown behind the button text),
   - background image URL,
   - colors and WebGL animation settings.

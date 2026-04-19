@@ -20,6 +20,8 @@ const DEFAULT_SITE_CONFIG = {
       id: "reis",
       label: "Reis",
       title: "Reis Optionen",
+      backgroundColor: "",
+      textColor: "",
       imageUrl: "",
       items: ["Mildes Curry", "Gemüsepfanne", "Reissuppe"],
     },
@@ -27,6 +29,8 @@ const DEFAULT_SITE_CONFIG = {
       id: "nudeln",
       label: "Nudeln",
       title: "Nudeln Optionen",
+      backgroundColor: "",
+      textColor: "",
       imageUrl: "",
       items: ["Tomatensauce", "Pesto", "Gemüse-Nudeln"],
     },
@@ -75,6 +79,12 @@ function sanitizeItems(multilineValue, fallbackItems) {
     .map((entry) => entry.trim())
     .filter(Boolean);
   return items.length ? items : fallbackItems;
+}
+
+function sanitizeColor(value, fallback = "") {
+  const cleaned = String(value ?? "").trim();
+  if (!cleaned) return fallback;
+  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(cleaned) ? cleaned : fallback;
 }
 
 function clamp(value, min, max, fallback) {
@@ -154,6 +164,8 @@ function normalizeButtons(rawButtons) {
       id,
       label,
       title,
+      backgroundColor: sanitizeColor(entry?.backgroundColor, ""),
+      textColor: sanitizeColor(entry?.textColor, ""),
       imageUrl: sanitizeImageUrl(entry?.imageUrl),
       items: Array.isArray(entry?.items) && entry.items.length
         ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
@@ -173,6 +185,8 @@ function normalizeSiteConfig(rawConfig) {
       id: slugify(rawConfig.riceButtonLabel || "reis") || "reis",
       label: sanitizeString(rawConfig.riceButtonLabel, defaults.buttons[0].label),
       title: sanitizeString(rawConfig.riceTitle, defaults.buttons[0].title),
+      backgroundColor: "",
+      textColor: "",
       imageUrl: "",
       items: Array.isArray(rawConfig.riceItems) && rawConfig.riceItems.length ? rawConfig.riceItems : defaults.buttons[0].items,
     },
@@ -180,6 +194,8 @@ function normalizeSiteConfig(rawConfig) {
       id: slugify(rawConfig.pastaButtonLabel || "nudeln") || "nudeln",
       label: sanitizeString(rawConfig.pastaButtonLabel, defaults.buttons[1].label),
       title: sanitizeString(rawConfig.pastaTitle, defaults.buttons[1].title),
+      backgroundColor: "",
+      textColor: "",
       imageUrl: "",
       items: Array.isArray(rawConfig.pastaItems) && rawConfig.pastaItems.length
         ? rawConfig.pastaItems
@@ -229,6 +245,8 @@ function applySiteConfig(config) {
         button.type = "button";
         button.className = "action-button option-button";
         button.dataset.target = `options-${buttonConfig.id || index + 1}`;
+        button.style.backgroundColor = sanitizeColor(buttonConfig.backgroundColor, "");
+        button.style.color = sanitizeColor(buttonConfig.textColor, "");
         if (buttonConfig.imageUrl) {
           button.classList.add("has-image");
           button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
@@ -436,8 +454,26 @@ function initNavigation() {
   const startButton = document.getElementById("start-button");
   const categorySection = document.getElementById("category");
   const categoryButtons = document.getElementById("category-buttons");
+  const lockScroll = (event) => event.preventDefault();
+  const lockScrollKeys = (event) => {
+    const blocked = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+    if (blocked.includes(event.key)) event.preventDefault();
+  };
+  let startClicked = false;
+
+  document.body.classList.add("landing-scroll-locked");
+  window.addEventListener("wheel", lockScroll, { passive: false });
+  window.addEventListener("touchmove", lockScroll, { passive: false });
+  window.addEventListener("keydown", lockScrollKeys, { passive: false });
 
   startButton?.addEventListener("click", () => {
+    if (!startClicked) {
+      startClicked = true;
+      document.body.classList.remove("landing-scroll-locked");
+      window.removeEventListener("wheel", lockScroll);
+      window.removeEventListener("touchmove", lockScroll);
+      window.removeEventListener("keydown", lockScrollKeys);
+    }
     categorySection?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
@@ -483,6 +519,20 @@ function createButtonEditorItem(buttonConfig) {
   imageInput.placeholder = "https://...";
   imageInput.value = buttonConfig.imageUrl;
 
+  const bgColorLabel = document.createElement("label");
+  bgColorLabel.textContent = "Button Hintergrundfarbe";
+  const bgColorInput = document.createElement("input");
+  bgColorInput.type = "color";
+  bgColorInput.name = "buttonBackgroundColor";
+  bgColorInput.value = sanitizeColor(buttonConfig.backgroundColor, DEFAULT_SITE_CONFIG.theme.accentColor);
+
+  const textColorLabel = document.createElement("label");
+  textColorLabel.textContent = "Button Textfarbe";
+  const textColorInput = document.createElement("input");
+  textColorInput.type = "color";
+  textColorInput.name = "buttonTextColor";
+  textColorInput.value = sanitizeColor(buttonConfig.textColor, DEFAULT_SITE_CONFIG.theme.textColor);
+
   const itemsLabel = document.createElement("label");
   itemsLabel.textContent = "Optionen Einträge (je Zeile ein Eintrag)";
   const itemsInput = document.createElement("textarea");
@@ -498,7 +548,22 @@ function createButtonEditorItem(buttonConfig) {
   remove.textContent = "Entfernen";
   controls.append(remove);
 
-  item.append(title, labelLabel, labelInput, sectionLabel, sectionInput, imageLabel, imageInput, itemsLabel, itemsInput, controls);
+  item.append(
+    title,
+    labelLabel,
+    labelInput,
+    sectionLabel,
+    sectionInput,
+    bgColorLabel,
+    bgColorInput,
+    textColorLabel,
+    textColorInput,
+    imageLabel,
+    imageInput,
+    itemsLabel,
+    itemsInput,
+    controls,
+  );
   return item;
 }
 
@@ -529,6 +594,8 @@ function readButtonEditorList() {
   const buttons = items.map((item, index) => {
     const label = sanitizeString(item.querySelector('[name="buttonLabel"]')?.value, `Button ${index + 1}`);
     const title = sanitizeString(item.querySelector('[name="buttonTitle"]')?.value, `${label} Optionen`);
+    const backgroundColor = sanitizeColor(item.querySelector('[name="buttonBackgroundColor"]')?.value);
+    const textColor = sanitizeColor(item.querySelector('[name="buttonTextColor"]')?.value);
     const imageUrl = sanitizeImageUrl(item.querySelector('[name="buttonImageUrl"]')?.value);
     const optionItems = sanitizeItems(
       item.querySelector('[name="buttonItems"]')?.value,
@@ -538,6 +605,8 @@ function readButtonEditorList() {
       id: slugify(label) || `button-${index + 1}`,
       label,
       title,
+      backgroundColor,
+      textColor,
       imageUrl,
       items: optionItems,
     };
@@ -727,6 +796,8 @@ async function initApp() {
         id: crypto.randomUUID(),
         label: "Neuer Button",
         title: "Neue Optionen",
+        backgroundColor: currentConfig.theme.accentColor,
+        textColor: currentConfig.theme.textColor,
         imageUrl: "",
         items: ["Option 1"],
       }),
@@ -802,7 +873,7 @@ async function initApp() {
   });
 
   renderSessionState();
-  setDockVisibility(Boolean(activeSession));
+  setDockVisibility(false);
 }
 
 initApp();
