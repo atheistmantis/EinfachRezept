@@ -40,6 +40,7 @@ function setupWebGLBackground() {
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error("WebGL shader compile error:", gl.getShaderInfoLog(shader));
       gl.deleteShader(shader);
       return null;
     }
@@ -75,7 +76,7 @@ function setupWebGLBackground() {
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
   function resize() {
-    const dpr = Math.max(window.devicePixelRatio || 1, 1);
+    const dpr = window.devicePixelRatio || 1;
     canvas.width = Math.floor(window.innerWidth * dpr);
     canvas.height = Math.floor(window.innerHeight * dpr);
     canvas.style.width = "100%";
