@@ -848,6 +848,7 @@ async function initApp() {
   const redoButton = document.getElementById("redo-button");
   let editorHistory = [deepClone(currentConfig)];
   let editorHistoryIndex = 0;
+  let snapshotCaptureTimer = null;
 
   function setVisibility(element, isVisible) {
     if (!element) return;
@@ -890,6 +891,15 @@ async function initApp() {
   function captureEditorSnapshot() {
     if (!activeSession) return;
     pushEditorHistory(readEditorForm(currentConfig));
+  }
+
+  function scheduleEditorSnapshot() {
+    if (!activeSession) return;
+    if (snapshotCaptureTimer) window.clearTimeout(snapshotCaptureTimer);
+    snapshotCaptureTimer = window.setTimeout(() => {
+      snapshotCaptureTimer = null;
+      captureEditorSnapshot();
+    }, 120);
   }
 
   function findUserByName(username) {
@@ -1060,7 +1070,7 @@ async function initApp() {
 
   editorForm?.addEventListener("input", (event) => {
     if (event.target instanceof HTMLInputElement && event.target.type === "file") return;
-    captureEditorSnapshot();
+    scheduleEditorSnapshot();
   });
 
   resetButton?.addEventListener("click", () => {
