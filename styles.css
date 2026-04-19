@@ -6,6 +6,7 @@
   --accent-contrast: #00111a;
   --background: #02040a;
   --panel-bg-image: none;
+  --dock-width: min(31rem, 40vw);
 }
 
 * {
@@ -38,12 +39,14 @@ body.landing-scroll-locked {
 
 main {
   position: relative;
+  width: 100%;
   margin-left: 0;
-  transition: margin-left 0.25s ease;
+  transition: margin-left 0.25s ease, width 0.25s ease;
 }
 
 body.dock-open main {
-  margin-left: min(31rem, 40vw);
+  margin-left: var(--dock-width);
+  width: calc(100% - var(--dock-width));
 }
 
 .panel {
@@ -186,7 +189,7 @@ li {
   left: 0;
   top: 0;
   height: 100svh;
-  width: min(31rem, 40vw);
+  width: var(--dock-width);
   z-index: 3;
   padding: 1rem;
   overflow: auto;
@@ -304,5 +307,6 @@ textarea {
 
   body.dock-open main {
     margin-left: 0;
+    width: 100%;
   }
 }
