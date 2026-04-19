@@ -198,6 +198,12 @@ li {
   backdrop-filter: blur(8px);
 }
 
+.control-dock-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+
 .login-toggle {
   position: fixed;
   left: 0.75rem;
@@ -279,6 +285,13 @@ textarea {
 
 .button-edit-item .button-grid {
   justify-content: flex-end;
+}
+
+.action-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

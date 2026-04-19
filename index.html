@@ -12,6 +12,9 @@
       Login
     </button>
     <aside class="control-dock hidden" id="control-dock" aria-label="Seitenverwaltung" aria-hidden="true">
+      <div class="control-dock-header">
+        <button id="close-dock-button" type="button" class="action-button ghost small">Schließen</button>
+      </div>
       <section class="control-card" aria-labelledby="login-title">
         <h2 id="login-title">Login</h2>
         <form id="login-form" class="stack">
@@ -69,6 +72,8 @@
           </div>
           <div id="button-edit-list" class="stack"></div>
           <div class="button-grid">
+            <button id="undo-button" type="button" class="action-button ghost small">Rückgängig</button>
+            <button id="redo-button" type="button" class="action-button ghost small">Wiederholen</button>
             <button type="submit" class="action-button small">Änderungen speichern</button>
             <button id="reset-button" type="button" class="action-button ghost small">Standard wiederherstellen</button>
           </div>
