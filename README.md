@@ -17,7 +17,7 @@ Open `./index.html` in a browser.
   - category buttons (add/remove buttons, rename buttons, edit option lists),
   - per-category button colors (button background + text color),
   - optional local image upload per category button (image is shown behind the button text),
-  - background image upload,
+  - separate background image uploads for landing page, category page, and each options step,
   - colors and WebGL animation settings.
 - Click **Änderungen speichern** to persist changes.
 

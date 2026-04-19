@@ -57,7 +57,7 @@ body.dock-open main {
   align-items: center;
   text-align: center;
   padding: 2rem 1rem;
-  background-image: linear-gradient(180deg, rgba(2, 4, 10, 0.4), var(--bg-overlay)), var(--panel-bg-image);
+  background-image: linear-gradient(180deg, rgba(2, 4, 10, 0.4), var(--bg-overlay)), var(--section-bg-image, var(--panel-bg-image));
   background-size: cover;
   background-position: center;
 }
@@ -125,8 +125,10 @@ h3 {
 }
 
 .button-row {
-  width: min(70rem, 95vw);
+  width: min(70rem, 100vw);
   overflow-x: auto;
+  justify-content: flex-start;
+  padding-inline: 0.6rem;
   padding-bottom: 0.4rem;
 }
 
@@ -321,5 +323,13 @@ textarea {
   body.dock-open main {
     margin-left: 0;
     width: 100%;
+  }
+
+  .panel {
+    padding-inline: 0.75rem;
+  }
+
+  .action-button {
+    max-width: 100%;
   }
 }
