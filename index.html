@@ -8,26 +8,10 @@
   </head>
   <body>
     <canvas id="bg" aria-hidden="true"></canvas>
-    <aside class="control-dock" aria-label="Seitenverwaltung">
-      <section class="control-card hidden" id="setup-panel" aria-labelledby="setup-title">
-        <h2 id="setup-title">Erststart: Admin erstellen</h2>
-        <form id="first-admin-form" class="stack">
-          <label for="first-admin-username">Admin Benutzername</label>
-          <input id="first-admin-username" name="first-admin-username" type="text" minlength="3" required />
-          <label for="first-admin-password">Admin Passwort</label>
-          <input id="first-admin-password" name="first-admin-password" type="password" minlength="10" required />
-          <label for="first-admin-password-confirm">Passwort wiederholen</label>
-          <input
-            id="first-admin-password-confirm"
-            name="first-admin-password-confirm"
-            type="password"
-            minlength="10"
-            required
-          />
-          <button type="submit" class="action-button small">Admin anlegen</button>
-        </form>
-      </section>
-
+    <button id="login-toggle" type="button" class="action-button small ghost login-toggle" aria-expanded="false">
+      Login
+    </button>
+    <aside class="control-dock hidden" id="control-dock" aria-label="Seitenverwaltung" aria-hidden="true">
       <section class="control-card" aria-labelledby="login-title">
         <h2 id="login-title">Login</h2>
         <form id="login-form" class="stack">
@@ -47,22 +31,6 @@
         <button id="logout-button" type="button" class="action-button ghost small hidden">Abmelden</button>
       </section>
 
-      <section class="control-card hidden" id="user-admin-panel" aria-labelledby="user-admin-title">
-        <h3 id="user-admin-title">Login erstellen</h3>
-        <form id="create-user-form" class="stack">
-          <label for="new-username">Neuer Benutzername</label>
-          <input id="new-username" name="new-username" type="text" minlength="3" required />
-          <label for="new-password">Neues Passwort</label>
-          <input id="new-password" name="new-password" type="password" minlength="10" required />
-          <label for="new-role">Rolle</label>
-          <select id="new-role" name="new-role">
-            <option value="editor">Editor</option>
-            <option value="admin">Admin</option>
-          </select>
-          <button type="submit" class="action-button small">Benutzer speichern</button>
-        </form>
-      </section>
-
       <section class="control-card hidden" id="editor-panel" aria-labelledby="editor-title">
         <h3 id="editor-title">Design & Inhalte bearbeiten</h3>
         <form id="editor-form" class="stack">
@@ -74,14 +42,8 @@
           <input id="start-label-input" name="startLabel" type="text" />
           <label for="category-label-input">Kategorie-Überschrift</label>
           <input id="category-label-input" name="categoryLabel" type="text" />
-          <label for="rice-button-label-input">Basis-Button 1</label>
-          <input id="rice-button-label-input" name="riceButtonLabel" type="text" />
-          <label for="pasta-button-label-input">Basis-Button 2</label>
-          <input id="pasta-button-label-input" name="pastaButtonLabel" type="text" />
-          <label for="rice-title-input">Reis Optionen Titel</label>
-          <input id="rice-title-input" name="riceTitle" type="text" />
-          <label for="pasta-title-input">Nudeln Optionen Titel</label>
-          <input id="pasta-title-input" name="pastaTitle" type="text" />
+          <label for="background-image-input">Hintergrundbild URL (optional)</label>
+          <input id="background-image-input" name="backgroundImageUrl" type="url" placeholder="https://..." />
           <label for="accent-color-input">Akzentfarbe</label>
           <input id="accent-color-input" name="accentColor" type="color" />
           <label for="text-color-input">Textfarbe</label>
@@ -98,10 +60,11 @@
           <input id="wave-strength-input" name="waveStrength" type="range" min="0.1" max="1.8" step="0.05" />
           <label for="glow-strength-input">Glow-Stärke</label>
           <input id="glow-strength-input" name="glowStrength" type="range" min="0.05" max="1" step="0.01" />
-          <label for="rice-items-input">Reis Einträge (je Zeile ein Eintrag)</label>
-          <textarea id="rice-items-input" name="riceItems" rows="4"></textarea>
-          <label for="pasta-items-input">Nudeln Einträge (je Zeile ein Eintrag)</label>
-          <textarea id="pasta-items-input" name="pastaItems" rows="4"></textarea>
+          <div class="button-editor-header">
+            <h4>Kategorie-Buttons</h4>
+            <button id="add-category-button" type="button" class="action-button ghost small">Button hinzufügen</button>
+          </div>
+          <div id="button-edit-list" class="stack"></div>
           <div class="button-grid">
             <button type="submit" class="action-button small">Änderungen speichern</button>
             <button id="reset-button" type="button" class="action-button ghost small">Standard wiederherstellen</button>
@@ -119,29 +82,9 @@
 
       <section class="panel" id="category" aria-labelledby="category-title">
         <h2 id="category-title">Wähle eine Basis</h2>
-        <div class="button-grid">
-          <button id="rice-button" class="action-button option-button" data-target="reis-options">Reis</button>
-          <button id="pasta-button" class="action-button option-button" data-target="nudeln-options">Nudeln</button>
-        </div>
+        <div class="button-grid button-row" id="category-buttons"></div>
       </section>
-
-      <section class="panel options" id="reis-options" aria-labelledby="reis-title">
-        <h3 id="reis-title">Reis Optionen</h3>
-        <ul id="rice-list">
-          <li>Mildes Curry</li>
-          <li>Gemüsepfanne</li>
-          <li>Reissuppe</li>
-        </ul>
-      </section>
-
-      <section class="panel options" id="nudeln-options" aria-labelledby="nudeln-title">
-        <h3 id="nudeln-title">Nudeln Optionen</h3>
-        <ul id="pasta-list">
-          <li>Tomatensauce</li>
-          <li>Pesto</li>
-          <li>Gemüse-Nudeln</li>
-        </ul>
-      </section>
+      <div id="options-container"></div>
     </main>
     <script src="./app.js"></script>
   </body>

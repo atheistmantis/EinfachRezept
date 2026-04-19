@@ -8,11 +8,14 @@ Open `./index.html` in a browser.
 
 ## Login & content editing (ready to use)
 
-- On first start, create your first admin account in **Erststart: Admin erstellen**.
-- Passwords must include uppercase, lowercase, number, and special character (min. 10 chars).
-- Then log in from the left control panel.
-- As `admin`, use **Login erstellen** to create additional `editor` or `admin` accounts.
-- Logged-in users can update text content, colors, and WebGL animation tuning in **Design & Inhalte bearbeiten**.
+- Login is now opened via the small **Login** button in the upper-left corner.
+- User creation is disabled. Only already existing users in browser storage can log in.
+- Logged-in users can edit:
+  - site texts (title, subtitle, labels),
+  - category buttons (add/remove buttons, rename buttons, edit option lists),
+  - optional image URL per category button (image is shown behind the button text),
+  - background image URL,
+  - colors and WebGL animation settings.
 - Click **Änderungen speichern** to persist changes.
 
 All users, sessions, and content settings are stored in browser `localStorage` for static hosting compatibility.

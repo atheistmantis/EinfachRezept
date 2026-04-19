@@ -9,25 +9,35 @@ const STORAGE_KEYS = {
 
 const PASSWORD_HASH_VERSION = 2;
 const PASSWORD_ITERATIONS = 120000;
-const MIN_PASSWORD_LENGTH = 10;
 
 const DEFAULT_SITE_CONFIG = {
   title: "EinfachRezept",
   subtitle: "Einfach. Schnell. Gut lesbar.",
   startLabel: "START",
   categoryLabel: "Wähle eine Basis",
-  riceButtonLabel: "Reis",
-  pastaButtonLabel: "Nudeln",
-  riceTitle: "Reis Optionen",
-  pastaTitle: "Nudeln Optionen",
-  riceItems: ["Mildes Curry", "Gemüsepfanne", "Reissuppe"],
-  pastaItems: ["Tomatensauce", "Pesto", "Gemüse-Nudeln"],
+  buttons: [
+    {
+      id: "reis",
+      label: "Reis",
+      title: "Reis Optionen",
+      imageUrl: "",
+      items: ["Mildes Curry", "Gemüsepfanne", "Reissuppe"],
+    },
+    {
+      id: "nudeln",
+      label: "Nudeln",
+      title: "Nudeln Optionen",
+      imageUrl: "",
+      items: ["Tomatensauce", "Pesto", "Gemüse-Nudeln"],
+    },
+  ],
   theme: {
     accentColor: "#00d4ff",
     textColor: "#ffffff",
     backgroundColor: "#02040a",
     overlayColor: "#080c14",
     overlayOpacity: 0.75,
+    backgroundImageUrl: "",
   },
   webgl: {
     animationSpeed: 0.55,
@@ -67,18 +77,42 @@ function sanitizeItems(multilineValue, fallbackItems) {
   return items.length ? items : fallbackItems;
 }
 
-function isStrongPassword(password) {
-  return (
-    password.length >= MIN_PASSWORD_LENGTH &&
-    /[a-z]/.test(password) &&
-    /[A-Z]/.test(password) &&
-    /\d/.test(password) &&
-    /[^A-Za-z0-9]/.test(password)
-  );
+function clamp(value, min, max, fallback) {
+  const parsed = Number.parseFloat(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(max, Math.max(min, parsed));
+}
+
+function sanitizeImageUrl(value) {
+  const trimmed = String(value ?? "").trim();
+  if (!trimmed) return "";
+  const lower = trimmed.toLowerCase();
+  if (trimmed.startsWith("/") || trimmed.startsWith("./") || trimmed.startsWith("../")) return trimmed;
+
+  const schemeMatch = trimmed.match(/^([a-zA-Z][a-zA-Z\d+.-]*):/);
+  if (schemeMatch) {
+    const scheme = schemeMatch[1].toLowerCase();
+    if (scheme === "data") {
+      return /^data:image\//i.test(trimmed) ? trimmed : "";
+    }
+    if (scheme === "blob") return trimmed;
+    if (!["http", "https"].includes(scheme)) return "";
+  }
+
+  try {
+    const parsed = new URL(trimmed, window.location.href);
+    if (["http:", "https:"].includes(parsed.protocol)) return trimmed;
+  } catch {}
+
+  return "";
+}
+
+function cssUrlValue(url) {
+  return `url("${String(url).replace(/["\\\n\r\f]/g, "\\$&")}")`;
 }
 
 function hexToRgb(hex) {
-  const cleaned = hex.replace("#", "");
+  const cleaned = String(hex ?? "").replace(/^#/, "");
   const normalized = cleaned.length === 3 ? cleaned.split("").map((char) => char + char).join("") : cleaned;
   const parsed = Number.parseInt(normalized, 16);
   return {
@@ -88,16 +122,91 @@ function hexToRgb(hex) {
   };
 }
 
-function setListItems(listId, items) {
-  const list = document.getElementById(listId);
-  if (!list) return;
-  list.replaceChildren(
-    ...items.map((itemText) => {
-      const item = document.createElement("li");
-      item.textContent = itemText;
-      return item;
-    }),
-  );
+function slugify(value) {
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function normalizeButtons(rawButtons) {
+  const fallback = DEFAULT_SITE_CONFIG.buttons;
+  if (!Array.isArray(rawButtons) || !rawButtons.length) return deepClone(fallback);
+
+  const usedIds = new Set();
+  const normalized = [];
+  rawButtons.forEach((entry, index) => {
+    const fallbackSource = fallback[index % fallback.length];
+    const label = sanitizeString(entry?.label, fallbackSource.label);
+    const title = sanitizeString(entry?.title, `${label} Optionen`);
+    const idBase = sanitizeString(entry?.id, slugify(label) || `button-${index + 1}`);
+    let id = idBase;
+    let suffix = 2;
+    while (usedIds.has(id)) {
+      id = `${idBase}-${suffix}`;
+      suffix += 1;
+    }
+    usedIds.add(id);
+
+    normalized.push({
+      id,
+      label,
+      title,
+      imageUrl: sanitizeImageUrl(entry?.imageUrl),
+      items: Array.isArray(entry?.items) && entry.items.length
+        ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
+        : deepClone(fallbackSource.items),
+    });
+  });
+
+  return normalized.length ? normalized : deepClone(fallback);
+}
+
+function normalizeSiteConfig(rawConfig) {
+  const defaults = deepClone(DEFAULT_SITE_CONFIG);
+  if (!rawConfig || typeof rawConfig !== "object") return defaults;
+
+  const oldStyleButtons = [
+    {
+      id: slugify(rawConfig.riceButtonLabel || "reis") || "reis",
+      label: sanitizeString(rawConfig.riceButtonLabel, defaults.buttons[0].label),
+      title: sanitizeString(rawConfig.riceTitle, defaults.buttons[0].title),
+      imageUrl: "",
+      items: Array.isArray(rawConfig.riceItems) && rawConfig.riceItems.length ? rawConfig.riceItems : defaults.buttons[0].items,
+    },
+    {
+      id: slugify(rawConfig.pastaButtonLabel || "nudeln") || "nudeln",
+      label: sanitizeString(rawConfig.pastaButtonLabel, defaults.buttons[1].label),
+      title: sanitizeString(rawConfig.pastaTitle, defaults.buttons[1].title),
+      imageUrl: "",
+      items: Array.isArray(rawConfig.pastaItems) && rawConfig.pastaItems.length
+        ? rawConfig.pastaItems
+        : defaults.buttons[1].items,
+    },
+  ];
+
+  return {
+    title: sanitizeString(rawConfig.title, defaults.title),
+    subtitle: sanitizeString(rawConfig.subtitle, defaults.subtitle),
+    startLabel: sanitizeString(rawConfig.startLabel, defaults.startLabel),
+    categoryLabel: sanitizeString(rawConfig.categoryLabel, defaults.categoryLabel),
+    buttons: normalizeButtons(Array.isArray(rawConfig.buttons) ? rawConfig.buttons : oldStyleButtons),
+    theme: {
+      accentColor: sanitizeString(rawConfig.theme?.accentColor, defaults.theme.accentColor),
+      textColor: sanitizeString(rawConfig.theme?.textColor, defaults.theme.textColor),
+      backgroundColor: sanitizeString(rawConfig.theme?.backgroundColor, defaults.theme.backgroundColor),
+      overlayColor: sanitizeString(rawConfig.theme?.overlayColor, defaults.theme.overlayColor),
+      overlayOpacity: clamp(rawConfig.theme?.overlayOpacity, 0, 1, defaults.theme.overlayOpacity),
+      backgroundImageUrl: sanitizeImageUrl(rawConfig.theme?.backgroundImageUrl || rawConfig.backgroundImageUrl || ""),
+    },
+    webgl: {
+      animationSpeed: clamp(rawConfig.webgl?.animationSpeed, 0.05, 1.5, defaults.webgl.animationSpeed),
+      waveStrength: clamp(rawConfig.webgl?.waveStrength, 0.1, 1.8, defaults.webgl.waveStrength),
+      glowStrength: clamp(rawConfig.webgl?.glowStrength, 0.05, 1, defaults.webgl.glowStrength),
+    },
+  };
 }
 
 function applySiteConfig(config) {
@@ -105,30 +214,68 @@ function applySiteConfig(config) {
   const subtitle = document.getElementById("subtitle");
   const startButton = document.getElementById("start-button");
   const categoryTitle = document.getElementById("category-title");
-  const riceButton = document.getElementById("rice-button");
-  const pastaButton = document.getElementById("pasta-button");
-  const riceTitle = document.getElementById("reis-title");
-  const pastaTitle = document.getElementById("nudeln-title");
+  const categoryButtons = document.getElementById("category-buttons");
+  const optionsContainer = document.getElementById("options-container");
 
   if (title) title.textContent = config.title;
   if (subtitle) subtitle.textContent = config.subtitle;
   if (startButton) startButton.textContent = config.startLabel;
   if (categoryTitle) categoryTitle.textContent = config.categoryLabel;
-  if (riceButton) riceButton.textContent = config.riceButtonLabel;
-  if (pastaButton) pastaButton.textContent = config.pastaButtonLabel;
-  if (riceTitle) riceTitle.textContent = config.riceTitle;
-  if (pastaTitle) pastaTitle.textContent = config.pastaTitle;
 
-  setListItems("rice-list", config.riceItems);
-  setListItems("pasta-list", config.pastaItems);
+  if (categoryButtons) {
+    categoryButtons.replaceChildren(
+      ...config.buttons.map((buttonConfig, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "action-button option-button";
+        button.dataset.target = `options-${buttonConfig.id || index + 1}`;
+        if (buttonConfig.imageUrl) {
+          button.classList.add("has-image");
+          button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
+        } else {
+          button.style.backgroundImage = "";
+        }
+        const label = document.createElement("span");
+        label.textContent = buttonConfig.label;
+        button.append(label);
+        return button;
+      }),
+    );
+  }
+
+  if (optionsContainer) {
+    optionsContainer.replaceChildren(
+      ...config.buttons.map((buttonConfig, index) => {
+        const section = document.createElement("section");
+        section.className = "panel options";
+        section.id = `options-${buttonConfig.id || index + 1}`;
+
+        const heading = document.createElement("h3");
+        heading.textContent = buttonConfig.title;
+
+        const list = document.createElement("ul");
+        list.replaceChildren(
+          ...buttonConfig.items.map((itemText) => {
+            const item = document.createElement("li");
+            item.textContent = itemText;
+            return item;
+          }),
+        );
+
+        section.append(heading, list);
+        return section;
+      }),
+    );
+  }
 
   document.documentElement.style.setProperty("--accent", config.theme.accentColor);
   document.documentElement.style.setProperty("--text", config.theme.textColor);
   document.documentElement.style.setProperty("--background", config.theme.backgroundColor);
   const rgb = hexToRgb(config.theme.overlayColor);
+  document.documentElement.style.setProperty("--bg-overlay", `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${config.theme.overlayOpacity})`);
   document.documentElement.style.setProperty(
-    "--bg-overlay",
-    `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${config.theme.overlayOpacity})`,
+    "--panel-bg-image",
+    config.theme.backgroundImageUrl ? cssUrlValue(config.theme.backgroundImageUrl) : "none",
   );
 }
 
@@ -258,9 +405,9 @@ function setupWebGLBackground(getVisualSettings) {
       pointer.y = window.innerHeight - event.clientY;
     });
   }
-  resize();
 
-  let startTime = performance.now();
+  resize();
+  const startTime = performance.now();
 
   function render(now) {
     const visualSettings = getVisualSettings();
@@ -281,42 +428,90 @@ function setupWebGLBackground(getVisualSettings) {
   requestAnimationFrame(render);
 }
 
+function hideAllOptionSections() {
+  document.querySelectorAll(".options").forEach((section) => section.classList.remove("active"));
+}
+
 function initNavigation() {
   const startButton = document.getElementById("start-button");
   const categorySection = document.getElementById("category");
-  const optionButtons = document.querySelectorAll(".option-button");
+  const categoryButtons = document.getElementById("category-buttons");
 
   startButton?.addEventListener("click", () => {
     categorySection?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  optionButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const targetId = button.dataset.target;
-      if (!targetId) return;
+  categoryButtons?.addEventListener("click", (event) => {
+    const button = event.target.closest(".option-button");
+    if (!button) return;
+    const targetId = button.dataset.target;
+    if (!targetId) return;
 
-      document.querySelectorAll(".options").forEach((section) => {
-        section.classList.remove("active");
-      });
-
-      const targetSection = document.getElementById(targetId);
-      targetSection?.classList.add("active");
-      targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    hideAllOptionSections();
+    const targetSection = document.getElementById(targetId);
+    targetSection?.classList.add("active");
+    targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+}
+
+function createButtonEditorItem(buttonConfig) {
+  const item = document.createElement("div");
+  item.className = "button-edit-item stack";
+
+  const title = document.createElement("strong");
+  title.textContent = "Button";
+
+  const labelLabel = document.createElement("label");
+  labelLabel.textContent = "Button Name";
+  const labelInput = document.createElement("input");
+  labelInput.type = "text";
+  labelInput.name = "buttonLabel";
+  labelInput.value = buttonConfig.label;
+
+  const sectionLabel = document.createElement("label");
+  sectionLabel.textContent = "Optionen Titel";
+  const sectionInput = document.createElement("input");
+  sectionInput.type = "text";
+  sectionInput.name = "buttonTitle";
+  sectionInput.value = buttonConfig.title;
+
+  const imageLabel = document.createElement("label");
+  imageLabel.textContent = "Button Hintergrundbild URL (optional)";
+  const imageInput = document.createElement("input");
+  imageInput.type = "url";
+  imageInput.name = "buttonImageUrl";
+  imageInput.placeholder = "https://...";
+  imageInput.value = buttonConfig.imageUrl;
+
+  const itemsLabel = document.createElement("label");
+  itemsLabel.textContent = "Optionen Einträge (je Zeile ein Eintrag)";
+  const itemsInput = document.createElement("textarea");
+  itemsInput.name = "buttonItems";
+  itemsInput.rows = 4;
+  itemsInput.value = buttonConfig.items.join("\n");
+
+  const controls = document.createElement("div");
+  controls.className = "button-grid";
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "action-button ghost small remove-button-item";
+  remove.textContent = "Entfernen";
+  controls.append(remove);
+
+  item.append(title, labelLabel, labelInput, sectionLabel, sectionInput, imageLabel, imageInput, itemsLabel, itemsInput, controls);
+  return item;
 }
 
 function populateEditorForm(config) {
   const form = document.getElementById("editor-form");
-  if (!form) return;
+  const list = document.getElementById("button-edit-list");
+  if (!form || !list) return;
+
   form.title.value = config.title;
   form.subtitle.value = config.subtitle;
   form.startLabel.value = config.startLabel;
   form.categoryLabel.value = config.categoryLabel;
-  form.riceButtonLabel.value = config.riceButtonLabel;
-  form.pastaButtonLabel.value = config.pastaButtonLabel;
-  form.riceTitle.value = config.riceTitle;
-  form.pastaTitle.value = config.pastaTitle;
+  form.backgroundImageUrl.value = config.theme.backgroundImageUrl;
   form.accentColor.value = config.theme.accentColor;
   form.textColor.value = config.theme.textColor;
   form.backgroundColor.value = config.theme.backgroundColor;
@@ -325,39 +520,57 @@ function populateEditorForm(config) {
   form.animationSpeed.value = config.webgl.animationSpeed;
   form.waveStrength.value = config.webgl.waveStrength;
   form.glowStrength.value = config.webgl.glowStrength;
-  form.riceItems.value = config.riceItems.join("\n");
-  form.pastaItems.value = config.pastaItems.join("\n");
+
+  list.replaceChildren(...config.buttons.map((buttonConfig) => createButtonEditorItem(buttonConfig)));
+}
+
+function readButtonEditorList() {
+  const items = Array.from(document.querySelectorAll("#button-edit-list .button-edit-item"));
+  const buttons = items.map((item, index) => {
+    const label = sanitizeString(item.querySelector('[name="buttonLabel"]')?.value, `Button ${index + 1}`);
+    const title = sanitizeString(item.querySelector('[name="buttonTitle"]')?.value, `${label} Optionen`);
+    const imageUrl = sanitizeImageUrl(item.querySelector('[name="buttonImageUrl"]')?.value);
+    const optionItems = sanitizeItems(
+      item.querySelector('[name="buttonItems"]')?.value,
+      DEFAULT_SITE_CONFIG.buttons[index % DEFAULT_SITE_CONFIG.buttons.length].items,
+    );
+    return {
+      id: slugify(label) || `button-${index + 1}`,
+      label,
+      title,
+      imageUrl,
+      items: optionItems,
+    };
+  });
+
+  return normalizeButtons(buttons.length ? buttons : deepClone(DEFAULT_SITE_CONFIG.buttons));
 }
 
 function readEditorForm(currentConfig) {
   const form = document.getElementById("editor-form");
   if (!form) return currentConfig;
 
-  return {
+  return normalizeSiteConfig({
     ...currentConfig,
     title: sanitizeString(form.title.value, DEFAULT_SITE_CONFIG.title),
     subtitle: sanitizeString(form.subtitle.value, DEFAULT_SITE_CONFIG.subtitle),
     startLabel: sanitizeString(form.startLabel.value, DEFAULT_SITE_CONFIG.startLabel),
     categoryLabel: sanitizeString(form.categoryLabel.value, DEFAULT_SITE_CONFIG.categoryLabel),
-    riceButtonLabel: sanitizeString(form.riceButtonLabel.value, DEFAULT_SITE_CONFIG.riceButtonLabel),
-    pastaButtonLabel: sanitizeString(form.pastaButtonLabel.value, DEFAULT_SITE_CONFIG.pastaButtonLabel),
-    riceTitle: sanitizeString(form.riceTitle.value, DEFAULT_SITE_CONFIG.riceTitle),
-    pastaTitle: sanitizeString(form.pastaTitle.value, DEFAULT_SITE_CONFIG.pastaTitle),
-    riceItems: sanitizeItems(form.riceItems.value, DEFAULT_SITE_CONFIG.riceItems),
-    pastaItems: sanitizeItems(form.pastaItems.value, DEFAULT_SITE_CONFIG.pastaItems),
+    buttons: readButtonEditorList(),
     theme: {
       accentColor: form.accentColor.value || DEFAULT_SITE_CONFIG.theme.accentColor,
       textColor: form.textColor.value || DEFAULT_SITE_CONFIG.theme.textColor,
       backgroundColor: form.backgroundColor.value || DEFAULT_SITE_CONFIG.theme.backgroundColor,
       overlayColor: form.overlayColor.value || DEFAULT_SITE_CONFIG.theme.overlayColor,
-      overlayOpacity: Number.parseFloat(form.overlayOpacity.value) || DEFAULT_SITE_CONFIG.theme.overlayOpacity,
+      overlayOpacity: clamp(form.overlayOpacity.value, 0, 1, DEFAULT_SITE_CONFIG.theme.overlayOpacity),
+      backgroundImageUrl: sanitizeImageUrl(form.backgroundImageUrl.value),
     },
     webgl: {
-      animationSpeed: Number.parseFloat(form.animationSpeed.value) || DEFAULT_SITE_CONFIG.webgl.animationSpeed,
-      waveStrength: Number.parseFloat(form.waveStrength.value) || DEFAULT_SITE_CONFIG.webgl.waveStrength,
-      glowStrength: Number.parseFloat(form.glowStrength.value) || DEFAULT_SITE_CONFIG.webgl.glowStrength,
+      animationSpeed: clamp(form.animationSpeed.value, 0.05, 1.5, DEFAULT_SITE_CONFIG.webgl.animationSpeed),
+      waveStrength: clamp(form.waveStrength.value, 0.1, 1.8, DEFAULT_SITE_CONFIG.webgl.waveStrength),
+      glowStrength: clamp(form.glowStrength.value, 0.05, 1, DEFAULT_SITE_CONFIG.webgl.glowStrength),
     },
-  };
+  });
 }
 
 function toHex(buffer) {
@@ -369,12 +582,6 @@ function toHex(buffer) {
 function fromHex(hexString) {
   const pairs = hexString.match(/.{1,2}/g) ?? [];
   return new Uint8Array(pairs.map((pair) => Number.parseInt(pair, 16)));
-}
-
-function createSalt() {
-  const salt = new Uint8Array(16);
-  crypto.getRandomValues(salt);
-  return toHex(salt);
 }
 
 async function derivePbkdf2Hash(password, saltHex, iterations = PASSWORD_ITERATIONS) {
@@ -392,6 +599,12 @@ async function derivePbkdf2Hash(password, saltHex, iterations = PASSWORD_ITERATI
     256,
   );
   return toHex(bits);
+}
+
+function createSalt() {
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+  return toHex(salt);
 }
 
 async function createPasswordRecord(password) {
@@ -421,30 +634,35 @@ async function verifyPassword(user, password) {
 
 async function initApp() {
   let users = getStoredJSON(STORAGE_KEYS.users, []);
-  let currentConfig = getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG));
-  if (!currentConfig || typeof currentConfig !== "object") {
-    currentConfig = deepClone(DEFAULT_SITE_CONFIG);
-  }
+  if (!Array.isArray(users)) users = [];
+
+  let currentConfig = normalizeSiteConfig(getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG)));
   applySiteConfig(currentConfig);
   populateEditorForm(currentConfig);
   setupWebGLBackground(() => currentConfig.webgl);
   initNavigation();
 
+  const controlDock = document.getElementById("control-dock");
+  const loginToggle = document.getElementById("login-toggle");
   const loginForm = document.getElementById("login-form");
-  const setupPanel = document.getElementById("setup-panel");
-  const firstAdminForm = document.getElementById("first-admin-form");
   const logoutButton = document.getElementById("logout-button");
   const sessionStatus = document.getElementById("session-status");
   const editorPanel = document.getElementById("editor-panel");
-  const userAdminPanel = document.getElementById("user-admin-panel");
   const editorForm = document.getElementById("editor-form");
-  const createUserForm = document.getElementById("create-user-form");
   const resetButton = document.getElementById("reset-button");
+  const addCategoryButton = document.getElementById("add-category-button");
+  const buttonEditList = document.getElementById("button-edit-list");
 
   function setVisibility(element, isVisible) {
     if (!element) return;
     element.classList.toggle("hidden", !isVisible);
     element.setAttribute("aria-hidden", String(!isVisible));
+  }
+
+  function setDockVisibility(isVisible) {
+    setVisibility(controlDock, isVisible);
+    loginToggle?.setAttribute("aria-expanded", String(isVisible));
+    document.body.classList.toggle("dock-open", isVisible);
   }
 
   function findUserByName(username) {
@@ -463,15 +681,13 @@ async function initApp() {
   function renderSessionState() {
     if (!sessionStatus) return;
     const hasUsers = users.length > 0;
-    setVisibility(setupPanel, !hasUsers);
-    setVisibility(loginForm, hasUsers);
 
     if (!hasUsers) {
       activeSession = null;
       localStorage.removeItem(STORAGE_KEYS.session);
-      sessionStatus.textContent = "Erstelle zuerst einen Admin-Login.";
+      sessionStatus.textContent = "Keine gespeicherten Nutzer gefunden. Bitte dieses Gerät mit vorhandenen Logins verwenden.";
       setVisibility(editorPanel, false);
-      setVisibility(userAdminPanel, false);
+      setVisibility(loginForm, false);
       setVisibility(logoutButton, false);
       return;
     }
@@ -479,56 +695,48 @@ async function initApp() {
     if (!activeSession) {
       sessionStatus.textContent = "Nicht angemeldet.";
       setVisibility(editorPanel, false);
-      setVisibility(userAdminPanel, false);
+      setVisibility(loginForm, true);
       setVisibility(logoutButton, false);
       return;
     }
 
-    sessionStatus.textContent = `Angemeldet als ${activeSession.username} (${activeSession.role}).`;
+    sessionStatus.textContent = `Angemeldet als ${activeSession.username}.`;
     setVisibility(editorPanel, true);
+    setVisibility(loginForm, false);
     setVisibility(logoutButton, true);
-    if (activeSession.role === "admin") {
-      setVisibility(userAdminPanel, true);
-    } else {
-      setVisibility(userAdminPanel, false);
-    }
   }
 
-  firstAdminForm?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (users.length > 0) return;
+  loginToggle?.addEventListener("click", () => {
+    const isOpen = controlDock ? !controlDock.classList.contains("hidden") : false;
+    setDockVisibility(!isOpen);
+  });
 
-    const formData = new FormData(firstAdminForm);
-    const username = sanitizeString(formData.get("first-admin-username"), "");
-    const password = String(formData.get("first-admin-password") ?? "");
-    const passwordConfirm = String(formData.get("first-admin-password-confirm") ?? "");
+  buttonEditList?.addEventListener("click", (event) => {
+    const removeButton = event.target.closest(".remove-button-item");
+    if (!removeButton) return;
+    const allItems = buttonEditList.querySelectorAll(".button-edit-item");
+    if (allItems.length <= 1) return;
+    const item = removeButton.closest(".button-edit-item");
+    item?.remove();
+  });
 
-    if (!username) {
-      sessionStatus.textContent = "Admin konnte nicht erstellt werden. Benutzername fehlt.";
-      return;
-    }
-    if (!password || !passwordConfirm || password !== passwordConfirm) {
-      sessionStatus.textContent = "Admin konnte nicht erstellt werden. Passwörter stimmen nicht überein.";
-      return;
-    }
-    if (!isStrongPassword(password)) {
-      sessionStatus.textContent =
-        "Admin konnte nicht erstellt werden. Nutze ein starkes Passwort (Groß/Klein/Zahl/Sonderzeichen, min. 10).";
-      return;
-    }
-
-    const passwordRecord = await createPasswordRecord(password);
-    users = [{ username, role: "admin", ...passwordRecord }];
-    saveStoredJSON(STORAGE_KEYS.users, users);
-    firstAdminForm.reset();
-    sessionStatus.textContent = `Admin "${username}" erstellt. Bitte einloggen.`;
-    renderSessionState();
+  addCategoryButton?.addEventListener("click", () => {
+    if (!buttonEditList) return;
+    buttonEditList.append(
+      createButtonEditorItem({
+        id: crypto.randomUUID(),
+        label: "Neuer Button",
+        title: "Neue Optionen",
+        imageUrl: "",
+        items: ["Option 1"],
+      }),
+    );
   });
 
   loginForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!users.length) {
-      sessionStatus.textContent = "Bitte zuerst einen Admin anlegen.";
+      sessionStatus.textContent = "Keine Nutzer vorhanden.";
       return;
     }
 
@@ -566,35 +774,6 @@ async function initApp() {
     renderSessionState();
   });
 
-  createUserForm?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (!activeSession || activeSession.role !== "admin") return;
-
-    const formData = new FormData(createUserForm);
-    const username = sanitizeString(formData.get("new-username"), "");
-    const password = String(formData.get("new-password") ?? "");
-    const role = formData.get("new-role") === "admin" ? "admin" : "editor";
-
-    if (!username) {
-      sessionStatus.textContent = "Benutzer konnte nicht erstellt werden. Benutzername fehlt.";
-      return;
-    }
-    if (!isStrongPassword(password)) {
-      sessionStatus.textContent = "Benutzer konnte nicht erstellt werden. Passwort ist zu schwach.";
-      return;
-    }
-    if (findUserByName(username)) {
-      sessionStatus.textContent = "Benutzername existiert bereits.";
-      return;
-    }
-
-    const passwordRecord = await createPasswordRecord(password);
-    users = [...users, { username, role, ...passwordRecord }];
-    saveStoredJSON(STORAGE_KEYS.users, users);
-    createUserForm.reset();
-    sessionStatus.textContent = `Benutzer "${username}" erstellt.`;
-  });
-
   editorForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!activeSession) {
@@ -605,6 +784,7 @@ async function initApp() {
     currentConfig = readEditorForm(currentConfig);
     applySiteConfig(currentConfig);
     saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
+    hideAllOptionSections();
     sessionStatus.textContent = "Änderungen gespeichert.";
   });
 
@@ -617,10 +797,12 @@ async function initApp() {
     applySiteConfig(currentConfig);
     populateEditorForm(currentConfig);
     saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
+    hideAllOptionSections();
     sessionStatus.textContent = "Standardwerte wiederhergestellt.";
   });
 
   renderSessionState();
+  setDockVisibility(Boolean(activeSession));
 }
 
 initApp();
