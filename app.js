@@ -503,7 +503,15 @@ async function initApp() {
     const password = String(formData.get("first-admin-password") ?? "");
     const passwordConfirm = String(formData.get("first-admin-password-confirm") ?? "");
 
-    if (!username || !password || password !== passwordConfirm || !isStrongPassword(password)) {
+    if (!username) {
+      sessionStatus.textContent = "Admin konnte nicht erstellt werden. Benutzername fehlt.";
+      return;
+    }
+    if (!password || !passwordConfirm || password !== passwordConfirm) {
+      sessionStatus.textContent = "Admin konnte nicht erstellt werden. Passwörter stimmen nicht überein.";
+      return;
+    }
+    if (!isStrongPassword(password)) {
       sessionStatus.textContent =
         "Admin konnte nicht erstellt werden. Nutze ein starkes Passwort (Groß/Klein/Zahl/Sonderzeichen, min. 10).";
       return;
@@ -567,7 +575,11 @@ async function initApp() {
     const password = String(formData.get("new-password") ?? "");
     const role = formData.get("new-role") === "admin" ? "admin" : "editor";
 
-    if (!username || !isStrongPassword(password)) {
+    if (!username) {
+      sessionStatus.textContent = "Benutzer konnte nicht erstellt werden. Benutzername fehlt.";
+      return;
+    }
+    if (!isStrongPassword(password)) {
       sessionStatus.textContent = "Benutzer konnte nicht erstellt werden. Passwort ist zu schwach.";
       return;
     }
