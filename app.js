@@ -87,23 +87,32 @@ function sanitizeImageUrl(value) {
   const trimmed = String(value ?? "").trim();
   if (!trimmed) return "";
   const lower = trimmed.toLowerCase();
-  if (lower.startsWith("javascript:")) return "";
-  if (lower.startsWith("data:image/")) return trimmed;
-  if (lower.startsWith("blob:")) return trimmed;
+  if (trimmed.startsWith("/") || trimmed.startsWith("./") || trimmed.startsWith("../")) return trimmed;
+
+  const schemeMatch = trimmed.match(/^([a-zA-Z][a-zA-Z\d+.-]*):/);
+  if (schemeMatch) {
+    const scheme = schemeMatch[1].toLowerCase();
+    if (scheme === "data") {
+      return /^data:image\//i.test(trimmed) ? trimmed : "";
+    }
+    if (scheme === "blob") return trimmed;
+    if (!["http", "https"].includes(scheme)) return "";
+  }
 
   try {
     const parsed = new URL(trimmed, window.location.href);
     if (["http:", "https:"].includes(parsed.protocol)) return trimmed;
-    if (parsed.protocol === window.location.protocol && parsed.origin === window.location.origin) return trimmed;
-  } catch {
-    if (trimmed.startsWith("/") || trimmed.startsWith("./") || trimmed.startsWith("../")) return trimmed;
-  }
+  } catch {}
 
   return "";
 }
 
+function cssUrlValue(url) {
+  return `url("${String(url).replace(/["\\\n\r\f]/g, "\\$&")}")`;
+}
+
 function hexToRgb(hex) {
-  const cleaned = String(hex ?? "").replace("#", "");
+  const cleaned = String(hex ?? "").replace(/^#/, "");
   const normalized = cleaned.length === 3 ? cleaned.split("").map((char) => char + char).join("") : cleaned;
   const parsed = Number.parseInt(normalized, 16);
   return {
@@ -222,7 +231,7 @@ function applySiteConfig(config) {
         button.dataset.target = `options-${buttonConfig.id || index + 1}`;
         if (buttonConfig.imageUrl) {
           button.classList.add("has-image");
-          button.style.backgroundImage = `url("${buttonConfig.imageUrl}")`;
+          button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
         } else {
           button.style.backgroundImage = "";
         }
@@ -266,7 +275,7 @@ function applySiteConfig(config) {
   document.documentElement.style.setProperty("--bg-overlay", `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${config.theme.overlayOpacity})`);
   document.documentElement.style.setProperty(
     "--panel-bg-image",
-    config.theme.backgroundImageUrl ? `url("${config.theme.backgroundImageUrl}")` : "none",
+    config.theme.backgroundImageUrl ? cssUrlValue(config.theme.backgroundImageUrl) : "none",
   );
 }
 
@@ -676,7 +685,7 @@ async function initApp() {
     if (!hasUsers) {
       activeSession = null;
       localStorage.removeItem(STORAGE_KEYS.session);
-      sessionStatus.textContent = "Keine Nutzer vorhanden. Bitte vorhandene Login-Daten im Browser-Speicher nutzen.";
+      sessionStatus.textContent = "Keine gespeicherten Nutzer gefunden. Bitte dieses Gerät mit vorhandenen Logins verwenden.";
       setVisibility(editorPanel, false);
       setVisibility(loginForm, false);
       setVisibility(logoutButton, false);
@@ -715,7 +724,7 @@ async function initApp() {
     if (!buttonEditList) return;
     buttonEditList.append(
       createButtonEditorItem({
-        id: `button-${buttonEditList.querySelectorAll(".button-edit-item").length + 1}`,
+        id: crypto.randomUUID(),
         label: "Neuer Button",
         title: "Neue Optionen",
         imageUrl: "",
@@ -774,7 +783,6 @@ async function initApp() {
 
     currentConfig = readEditorForm(currentConfig);
     applySiteConfig(currentConfig);
-    populateEditorForm(currentConfig);
     saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
     hideAllOptionSections();
     sessionStatus.textContent = "Änderungen gespeichert.";
