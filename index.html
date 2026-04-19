@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EinfachRezept</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="bg" aria-hidden="true"></canvas>
+    <main>
+      <section class="panel hero" id="top" aria-labelledby="site-title">
+        <h1 id="site-title">EinfachRezept</h1>
+        <p class="subtitle">Einfach. Schnell. Gut lesbar.</p>
+        <button id="start-button" class="action-button">START</button>
+      </section>
+
+      <section class="panel" id="category" aria-labelledby="category-title">
+        <h2 id="category-title">Wähle eine Basis</h2>
+        <div class="button-grid" role="group" aria-label="Basis auswählen">
+          <button class="action-button option-button" data-target="reis-options">Reis</button>
+          <button class="action-button option-button" data-target="nudeln-options">Nudeln</button>
+        </div>
+      </section>
+
+      <section class="panel options" id="reis-options" aria-labelledby="reis-title">
+        <h3 id="reis-title">Reis Optionen</h3>
+        <ul>
+          <li>Mildes Curry</li>
+          <li>Gemüsepfanne</li>
+          <li>Reissuppe</li>
+        </ul>
+      </section>
+
+      <section class="panel options" id="nudeln-options" aria-labelledby="nudeln-title">
+        <h3 id="nudeln-title">Nudeln Optionen</h3>
+        <ul>
+          <li>Tomatensauce</li>
+          <li>Pesto</li>
+          <li>Gemüse-Nudeln</li>
+        </ul>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
