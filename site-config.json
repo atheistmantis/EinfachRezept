@@ -1,0 +1,46 @@
+{
+  "title": "EinfachRezept",
+  "subtitle": "Einfach. Schnell. Gut lesbar.",
+  "startLabel": "START",
+  "categoryLabel": "Wähle eine Basis",
+  "buttons": [
+    {
+      "id": "reis",
+      "label": "Reis",
+      "title": "Reis Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "",
+      "stepBackgroundImageUrl": "",
+      "items": ["Mildes Curry", "Gemüsepfanne", "Reissuppe"]
+    },
+    {
+      "id": "nudeln",
+      "label": "Nudeln",
+      "title": "Nudeln Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "",
+      "stepBackgroundImageUrl": "",
+      "items": ["Tomatensauce", "Pesto", "Gemüse-Nudeln"]
+    }
+  ],
+  "theme": {
+    "accentColor": "#00d4ff",
+    "textColor": "#ffffff",
+    "backgroundColor": "#02040a",
+    "overlayColor": "#080c14",
+    "overlayOpacity": 0.75,
+    "landingBackgroundImageUrl": "",
+    "categoryBackgroundImageUrl": "",
+    "buttonFontFamily": "Arial, Helvetica, sans-serif",
+    "buttonFontWeight": 700,
+    "buttonBorderRadius": 1,
+    "buttonFontSize": 1.65
+  },
+  "webgl": {
+    "animationSpeed": 0.55,
+    "waveStrength": 0.8,
+    "glowStrength": 0.28
+  }
+}
