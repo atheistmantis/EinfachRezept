@@ -6,7 +6,7 @@
   --accent-contrast: #00111a;
   --background: #02040a;
   --panel-bg-image: none;
-  --dock-width: min(31rem, 40vw);
+  --dock-width: 50vw;
   --btn-border-radius: 1rem;
   --btn-font-size: 1.65rem;
   --btn-font-family: Arial, Helvetica, sans-serif;
@@ -295,6 +295,10 @@ textarea {
 
 .button-edit-item .button-grid {
   justify-content: flex-end;
+}
+
+.control-card .button-grid {
+  flex-wrap: wrap;
 }
 
 .action-button:disabled {
