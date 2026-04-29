@@ -36,6 +36,9 @@
 
       <section class="control-card hidden" id="editor-panel" aria-labelledby="editor-title">
         <h3 id="editor-title">Design & Inhalte bearbeiten</h3>
+        <div class="spider-map-open-wrapper">
+          <button id="spider-map-open" type="button" class="action-button small">🕸 Spider Map</button>
+        </div>
         <form id="editor-form" class="stack">
           <label for="title-input">Titel</label>
           <input id="title-input" name="title" type="text" />
@@ -127,5 +130,20 @@
       <div id="options-container"></div>
     </main>
     <script src="./app.js"></script>
+
+    <div id="spider-map-overlay" class="spider-map-overlay hidden" aria-hidden="true" role="dialog" aria-label="Spider Map Editor" aria-modal="true">
+      <div class="spider-map-toolbar">
+        <span class="spider-map-title">Spider Map – Webseiten-Übersicht</span>
+        <span class="spider-map-legend" aria-hidden="true">
+          <span class="sm-legend-dot haupt"></span> Haupt-Button
+          <span class="sm-legend-dot side"></span> Side-Button
+        </span>
+        <button id="spider-map-add-haupt" type="button" class="action-button small">+ Haupt-Button</button>
+        <button id="spider-map-close" type="button" class="action-button ghost small">Schließen</button>
+      </div>
+      <div id="spider-map-canvas" class="spider-map-canvas">
+        <svg id="spider-map-svg" class="spider-map-svg" aria-hidden="true"></svg>
+      </div>
+    </div>
   </body>
 </html>

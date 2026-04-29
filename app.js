@@ -921,6 +921,439 @@ function ensureRequiredAdminUsers(existingUsers) {
   return { users, hasChanges };
 }
 
+function initSpiderMap(getConfig, onConfigChange) {
+  const overlay = document.getElementById("spider-map-overlay");
+  const mapCanvas = document.getElementById("spider-map-canvas");
+  const mapSvg = document.getElementById("spider-map-svg");
+  const openBtn = document.getElementById("spider-map-open");
+  const closeBtn = document.getElementById("spider-map-close");
+  const addHauptBtn = document.getElementById("spider-map-add-haupt");
+
+  if (!overlay || !mapCanvas || !mapSvg) return;
+
+  const HAUPT_RADIUS = 240;
+  const SIDE_RADIUS = 165;
+  const SNAP_DIST = 90;
+  const SNAP_ATTACH_DIST = 170;
+
+  let nodes = [];
+  let savedPositions = {};
+  let dragging = null;
+  let snapTargetId = null;
+
+  function getMapCenter() {
+    return { x: mapCanvas.clientWidth / 2, y: mapCanvas.clientHeight / 2 };
+  }
+
+  function computeDefaultPositions(config) {
+    const { x: cx, y: cy } = getMapCenter();
+    const positions = { center: { x: cx, y: cy } };
+
+    config.buttons.forEach((btn, btnIdx) => {
+      const total = config.buttons.length;
+      const angle = (2 * Math.PI * btnIdx / total) - Math.PI / 2;
+      const hauptId = `haupt-${btn.id}`;
+      const hx = cx + Math.cos(angle) * HAUPT_RADIUS;
+      const hy = cy + Math.sin(angle) * HAUPT_RADIUS;
+      positions[hauptId] = { x: hx, y: hy };
+
+      btn.items.forEach((_, itemIdx) => {
+        const count = btn.items.length;
+        const fanSpread = Math.PI / 2.5;
+        const sideAngle = count > 1
+          ? angle + fanSpread * (itemIdx / (count - 1) - 0.5)
+          : angle;
+        positions[`side-${hauptId}-${itemIdx}`] = {
+          x: hx + Math.cos(sideAngle) * SIDE_RADIUS,
+          y: hy + Math.sin(sideAngle) * SIDE_RADIUS,
+        };
+      });
+    });
+
+    return positions;
+  }
+
+  function buildNodesFromConfig(config) {
+    const defaultPos = computeDefaultPositions(config);
+    const getPos = (id) => savedPositions[id] || defaultPos[id] || getMapCenter();
+    const result = [];
+
+    const cp = getPos("center");
+    result.push({ id: "center", type: "center", label: "Webseite", x: cp.x, y: cp.y, parentId: null });
+
+    config.buttons.forEach((btn, btnIdx) => {
+      const hauptId = `haupt-${btn.id}`;
+      const hp = getPos(hauptId);
+      result.push({
+        id: hauptId,
+        type: "haupt",
+        label: btn.label,
+        x: hp.x,
+        y: hp.y,
+        parentId: "center",
+        buttonId: btn.id,
+        title: btn.title,
+        backgroundColor: btn.backgroundColor,
+        textColor: btn.textColor,
+        imageUrl: btn.imageUrl,
+        stepBackgroundImageUrl: btn.stepBackgroundImageUrl,
+        createdOrder: btnIdx,
+      });
+
+      btn.items.forEach((item, itemIdx) => {
+        const sideId = `side-${hauptId}-${itemIdx}`;
+        const sp = getPos(sideId);
+        result.push({
+          id: sideId,
+          type: "side",
+          label: item,
+          x: sp.x,
+          y: sp.y,
+          parentId: hauptId,
+          buttonId: btn.id,
+          itemIndex: itemIdx,
+          createdOrder: itemIdx,
+        });
+      });
+    });
+
+    return result;
+  }
+
+  function rebuildConfigButtons() {
+    return nodes
+      .filter((n) => n.type === "haupt")
+      .sort((a, b) => a.createdOrder - b.createdOrder)
+      .map((h) => {
+        const items = nodes
+          .filter((n) => n.type === "side" && n.parentId === h.id)
+          .sort((a, b) => a.createdOrder - b.createdOrder)
+          .map((s) => s.label)
+          .filter(Boolean);
+        return {
+          id: h.buttonId || slugify(h.label) || `button-${h.createdOrder + 1}`,
+          label: h.label,
+          title: h.title || `${h.label} Optionen`,
+          backgroundColor: h.backgroundColor || "",
+          textColor: h.textColor || "",
+          imageUrl: h.imageUrl || "",
+          stepBackgroundImageUrl: h.stepBackgroundImageUrl || "",
+          items: items.length ? items : ["Option 1"],
+        };
+      });
+  }
+
+  function syncConfig() {
+    const current = getConfig();
+    const newConfig = normalizeSiteConfig({ ...current, buttons: rebuildConfigButtons() });
+    onConfigChange(newConfig);
+  }
+
+  function renderConnections() {
+    while (mapSvg.firstChild) mapSvg.removeChild(mapSvg.firstChild);
+    nodes.forEach((node) => {
+      if (!node.parentId) return;
+      const parent = nodes.find((n) => n.id === node.parentId);
+      if (!parent) return;
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", String(parent.x));
+      line.setAttribute("y1", String(parent.y));
+      line.setAttribute("x2", String(node.x));
+      line.setAttribute("y2", String(node.y));
+      line.setAttribute("class", node.type === "side" ? "sm-connection side-connection" : "sm-connection");
+      mapSvg.appendChild(line);
+    });
+  }
+
+  function createNodeElement(node) {
+    const el = document.createElement("div");
+    el.className = `sm-node ${node.type}`;
+    el.dataset.smId = node.id;
+    el.style.left = `${node.x}px`;
+    el.style.top = `${node.y}px`;
+
+    const inner = document.createElement("div");
+    inner.className = "sm-node-inner";
+    const labelEl = document.createElement("span");
+    labelEl.className = "sm-node-label";
+    labelEl.textContent = node.label;
+    inner.appendChild(labelEl);
+    el.appendChild(inner);
+
+    if (node.type !== "center") {
+      const controls = document.createElement("div");
+      controls.className = "sm-node-controls";
+
+      if (node.type === "haupt") {
+        const addSideBtn = document.createElement("button");
+        addSideBtn.type = "button";
+        addSideBtn.className = "sm-node-btn";
+        addSideBtn.title = "Side-Button hinzufügen";
+        addSideBtn.textContent = "+";
+        addSideBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          addSideButton(node.id);
+        });
+        controls.appendChild(addSideBtn);
+      }
+
+      const renameBtn = document.createElement("button");
+      renameBtn.type = "button";
+      renameBtn.className = "sm-node-btn";
+      renameBtn.title = "Umbenennen";
+      renameBtn.textContent = "✏";
+      renameBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        renameNode(node.id);
+      });
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "sm-node-btn";
+      deleteBtn.title = "Löschen";
+      deleteBtn.textContent = "✕";
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteNode(node.id);
+      });
+
+      controls.append(renameBtn, deleteBtn);
+      el.appendChild(controls);
+
+      el.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".sm-node-btn")) return;
+        e.preventDefault();
+        startDrag(node.id, e.clientX, e.clientY, e.pointerId);
+      });
+    }
+
+    return el;
+  }
+
+  function renderAll() {
+    Array.from(mapCanvas.querySelectorAll(".sm-node")).forEach((el) => el.remove());
+    nodes.forEach((node) => mapCanvas.appendChild(createNodeElement(node)));
+    renderConnections();
+  }
+
+  function startDrag(nodeId, clientX, clientY, pointerId) {
+    const node = nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+    const rect = mapCanvas.getBoundingClientRect();
+    dragging = {
+      nodeId,
+      offsetX: clientX - rect.left - node.x,
+      offsetY: clientY - rect.top - node.y,
+      pointerId,
+    };
+    overlay.setPointerCapture(pointerId);
+    const el = mapCanvas.querySelector(`[data-sm-id="${nodeId}"]`);
+    if (el) el.classList.add("dragging");
+  }
+
+  function moveDrag(clientX, clientY) {
+    if (!dragging) return;
+    const node = nodes.find((n) => n.id === dragging.nodeId);
+    if (!node) return;
+    const rect = mapCanvas.getBoundingClientRect();
+    node.x = clientX - rect.left - dragging.offsetX;
+    node.y = clientY - rect.top - dragging.offsetY;
+    savedPositions[node.id] = { x: node.x, y: node.y };
+
+    let newSnapId = null;
+    let minDist = SNAP_DIST;
+    nodes.forEach((other) => {
+      if (other.id === node.id) return;
+      const d = Math.hypot(other.x - node.x, other.y - node.y);
+      if (d < minDist) { minDist = d; newSnapId = other.id; }
+    });
+
+    if (newSnapId !== snapTargetId) {
+      if (snapTargetId) {
+        const old = mapCanvas.querySelector(`[data-sm-id="${snapTargetId}"]`);
+        if (old) old.classList.remove("snap-target");
+      }
+      snapTargetId = newSnapId;
+      if (snapTargetId) {
+        const next = mapCanvas.querySelector(`[data-sm-id="${snapTargetId}"]`);
+        if (next) next.classList.add("snap-target");
+      }
+    }
+
+    const el = mapCanvas.querySelector(`[data-sm-id="${node.id}"]`);
+    if (el) { el.style.left = `${node.x}px`; el.style.top = `${node.y}px`; }
+    renderConnections();
+  }
+
+  function endDrag() {
+    if (!dragging) return;
+    const node = nodes.find((n) => n.id === dragging.nodeId);
+
+    if (snapTargetId && node) {
+      const target = nodes.find((n) => n.id === snapTargetId);
+      if (target) {
+        const angle = Math.atan2(node.y - target.y, node.x - target.x);
+        node.x = target.x + Math.cos(angle) * SNAP_ATTACH_DIST;
+        node.y = target.y + Math.sin(angle) * SNAP_ATTACH_DIST;
+        savedPositions[node.id] = { x: node.x, y: node.y };
+      }
+      const snapEl = mapCanvas.querySelector(`[data-sm-id="${snapTargetId}"]`);
+      if (snapEl) snapEl.classList.remove("snap-target");
+      snapTargetId = null;
+    }
+
+    const el = mapCanvas.querySelector(`[data-sm-id="${dragging.nodeId}"]`);
+    if (el) {
+      el.classList.remove("dragging");
+      if (node) { el.style.left = `${node.x}px`; el.style.top = `${node.y}px`; }
+    }
+    dragging = null;
+    renderConnections();
+  }
+
+  overlay.addEventListener("pointermove", (e) => {
+    if (!dragging || dragging.pointerId !== e.pointerId) return;
+    moveDrag(e.clientX, e.clientY);
+  });
+
+  overlay.addEventListener("pointerup", (e) => {
+    if (!dragging || dragging.pointerId !== e.pointerId) return;
+    endDrag();
+  });
+
+  overlay.addEventListener("pointercancel", (e) => {
+    if (!dragging || dragging.pointerId !== e.pointerId) return;
+    endDrag();
+  });
+
+  function renameNode(nodeId) {
+    const node = nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+    const newLabel = window.prompt("Neuer Name:", node.label);
+    if (newLabel === null) return;
+    const trimmed = newLabel.trim();
+    if (!trimmed) return;
+    node.label = trimmed;
+    renderAll();
+    syncConfig();
+  }
+
+  function deleteNode(nodeId) {
+    const node = nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+
+    if (node.type === "haupt") {
+      if (nodes.filter((n) => n.type === "haupt").length <= 1) {
+        window.alert("Mindestens ein Haupt-Button muss vorhanden sein.");
+        return;
+      }
+      const toRemove = new Set([nodeId, ...nodes.filter((n) => n.parentId === nodeId).map((n) => n.id)]);
+      nodes = nodes.filter((n) => !toRemove.has(n.id));
+      toRemove.forEach((id) => delete savedPositions[id]);
+    } else {
+      nodes = nodes.filter((n) => n.id !== nodeId);
+      delete savedPositions[nodeId];
+      nodes
+        .filter((n) => n.type === "side" && n.parentId === node.parentId)
+        .sort((a, b) => a.createdOrder - b.createdOrder)
+        .forEach((s, i) => { s.createdOrder = i; s.itemIndex = i; });
+    }
+
+    renderAll();
+    syncConfig();
+  }
+
+  function addHauptButton() {
+    const config = getConfig();
+    const center = nodes.find((n) => n.id === "center");
+    if (!center) return;
+
+    const hauptNodes = nodes.filter((n) => n.type === "haupt");
+    const newOrder = hauptNodes.length;
+    const angle = (2 * Math.PI * newOrder / (newOrder + 1)) - Math.PI / 2;
+    const hx = center.x + Math.cos(angle) * HAUPT_RADIUS;
+    const hy = center.y + Math.sin(angle) * HAUPT_RADIUS;
+
+    const newHauptId = `haupt-new-${Date.now()}`;
+    const newButtonId = `new-btn-${Date.now()}`;
+
+    nodes.push({
+      id: newHauptId,
+      type: "haupt",
+      label: "Neuer Button",
+      x: hx,
+      y: hy,
+      parentId: "center",
+      buttonId: newButtonId,
+      title: "Neue Optionen",
+      backgroundColor: sanitizeColor(config.theme.accentColor, "#00d4ff"),
+      textColor: sanitizeColor(config.theme.textColor, "#ffffff"),
+      imageUrl: "",
+      stepBackgroundImageUrl: "",
+      createdOrder: newOrder,
+    });
+
+    nodes.push({
+      id: `side-${newHauptId}-0`,
+      type: "side",
+      label: "Option 1",
+      x: hx + Math.cos(angle) * SIDE_RADIUS,
+      y: hy + Math.sin(angle) * SIDE_RADIUS,
+      parentId: newHauptId,
+      buttonId: newButtonId,
+      itemIndex: 0,
+      createdOrder: 0,
+    });
+
+    renderAll();
+    syncConfig();
+  }
+
+  function addSideButton(hauptId) {
+    const haupt = nodes.find((n) => n.id === hauptId);
+    if (!haupt) return;
+    const center = nodes.find((n) => n.id === "center");
+    const siblings = nodes.filter((n) => n.type === "side" && n.parentId === hauptId);
+    const idx = siblings.length;
+    const awayAngle = center
+      ? Math.atan2(haupt.y - center.y, haupt.x - center.x)
+      : 0;
+    const fanAngle = awayAngle + (idx - (siblings.length - 1) / 2) * 0.45;
+
+    nodes.push({
+      id: `side-${hauptId}-${Date.now()}`,
+      type: "side",
+      label: `Option ${idx + 1}`,
+      x: haupt.x + Math.cos(fanAngle) * SIDE_RADIUS,
+      y: haupt.y + Math.sin(fanAngle) * SIDE_RADIUS,
+      parentId: hauptId,
+      buttonId: haupt.buttonId,
+      itemIndex: idx,
+      createdOrder: idx,
+    });
+
+    renderAll();
+    syncConfig();
+  }
+
+  function open() {
+    overlay.classList.remove("hidden");
+    overlay.setAttribute("aria-hidden", "false");
+    nodes = buildNodesFromConfig(getConfig());
+    renderAll();
+  }
+
+  function close() {
+    overlay.classList.add("hidden");
+    overlay.setAttribute("aria-hidden", "true");
+    if (dragging) endDrag();
+  }
+
+  openBtn?.addEventListener("click", open);
+  closeBtn?.addEventListener("click", close);
+  addHauptBtn?.addEventListener("click", addHauptButton);
+}
+
 async function initApp() {
   let users = getStoredJSON(STORAGE_KEYS.users, []);
   if (!Array.isArray(users)) users = [];
@@ -1251,6 +1684,16 @@ async function initApp() {
   });
 
   renderSessionState();
+
+  initSpiderMap(
+    () => currentConfig,
+    (newConfig) => {
+      currentConfig = newConfig;
+      applySiteConfig(currentConfig);
+      populateEditorForm(currentConfig);
+      pushEditorHistory(currentConfig);
+    },
+  );
 }
 
 initApp();
