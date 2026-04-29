@@ -6,7 +6,7 @@
   --accent-contrast: #00111a;
   --background: #02040a;
   --panel-bg-image: none;
-  --dock-width: min(31rem, 40vw);
+  --dock-width: 50vw;
 }
 
 * {
@@ -287,6 +287,10 @@ textarea {
 
 .button-edit-item .button-grid {
   justify-content: flex-end;
+}
+
+.control-card .button-grid {
+  flex-wrap: wrap;
 }
 
 .action-button:disabled {
