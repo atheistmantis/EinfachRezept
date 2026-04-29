@@ -154,7 +154,7 @@ const GITHUB_API_BASE = "https://api.github.com";
 
 async function fetchRepoConfig() {
   try {
-    const response = await fetch(`./${GITHUB_CONFIG_PATH}?_=${Date.now()}`, { cache: "no-store" });
+    const response = await fetch(`./${GITHUB_CONFIG_PATH}`, { cache: "no-store" });
     if (!response.ok) return null;
     return await response.json();
   } catch {
@@ -165,8 +165,7 @@ async function fetchRepoConfig() {
 function configToBase64(config) {
   const jsonStr = JSON.stringify(config, null, 2);
   const bytes = new TextEncoder().encode(jsonStr);
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
+  const binary = Array.from(bytes, (b) => String.fromCharCode(b)).join("");
   return btoa(binary);
 }
 
@@ -1810,7 +1809,7 @@ async function initApp() {
   if (smGithubPatInput) {
     const storedPat = localStorage.getItem(STORAGE_KEYS.githubPat) ?? "";
     smGithubPatInput.value = storedPat;
-    if (smTokenStatus) smTokenStatus.textContent = storedPat ? "Token gespeichert." : "Kein Token gesetzt.";
+    if (smTokenStatus) smTokenStatus.textContent = storedPat ? "Token hinterlegt." : "Kein Token gesetzt.";
   }
 
   smTokenToggleBtn?.addEventListener("click", () => {
