@@ -66,6 +66,10 @@ const DEFAULT_SITE_CONFIG = {
     overlayOpacity: 0.75,
     landingBackgroundImageUrl: "",
     categoryBackgroundImageUrl: "",
+    buttonFontFamily: "Arial, Helvetica, sans-serif",
+    buttonFontWeight: 700,
+    buttonBorderRadius: 1,
+    buttonFontSize: 1.65,
   },
   webgl: {
     animationSpeed: 0.55,
@@ -267,6 +271,10 @@ function normalizeSiteConfig(rawConfig) {
           || rawConfig.backgroundImageUrl
           || "",
       ),
+      buttonFontFamily: sanitizeString(rawConfig.theme?.buttonFontFamily, defaults.theme.buttonFontFamily),
+      buttonFontWeight: clamp(rawConfig.theme?.buttonFontWeight, 100, 900, defaults.theme.buttonFontWeight),
+      buttonBorderRadius: clamp(rawConfig.theme?.buttonBorderRadius, 0, 3, defaults.theme.buttonBorderRadius),
+      buttonFontSize: clamp(rawConfig.theme?.buttonFontSize, 0.8, 3, defaults.theme.buttonFontSize),
     },
     webgl: {
       animationSpeed: clamp(rawConfig.webgl?.animationSpeed, 0.05, 1.5, defaults.webgl.animationSpeed),
@@ -368,6 +376,10 @@ function applySiteConfig(config) {
     "--panel-bg-image",
     config.theme.landingBackgroundImageUrl ? cssUrlValue(config.theme.landingBackgroundImageUrl) : "none",
   );
+  document.documentElement.style.setProperty("--btn-font-family", config.theme.buttonFontFamily);
+  document.documentElement.style.setProperty("--btn-font-weight", String(config.theme.buttonFontWeight));
+  document.documentElement.style.setProperty("--btn-border-radius", `${config.theme.buttonBorderRadius}rem`);
+  document.documentElement.style.setProperty("--btn-font-size", `${config.theme.buttonFontSize}rem`);
 }
 
 function setupWebGLBackground(getVisualSettings) {
@@ -749,6 +761,10 @@ function populateEditorForm(config) {
   form.animationSpeed.value = config.webgl.animationSpeed;
   form.waveStrength.value = config.webgl.waveStrength;
   form.glowStrength.value = config.webgl.glowStrength;
+  form.buttonFontFamily.value = config.theme.buttonFontFamily;
+  form.buttonFontWeight.value = String(config.theme.buttonFontWeight);
+  form.buttonBorderRadius.value = config.theme.buttonBorderRadius;
+  form.buttonFontSize.value = config.theme.buttonFontSize;
 
   list.replaceChildren(...config.buttons.map((buttonConfig) => createButtonEditorItem(buttonConfig)));
 }
@@ -800,6 +816,10 @@ function readEditorForm(currentConfig) {
       overlayOpacity: clamp(form.overlayOpacity.value, 0, 1, DEFAULT_SITE_CONFIG.theme.overlayOpacity),
       landingBackgroundImageUrl: sanitizeImageUrl(form.backgroundImageUrl.value),
       categoryBackgroundImageUrl: sanitizeImageUrl(form.categoryBackgroundImageUrl.value),
+      buttonFontFamily: sanitizeString(form.buttonFontFamily.value, DEFAULT_SITE_CONFIG.theme.buttonFontFamily),
+      buttonFontWeight: clamp(form.buttonFontWeight.value, 100, 900, DEFAULT_SITE_CONFIG.theme.buttonFontWeight),
+      buttonBorderRadius: clamp(form.buttonBorderRadius.value, 0, 3, DEFAULT_SITE_CONFIG.theme.buttonBorderRadius),
+      buttonFontSize: clamp(form.buttonFontSize.value, 0.8, 3, DEFAULT_SITE_CONFIG.theme.buttonFontSize),
     },
     webgl: {
       animationSpeed: clamp(form.animationSpeed.value, 0.05, 1.5, DEFAULT_SITE_CONFIG.webgl.animationSpeed),
