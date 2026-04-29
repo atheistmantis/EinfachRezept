@@ -278,15 +278,130 @@ textarea {
   font-size: 1rem;
 }
 
-.button-edit-item {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.65rem;
-  padding: 0.7rem;
-  background: rgba(255, 255, 255, 0.04);
+#button-edit-list {
+  counter-reset: btn-count;
 }
 
-.button-edit-item .button-grid {
-  justify-content: flex-end;
+.button-edit-item {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0.65rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  counter-increment: btn-count;
+}
+
+.button-edit-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.button-edit-item-num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 1.6rem;
+  text-align: center;
+  background: rgba(0, 212, 255, 0.12);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.3rem;
+}
+
+.button-edit-item-num::before {
+  content: "#" counter(btn-count);
+}
+
+.button-edit-item-title {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.button-edit-item-header .remove-button-item {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  min-width: 0;
+}
+
+.button-edit-item-body {
+  padding: 0.7rem;
+}
+
+.editor-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+  padding-top: 0.6rem;
+  margin-top: 0.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sub-buttons-add-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.sub-button-edit-list {
+  counter-reset: sub-btn-count;
+}
+
+.sub-button-edit-item {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  counter-increment: sub-btn-count;
+}
+
+.sub-button-edit-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sub-button-edit-num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 1.4rem;
+  text-align: center;
+  background: rgba(0, 212, 255, 0.1);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.25rem;
+}
+
+.sub-button-edit-num::before {
+  content: "↳" counter(sub-btn-count);
+}
+
+.sub-button-edit-title {
+  flex: 1;
+  font-size: 0.82rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sub-button-edit-header .remove-sub-button-item {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.8rem;
+  min-width: 0;
+}
+
+.sub-button-edit-body {
+  padding: 0.6rem;
 }
 
 .action-button:disabled {

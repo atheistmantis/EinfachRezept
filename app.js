@@ -46,6 +46,7 @@ const DEFAULT_SITE_CONFIG = {
       imageUrl: "",
       stepBackgroundImageUrl: "",
       items: ["Mildes Curry", "Gemüsepfanne", "Reissuppe"],
+      children: [],
     },
     {
       id: "nudeln",
@@ -56,6 +57,7 @@ const DEFAULT_SITE_CONFIG = {
       imageUrl: "",
       stepBackgroundImageUrl: "",
       items: ["Tomatensauce", "Pesto", "Gemüse-Nudeln"],
+      children: [],
     },
   ],
   theme: {
@@ -180,40 +182,64 @@ function slugify(value) {
     .replace(/^-+|-+$/g, "");
 }
 
-function normalizeButtons(rawButtons) {
+function normalizeOneButton(entry, index, usedIds) {
   const fallback = DEFAULT_SITE_CONFIG.buttons;
-  if (!Array.isArray(rawButtons) || !rawButtons.length) return deepClone(fallback);
+  const fallbackSource = fallback[index % fallback.length];
+  const label = sanitizeString(entry?.label, fallbackSource.label);
+  const title = sanitizeString(entry?.title, `${label} Optionen`);
+  const idBase = sanitizeString(entry?.id, slugify(label) || `button-${index + 1}`);
+  let id = idBase;
+  let suffix = 2;
+  while (usedIds.has(id)) {
+    id = `${idBase}-${suffix}`;
+    suffix += 1;
+  }
+  usedIds.add(id);
 
-  const usedIds = new Set();
-  const normalized = [];
-  rawButtons.forEach((entry, index) => {
-    const fallbackSource = fallback[index % fallback.length];
-    const label = sanitizeString(entry?.label, fallbackSource.label);
-    const title = sanitizeString(entry?.title, `${label} Optionen`);
-    const idBase = sanitizeString(entry?.id, slugify(label) || `button-${index + 1}`);
-    let id = idBase;
-    let suffix = 2;
-    while (usedIds.has(id)) {
-      id = `${idBase}-${suffix}`;
-      suffix += 1;
+  const rawChildren = Array.isArray(entry?.children) ? entry.children : [];
+  const children = rawChildren.map((child, ci) => {
+    const childLabel = sanitizeString(child?.label, `Sub-Button ${ci + 1}`);
+    const childTitle = sanitizeString(child?.title, `${childLabel} Optionen`);
+    const childIdBase = `${id}-${sanitizeString(child?.id, slugify(childLabel) || `sub-${ci + 1}`)}`;
+    let childId = childIdBase;
+    let childSuffix = 2;
+    while (usedIds.has(childId)) {
+      childId = `${childIdBase}-${childSuffix}`;
+      childSuffix += 1;
     }
-    usedIds.add(id);
-
-    normalized.push({
-      id,
-      label,
-      title,
-      backgroundColor: sanitizeColor(entry?.backgroundColor, ""),
-      textColor: sanitizeColor(entry?.textColor, ""),
-      imageUrl: sanitizeImageUrl(entry?.imageUrl),
-      stepBackgroundImageUrl: sanitizeImageUrl(entry?.stepBackgroundImageUrl || entry?.sectionBackgroundImageUrl || ""),
-      items: Array.isArray(entry?.items) && entry.items.length
-        ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
-        : deepClone(fallbackSource.items),
-    });
+    usedIds.add(childId);
+    return {
+      id: childId,
+      label: childLabel,
+      title: childTitle,
+      backgroundColor: sanitizeColor(child?.backgroundColor, ""),
+      textColor: sanitizeColor(child?.textColor, ""),
+      imageUrl: sanitizeImageUrl(child?.imageUrl || ""),
+      items: Array.isArray(child?.items) && child.items.length
+        ? child.items.map((item) => sanitizeString(item, "")).filter(Boolean)
+        : ["Option 1"],
+    };
   });
 
-  return normalized.length ? normalized : deepClone(fallback);
+  return {
+    id,
+    label,
+    title,
+    backgroundColor: sanitizeColor(entry?.backgroundColor, ""),
+    textColor: sanitizeColor(entry?.textColor, ""),
+    imageUrl: sanitizeImageUrl(entry?.imageUrl),
+    stepBackgroundImageUrl: sanitizeImageUrl(entry?.stepBackgroundImageUrl || entry?.sectionBackgroundImageUrl || ""),
+    items: Array.isArray(entry?.items) && entry.items.length
+      ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
+      : deepClone(fallbackSource.items),
+    children,
+  };
+}
+
+function normalizeButtons(rawButtons) {
+  if (!Array.isArray(rawButtons)) return deepClone(DEFAULT_SITE_CONFIG.buttons);
+  const usedIds = new Set();
+  return rawButtons.map((entry, index) => normalizeOneButton(entry, index, usedIds));
 }
 
 function normalizeSiteConfig(rawConfig) {
@@ -327,23 +353,44 @@ function applySiteConfig(config) {
   }
 
   if (optionsContainer) {
-    optionsContainer.replaceChildren(
-      ...config.buttons.map((buttonConfig, index) => {
-        const section = document.createElement("section");
-        section.className = "panel options";
-        section.id = `options-${buttonConfig.id || index + 1}`;
-        section.style.setProperty(
-          "--section-bg-image",
-          buttonConfig.stepBackgroundImageUrl
-            ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
-            : config.theme.categoryBackgroundImageUrl
-              ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
-              : "none",
-        );
+    const sections = [];
 
-        const heading = document.createElement("h3");
-        heading.textContent = buttonConfig.title;
+    config.buttons.forEach((buttonConfig, index) => {
+      const bgImage = buttonConfig.stepBackgroundImageUrl
+        ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
+        : config.theme.categoryBackgroundImageUrl
+          ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
+          : "none";
 
+      const mainSection = document.createElement("section");
+      mainSection.className = "panel options";
+      mainSection.id = `options-${buttonConfig.id || index + 1}`;
+      mainSection.style.setProperty("--section-bg-image", bgImage);
+
+      const heading = document.createElement("h3");
+      heading.textContent = buttonConfig.title;
+
+      if (buttonConfig.children && buttonConfig.children.length > 0) {
+        const subGrid = document.createElement("div");
+        subGrid.className = "button-grid button-row";
+        buttonConfig.children.forEach((child) => {
+          const subBtn = document.createElement("button");
+          subBtn.type = "button";
+          subBtn.className = "action-button option-button";
+          subBtn.dataset.target = `options-${child.id}`;
+          subBtn.style.backgroundColor = sanitizeColor(child.backgroundColor, "");
+          subBtn.style.color = sanitizeColor(child.textColor, "");
+          if (child.imageUrl) {
+            subBtn.classList.add("has-image");
+            subBtn.style.backgroundImage = cssUrlValue(child.imageUrl);
+          }
+          const subLabel = document.createElement("span");
+          subLabel.textContent = child.label;
+          subBtn.append(subLabel);
+          subGrid.append(subBtn);
+        });
+        mainSection.append(heading, subGrid);
+      } else {
         const list = document.createElement("ul");
         list.replaceChildren(
           ...buttonConfig.items.map((itemText) => {
@@ -352,11 +399,37 @@ function applySiteConfig(config) {
             return item;
           }),
         );
+        mainSection.append(heading, list);
+      }
 
-        section.append(heading, list);
-        return section;
-      }),
-    );
+      sections.push(mainSection);
+
+      if (buttonConfig.children) {
+        buttonConfig.children.forEach((child) => {
+          const childSection = document.createElement("section");
+          childSection.className = "panel options";
+          childSection.id = `options-${child.id}`;
+          childSection.style.setProperty("--section-bg-image", bgImage);
+
+          const childHeading = document.createElement("h3");
+          childHeading.textContent = child.title;
+
+          const childList = document.createElement("ul");
+          childList.replaceChildren(
+            ...child.items.map((itemText) => {
+              const item = document.createElement("li");
+              item.textContent = itemText;
+              return item;
+            }),
+          );
+
+          childSection.append(childHeading, childList);
+          sections.push(childSection);
+        });
+      }
+    });
+
+    optionsContainer.replaceChildren(...sections);
   }
 
   document.documentElement.style.setProperty("--accent", config.theme.accentColor);
@@ -570,14 +643,151 @@ function initNavigation() {
     targetSection?.classList.add("active");
     targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  const optionsContainerNav = document.getElementById("options-container");
+  optionsContainerNav?.addEventListener("click", (event) => {
+    const button = event.target.closest(".option-button");
+    if (!button) return;
+    const targetId = button.dataset.target;
+    if (!targetId) return;
+
+    hideAllOptionSections();
+    const targetSection = document.getElementById(targetId);
+    targetSection?.classList.add("active");
+    targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function createSubButtonEditorItem(subConfig) {
+  const item = document.createElement("div");
+  item.className = "sub-button-edit-item";
+
+  const header = document.createElement("div");
+  header.className = "sub-button-edit-header";
+  const numSpan = document.createElement("span");
+  numSpan.className = "sub-button-edit-num";
+  const titleSpan = document.createElement("span");
+  titleSpan.className = "sub-button-edit-title";
+  titleSpan.textContent = subConfig.label || "Sub-Button";
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.className = "action-button ghost small remove-sub-button-item";
+  removeBtn.title = "Sub-Button entfernen";
+  removeBtn.textContent = "✕";
+  header.append(numSpan, titleSpan, removeBtn);
+
+  const body = document.createElement("div");
+  body.className = "sub-button-edit-body stack";
+
+  const labelLabel = document.createElement("label");
+  labelLabel.textContent = "Name";
+  const labelInput = document.createElement("input");
+  labelInput.type = "text";
+  labelInput.name = "subButtonLabel";
+  labelInput.value = subConfig.label;
+  labelInput.addEventListener("input", () => {
+    titleSpan.textContent = labelInput.value || "Sub-Button";
+  });
+
+  const titleLabel = document.createElement("label");
+  titleLabel.textContent = "Optionen Titel";
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.name = "subButtonTitle";
+  titleInput.value = subConfig.title;
+
+  const bgColorLabel = document.createElement("label");
+  bgColorLabel.textContent = "Hintergrundfarbe";
+  const bgColorInput = document.createElement("input");
+  bgColorInput.type = "color";
+  bgColorInput.name = "subButtonBackgroundColor";
+  bgColorInput.value = sanitizeColor(subConfig.backgroundColor, "#00d4ff");
+
+  const textColorLabel = document.createElement("label");
+  textColorLabel.textContent = "Textfarbe";
+  const textColorInput = document.createElement("input");
+  textColorInput.type = "color";
+  textColorInput.name = "subButtonTextColor";
+  textColorInput.value = sanitizeColor(subConfig.textColor, "#ffffff");
+
+  const imageLabel = document.createElement("label");
+  imageLabel.textContent = "Hintergrundbild (optional)";
+  const imageInput = document.createElement("input");
+  imageInput.type = "hidden";
+  imageInput.name = "subButtonImageUrl";
+  imageInput.value = subConfig.imageUrl || "";
+  const imageFileInput = document.createElement("input");
+  imageFileInput.type = "file";
+  imageFileInput.name = "subButtonImageFile";
+  imageFileInput.accept = "image/*";
+  const imageStatus = document.createElement("p");
+  imageStatus.className = "status";
+  imageStatus.textContent = imageInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
+  const clearImageBtn = document.createElement("button");
+  clearImageBtn.type = "button";
+  clearImageBtn.className = "action-button ghost small clear-sub-button-image";
+  clearImageBtn.textContent = "Bild entfernen";
+
+  imageFileInput.addEventListener("change", async () => {
+    const file = imageFileInput.files?.[0];
+    if (!file) return;
+    try {
+      const fileDataUrl = await readImageFileAsDataUrl(file);
+      imageInput.value = sanitizeImageUrl(fileDataUrl);
+      imageStatus.textContent = imageInput.value ? `Bild "${file.name}" geladen.` : "Ungültiges Bild.";
+    } catch {
+      imageInput.value = "";
+      imageStatus.textContent = "Bild konnte nicht geladen werden.";
+    }
+  });
+  clearImageBtn.addEventListener("click", () => {
+    imageInput.value = "";
+    imageFileInput.value = "";
+    imageStatus.textContent = "Kein Bild gewählt.";
+  });
+
+  const itemsLabel = document.createElement("label");
+  itemsLabel.textContent = "Einträge (je Zeile ein Eintrag)";
+  const itemsInput = document.createElement("textarea");
+  itemsInput.name = "subButtonItems";
+  itemsInput.rows = 3;
+  itemsInput.value = (subConfig.items || []).join("\n");
+
+  body.append(
+    labelLabel, labelInput,
+    titleLabel, titleInput,
+    bgColorLabel, bgColorInput,
+    textColorLabel, textColorInput,
+    imageLabel, imageInput, imageFileInput, imageStatus, clearImageBtn,
+    itemsLabel, itemsInput,
+  );
+
+  item.append(header, body);
+  return item;
 }
 
 function createButtonEditorItem(buttonConfig) {
   const item = document.createElement("div");
-  item.className = "button-edit-item stack";
+  item.className = "button-edit-item";
 
-  const title = document.createElement("strong");
-  title.textContent = "Button";
+  // Header: number badge + dynamic title + remove button
+  const header = document.createElement("div");
+  header.className = "button-edit-item-header";
+  const numSpan = document.createElement("span");
+  numSpan.className = "button-edit-item-num";
+  const titleSpan = document.createElement("span");
+  titleSpan.className = "button-edit-item-title";
+  titleSpan.textContent = buttonConfig.label;
+  const removeButton = document.createElement("button");
+  removeButton.type = "button";
+  removeButton.className = "action-button ghost small remove-button-item";
+  removeButton.title = "Button entfernen";
+  removeButton.textContent = "✕";
+  header.append(numSpan, titleSpan, removeButton);
+
+  // Body: all editable fields
+  const body = document.createElement("div");
+  body.className = "button-edit-item-body stack";
 
   const labelLabel = document.createElement("label");
   labelLabel.textContent = "Button Name";
@@ -585,6 +795,9 @@ function createButtonEditorItem(buttonConfig) {
   labelInput.type = "text";
   labelInput.name = "buttonLabel";
   labelInput.value = buttonConfig.label;
+  labelInput.addEventListener("input", () => {
+    titleSpan.textContent = labelInput.value || "Button";
+  });
 
   const sectionLabel = document.createElement("label");
   sectionLabel.textContent = "Optionen Titel";
@@ -592,33 +805,6 @@ function createButtonEditorItem(buttonConfig) {
   sectionInput.type = "text";
   sectionInput.name = "buttonTitle";
   sectionInput.value = buttonConfig.title;
-
-  const imageLabel = document.createElement("label");
-  imageLabel.textContent = "Button Hintergrundbild (optional)";
-  const imageInput = document.createElement("input");
-  imageInput.type = "hidden";
-  imageInput.name = "buttonImageUrl";
-  imageInput.value = buttonConfig.imageUrl;
-  const imageFileInput = document.createElement("input");
-  imageFileInput.type = "file";
-  imageFileInput.name = "buttonImageFile";
-  imageFileInput.accept = "image/*";
-  const imageStatus = document.createElement("p");
-  imageStatus.className = "status";
-  imageStatus.textContent = imageInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
-  const stepBackgroundLabel = document.createElement("label");
-  stepBackgroundLabel.textContent = "Schritt Hintergrundbild (optional)";
-  const stepBackgroundInput = document.createElement("input");
-  stepBackgroundInput.type = "hidden";
-  stepBackgroundInput.name = "buttonStepBackgroundImageUrl";
-  stepBackgroundInput.value = buttonConfig.stepBackgroundImageUrl || "";
-  const stepBackgroundFileInput = document.createElement("input");
-  stepBackgroundFileInput.type = "file";
-  stepBackgroundFileInput.name = "buttonStepBackgroundImageFile";
-  stepBackgroundFileInput.accept = "image/*";
-  const stepBackgroundStatus = document.createElement("p");
-  stepBackgroundStatus.className = "status";
-  stepBackgroundStatus.textContent = stepBackgroundInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
 
   const bgColorLabel = document.createElement("label");
   bgColorLabel.textContent = "Button Hintergrundfarbe";
@@ -634,28 +820,70 @@ function createButtonEditorItem(buttonConfig) {
   textColorInput.name = "buttonTextColor";
   textColorInput.value = sanitizeColor(buttonConfig.textColor, "#ffffff");
 
-  const itemsLabel = document.createElement("label");
-  itemsLabel.textContent = "Optionen Einträge (je Zeile ein Eintrag)";
+  const imageLabel = document.createElement("label");
+  imageLabel.textContent = "Button Hintergrundbild (optional)";
+  const imageInput = document.createElement("input");
+  imageInput.type = "hidden";
+  imageInput.name = "buttonImageUrl";
+  imageInput.value = buttonConfig.imageUrl;
+  const imageFileInput = document.createElement("input");
+  imageFileInput.type = "file";
+  imageFileInput.name = "buttonImageFile";
+  imageFileInput.accept = "image/*";
+  const imageStatus = document.createElement("p");
+  imageStatus.className = "status";
+  imageStatus.textContent = imageInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
+  const clearImage = document.createElement("button");
+  clearImage.type = "button";
+  clearImage.className = "action-button ghost small clear-button-image";
+  clearImage.textContent = "Bild entfernen";
+
+  const stepBackgroundLabel = document.createElement("label");
+  stepBackgroundLabel.textContent = "Schritt Hintergrundbild (optional)";
+  const stepBackgroundInput = document.createElement("input");
+  stepBackgroundInput.type = "hidden";
+  stepBackgroundInput.name = "buttonStepBackgroundImageUrl";
+  stepBackgroundInput.value = buttonConfig.stepBackgroundImageUrl || "";
+  const stepBackgroundFileInput = document.createElement("input");
+  stepBackgroundFileInput.type = "file";
+  stepBackgroundFileInput.name = "buttonStepBackgroundImageFile";
+  stepBackgroundFileInput.accept = "image/*";
+  const stepBackgroundStatus = document.createElement("p");
+  stepBackgroundStatus.className = "status";
+  stepBackgroundStatus.textContent = stepBackgroundInput.value ? "Bild gesetzt." : "Kein Bild gewählt.";
+  const clearStepBackgroundImage = document.createElement("button");
+  clearStepBackgroundImage.type = "button";
+  clearStepBackgroundImage.className = "action-button ghost small clear-button-step-background-image";
+  clearStepBackgroundImage.textContent = "Schrittbild entfernen";
+
+  const itemsSeparator = document.createElement("div");
+  itemsSeparator.className = "editor-section-label";
+  itemsSeparator.textContent = "Optionen Einträge (wenn keine Sub-Buttons)";
+
   const itemsInput = document.createElement("textarea");
   itemsInput.name = "buttonItems";
   itemsInput.rows = 4;
   itemsInput.value = buttonConfig.items.join("\n");
 
-  const controls = document.createElement("div");
-  controls.className = "button-grid";
-  const remove = document.createElement("button");
-  remove.type = "button";
-  remove.className = "action-button ghost small remove-button-item";
-  remove.textContent = "Entfernen";
-  const clearImage = document.createElement("button");
-  clearImage.type = "button";
-  clearImage.className = "action-button ghost small clear-button-image";
-  clearImage.textContent = "Bild entfernen";
-  const clearStepBackgroundImage = document.createElement("button");
-  clearStepBackgroundImage.type = "button";
-  clearStepBackgroundImage.className = "action-button ghost small clear-button-step-background-image";
-  clearStepBackgroundImage.textContent = "Schrittbild entfernen";
-  controls.append(clearImage, clearStepBackgroundImage, remove);
+  const subButtonsSeparator = document.createElement("div");
+  subButtonsSeparator.className = "editor-section-label";
+  subButtonsSeparator.textContent = "Sub-Buttons";
+
+  const addSubButtonRow = document.createElement("div");
+  addSubButtonRow.className = "sub-buttons-add-row";
+  const addSubButton = document.createElement("button");
+  addSubButton.type = "button";
+  addSubButton.className = "action-button ghost small add-sub-button-item";
+  addSubButton.textContent = "+ Sub-Button hinzufügen";
+  addSubButtonRow.append(addSubButton);
+
+  const subButtonsList = document.createElement("div");
+  subButtonsList.className = "sub-button-edit-list stack";
+  if (buttonConfig.children && buttonConfig.children.length > 0) {
+    buttonConfig.children.forEach((child) => {
+      subButtonsList.append(createSubButtonEditorItem(child));
+    });
+  }
 
   imageFileInput.addEventListener("change", async () => {
     const file = imageFileInput.files?.[0];
@@ -669,7 +897,6 @@ function createButtonEditorItem(buttonConfig) {
       imageStatus.textContent = "Bild konnte nicht geladen werden.";
     }
   });
-
   clearImage.addEventListener("click", () => {
     imageInput.value = "";
     imageFileInput.value = "";
@@ -693,28 +920,18 @@ function createButtonEditorItem(buttonConfig) {
     stepBackgroundStatus.textContent = "Kein Bild gewählt.";
   });
 
-  item.append(
-    title,
-    labelLabel,
-    labelInput,
-    sectionLabel,
-    sectionInput,
-    bgColorLabel,
-    bgColorInput,
-    textColorLabel,
-    textColorInput,
-    imageLabel,
-    imageInput,
-    imageFileInput,
-    imageStatus,
-    stepBackgroundLabel,
-    stepBackgroundInput,
-    stepBackgroundFileInput,
-    stepBackgroundStatus,
-    itemsLabel,
-    itemsInput,
-    controls,
+  body.append(
+    labelLabel, labelInput,
+    sectionLabel, sectionInput,
+    bgColorLabel, bgColorInput,
+    textColorLabel, textColorInput,
+    imageLabel, imageInput, imageFileInput, imageStatus, clearImage,
+    stepBackgroundLabel, stepBackgroundInput, stepBackgroundFileInput, stepBackgroundStatus, clearStepBackgroundImage,
+    itemsSeparator, itemsInput,
+    subButtonsSeparator, addSubButtonRow, subButtonsList,
   );
+
+  item.append(header, body);
   return item;
 }
 
@@ -766,6 +983,26 @@ function readButtonEditorList() {
       item.querySelector('[name="buttonItems"]')?.value,
       DEFAULT_SITE_CONFIG.buttons[index % DEFAULT_SITE_CONFIG.buttons.length].items,
     );
+
+    const subElements = Array.from(item.querySelectorAll(".sub-button-edit-item"));
+    const children = subElements.map((subEl, si) => {
+      const subLabel = sanitizeString(subEl.querySelector('[name="subButtonLabel"]')?.value, `Sub-Button ${si + 1}`);
+      const subTitle = sanitizeString(subEl.querySelector('[name="subButtonTitle"]')?.value, `${subLabel} Optionen`);
+      const subBgColor = sanitizeColor(subEl.querySelector('[name="subButtonBackgroundColor"]')?.value);
+      const subTextColor = sanitizeColor(subEl.querySelector('[name="subButtonTextColor"]')?.value);
+      const subImageUrl = sanitizeImageUrl(subEl.querySelector('[name="subButtonImageUrl"]')?.value);
+      const subItems = sanitizeItems(subEl.querySelector('[name="subButtonItems"]')?.value, ["Option 1"]);
+      return {
+        id: slugify(subLabel) || `sub-${si + 1}`,
+        label: subLabel,
+        title: subTitle,
+        backgroundColor: subBgColor,
+        textColor: subTextColor,
+        imageUrl: subImageUrl,
+        items: subItems,
+      };
+    });
+
     return {
       id: slugify(label) || `button-${index + 1}`,
       label,
@@ -775,10 +1012,11 @@ function readButtonEditorList() {
       imageUrl,
       stepBackgroundImageUrl,
       items: optionItems,
+      children,
     };
   });
 
-  return normalizeButtons(buttons.length ? buttons : deepClone(DEFAULT_SITE_CONFIG.buttons));
+  return normalizeButtons(buttons);
 }
 
 function readEditorForm(currentConfig) {
@@ -1047,10 +1285,34 @@ async function initApp() {
   });
 
   buttonEditList?.addEventListener("click", (event) => {
+    const addSubBtn = event.target.closest(".add-sub-button-item");
+    if (addSubBtn) {
+      const parentItem = addSubBtn.closest(".button-edit-item");
+      const subList = parentItem?.querySelector(".sub-button-edit-list");
+      if (subList) {
+        subList.append(createSubButtonEditorItem({
+          label: "Neuer Sub-Button",
+          title: "Neue Sub-Optionen",
+          backgroundColor: "",
+          textColor: "",
+          imageUrl: "",
+          items: ["Option 1"],
+        }));
+        captureEditorSnapshot();
+      }
+      return;
+    }
+
+    const removeSubBtn = event.target.closest(".remove-sub-button-item");
+    if (removeSubBtn) {
+      const subItem = removeSubBtn.closest(".sub-button-edit-item");
+      subItem?.remove();
+      captureEditorSnapshot();
+      return;
+    }
+
     const removeButton = event.target.closest(".remove-button-item");
     if (!removeButton) return;
-    const allItems = buttonEditList.querySelectorAll(".button-edit-item");
-    if (allItems.length <= 1) return;
     const item = removeButton.closest(".button-edit-item");
     item?.remove();
     captureEditorSnapshot();
@@ -1060,7 +1322,6 @@ async function initApp() {
     if (!buttonEditList) return;
     buttonEditList.append(
       createButtonEditorItem({
-        id: crypto.randomUUID(),
         label: "Neuer Button",
         title: "Neue Optionen",
         backgroundColor: sanitizeColor(currentConfig.theme.accentColor, "#00d4ff"),
@@ -1068,6 +1329,7 @@ async function initApp() {
         imageUrl: "",
         stepBackgroundImageUrl: "",
         items: ["Option 1"],
+        children: [],
       }),
     );
     captureEditorSnapshot();
