@@ -5,6 +5,7 @@ const STORAGE_KEYS = {
   users: "einfachrezept_users_v1",
   session: "einfachrezept_session_v1",
   siteConfig: "einfachrezept_site_config_v1",
+  githubPat: "einfachrezept_github_pat_v1",
 };
 
 const PASSWORD_HASH_VERSION = 2;
@@ -146,6 +147,65 @@ function sanitizeImageUrl(value) {
 
   return "";
 }
+
+const GITHUB_REPO = "atheistmantis/EinfachRezept";
+const GITHUB_CONFIG_PATH = "site-config.json";
+const GITHUB_API_BASE = "https://api.github.com";
+
+async function fetchRepoConfig() {
+  try {
+    const response = await fetch(`./${GITHUB_CONFIG_PATH}`, { cache: "no-store" });
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
+function configToBase64(config) {
+  const jsonStr = JSON.stringify(config, null, 2);
+  const bytes = new TextEncoder().encode(jsonStr);
+  const binary = Array.from(bytes, (b) => String.fromCharCode(b)).join("");
+  return btoa(binary);
+}
+
+async function saveConfigToGitHub(config, pat) {
+  const apiUrl = `${GITHUB_API_BASE}/repos/${GITHUB_REPO}/contents/${GITHUB_CONFIG_PATH}`;
+  const headers = {
+    Authorization: `Bearer ${pat}`,
+    "Content-Type": "application/json",
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+
+  let sha;
+  const getResponse = await fetch(apiUrl, { headers });
+  if (getResponse.ok) {
+    const data = await getResponse.json();
+    sha = data.sha;
+  } else if (getResponse.status !== 404) {
+    const err = await getResponse.json().catch(() => ({}));
+    throw new Error(`GitHub API Fehler ${getResponse.status}: ${err.message || "Unbekannter Fehler"}`);
+  }
+
+  const body = {
+    message: "Update site config via EinfachRezept editor",
+    content: configToBase64(config),
+  };
+  if (sha) body.sha = sha;
+
+  const putResponse = await fetch(apiUrl, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!putResponse.ok) {
+    const err = await putResponse.json().catch(() => ({}));
+    throw new Error(`GitHub API Fehler ${putResponse.status}: ${err.message || "Unbekannter Fehler"}`);
+  }
+}
+
 
 function cssUrlValue(url) {
   return `url("${String(url).replace(/["\\\n\r\f]/g, "\\$&")}")`;
@@ -1719,7 +1779,13 @@ async function initApp() {
     saveStoredJSON(STORAGE_KEYS.users, users);
   }
 
-  let currentConfig = normalizeSiteConfig(getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG)));
+  // Load config: prefer repo file (shared) → localStorage (cache) → default
+  const repoConfig = await fetchRepoConfig();
+  const storedConfig = getStoredJSON(STORAGE_KEYS.siteConfig, null);
+  let currentConfig = normalizeSiteConfig(repoConfig ?? storedConfig ?? deepClone(DEFAULT_SITE_CONFIG));
+  if (repoConfig) {
+    saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
+  }
   applySiteConfig(currentConfig);
   setupWebGLBackground(() => currentConfig.webgl);
   initNavigation();
@@ -1731,6 +1797,44 @@ async function initApp() {
   const logoutButton = document.getElementById("logout-button");
   const sessionStatus = document.getElementById("session-status");
   const closeDockButton = document.getElementById("close-dock-button");
+
+  // GitHub token panel elements
+  const smTokenToggleBtn = document.getElementById("spider-map-token-toggle");
+  const smTokenPanel = document.getElementById("sm-token-panel");
+  const smGithubPatInput = document.getElementById("sm-github-pat");
+  const smTokenSaveBtn = document.getElementById("sm-token-save-btn");
+  const smTokenClearBtn = document.getElementById("sm-token-clear-btn");
+  const smTokenStatus = document.getElementById("sm-token-status");
+
+  if (smGithubPatInput) {
+    const storedPat = localStorage.getItem(STORAGE_KEYS.githubPat) ?? "";
+    smGithubPatInput.value = storedPat;
+    if (smTokenStatus) smTokenStatus.textContent = storedPat ? "Token hinterlegt." : "Kein Token gesetzt.";
+  }
+
+  smTokenToggleBtn?.addEventListener("click", () => {
+    const isHidden = smTokenPanel?.classList.contains("hidden");
+    smTokenPanel?.classList.toggle("hidden", !isHidden);
+    smTokenPanel?.setAttribute("aria-hidden", String(isHidden ? "false" : "true"));
+  });
+
+  smTokenSaveBtn?.addEventListener("click", () => {
+    const pat = smGithubPatInput?.value.trim() ?? "";
+    if (pat) {
+      localStorage.setItem(STORAGE_KEYS.githubPat, pat);
+      if (smTokenStatus) smTokenStatus.textContent = "Token gespeichert.";
+    } else {
+      localStorage.removeItem(STORAGE_KEYS.githubPat);
+      if (smTokenStatus) smTokenStatus.textContent = "Token gelöscht.";
+    }
+  });
+
+  smTokenClearBtn?.addEventListener("click", () => {
+    if (smGithubPatInput) smGithubPatInput.value = "";
+    localStorage.removeItem(STORAGE_KEYS.githubPat);
+    if (smTokenStatus) smTokenStatus.textContent = "Token gelöscht.";
+  });
+
   let editorHistory = [deepClone(currentConfig)];
   let editorHistoryIndex = 0;
 
@@ -1778,11 +1882,33 @@ async function initApp() {
       applySiteConfig(currentConfig);
       pushEditorHistory(currentConfig);
     },
-    onSave: (config) => {
+    onSave: async (config) => {
       currentConfig = normalizeSiteConfig(config);
       applySiteConfig(currentConfig);
       saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
       pushEditorHistory(currentConfig);
+
+      const pat = localStorage.getItem(STORAGE_KEYS.githubPat) ?? "";
+      if (!pat) {
+        if (smTokenStatus) smTokenStatus.textContent = "⚠ Kein GitHub Token – Änderungen nur lokal gespeichert.";
+        if (smTokenPanel) {
+          smTokenPanel.classList.remove("hidden");
+          smTokenPanel.setAttribute("aria-hidden", "false");
+        }
+        return;
+      }
+
+      if (smTokenStatus) smTokenStatus.textContent = "⏳ Speichern im Repository…";
+      try {
+        await saveConfigToGitHub(currentConfig, pat);
+        if (smTokenStatus) smTokenStatus.textContent = "✅ Im Repository gespeichert.";
+      } catch (error) {
+        if (smTokenStatus) smTokenStatus.textContent = `❌ GitHub Fehler: ${error.message}`;
+        if (smTokenPanel) {
+          smTokenPanel.classList.remove("hidden");
+          smTokenPanel.setAttribute("aria-hidden", "false");
+        }
+      }
     },
     onUndo: () => {
       if (!activeSession) return;
@@ -1800,7 +1926,7 @@ async function initApp() {
       applySiteConfig(currentConfig);
       spiderMap.refresh();
     },
-    onReset: () => {
+    onReset: async () => {
       if (!activeSession) return;
       currentConfig = deepClone(DEFAULT_SITE_CONFIG);
       applySiteConfig(currentConfig);
@@ -1808,6 +1934,19 @@ async function initApp() {
       editorHistory = [deepClone(currentConfig)];
       editorHistoryIndex = 0;
       spiderMap.refresh();
+
+      const pat = localStorage.getItem(STORAGE_KEYS.githubPat) ?? "";
+      if (!pat) {
+        if (smTokenStatus) smTokenStatus.textContent = "⚠ Kein GitHub Token – Standard nur lokal zurückgesetzt.";
+        return;
+      }
+      if (smTokenStatus) smTokenStatus.textContent = "⏳ Standard im Repository speichern…";
+      try {
+        await saveConfigToGitHub(currentConfig, pat);
+        if (smTokenStatus) smTokenStatus.textContent = "✅ Standard im Repository gespeichert.";
+      } catch (error) {
+        if (smTokenStatus) smTokenStatus.textContent = `❌ GitHub Fehler: ${error.message}`;
+      }
     },
     onLogout: () => {
       activeSession = null;
