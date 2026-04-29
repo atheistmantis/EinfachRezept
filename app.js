@@ -921,25 +921,48 @@ function ensureRequiredAdminUsers(existingUsers) {
   return { users, hasChanges };
 }
 
-function initSpiderMap(getConfig, onConfigChange) {
+function initSpiderMap(opts) {
+  const getConfig = opts.getConfig;
+  const onConfigChange = opts.onConfigChange;
+  const onSave = opts.onSave;
+  const onUndo = opts.onUndo;
+  const onRedo = opts.onRedo;
+  const onReset = opts.onReset;
+  const onLogout = opts.onLogout;
+  const getHistoryState = opts.getHistoryState;
+
   const overlay = document.getElementById("spider-map-overlay");
   const mapCanvas = document.getElementById("spider-map-canvas");
   const mapSvg = document.getElementById("spider-map-svg");
-  const openBtn = document.getElementById("spider-map-open");
   const closeBtn = document.getElementById("spider-map-close");
   const addHauptBtn = document.getElementById("spider-map-add-haupt");
+  const smUndoBtn = document.getElementById("spider-map-undo");
+  const smRedoBtn = document.getElementById("spider-map-redo");
+  const smSaveBtn = document.getElementById("spider-map-save");
+  const smResetBtn = document.getElementById("spider-map-reset");
+  const smLogoutBtn = document.getElementById("spider-map-logout");
+  const smEditorPanel = document.getElementById("sm-editor-panel");
+  const smEditorTitle = document.getElementById("sm-editor-title");
+  const smEditorContent = document.getElementById("sm-editor-content");
+  const smEditorCloseBtn = document.getElementById("sm-editor-close");
+  const smEditorSaveBtn = document.getElementById("sm-editor-save");
 
-  if (!overlay || !mapCanvas || !mapSvg) return;
+  if (!overlay || !mapCanvas || !mapSvg) {
+    return { open: () => {}, close: () => {}, refresh: () => {}, updateHistoryButtons: () => {} };
+  }
 
   const HAUPT_RADIUS = 240;
   const SIDE_RADIUS = 165;
   const SNAP_DIST = 90;
   const SNAP_ATTACH_DIST = 170;
+  const DRAG_THRESHOLD = 5;
+  const FAN_SPREAD = Math.PI / 2.5;
 
   let nodes = [];
   let savedPositions = {};
   let dragging = null;
   let snapTargetId = null;
+  let currentEditNodeReadFn = null;
 
   function getMapCenter() {
     return { x: mapCanvas.clientWidth / 2, y: mapCanvas.clientHeight / 2 };
@@ -959,9 +982,8 @@ function initSpiderMap(getConfig, onConfigChange) {
 
       btn.items.forEach((_, itemIdx) => {
         const count = btn.items.length;
-        const fanSpread = Math.PI / 2.5;
         const sideAngle = count > 1
-          ? angle + fanSpread * (itemIdx / (count - 1) - 0.5)
+          ? angle + FAN_SPREAD * (itemIdx / (count - 1) - 0.5)
           : angle;
         positions[`side-${hauptId}-${itemIdx}`] = {
           x: hx + Math.cos(sideAngle) * SIDE_RADIUS,
@@ -1080,7 +1102,11 @@ function initSpiderMap(getConfig, onConfigChange) {
     inner.appendChild(labelEl);
     el.appendChild(inner);
 
-    if (node.type !== "center") {
+    if (node.type === "center") {
+      inner.title = "Klicken zum Bearbeiten";
+      inner.style.cursor = "pointer";
+      el.addEventListener("click", () => openNodeEditor("center"));
+    } else {
       const controls = document.createElement("div");
       controls.className = "sm-node-controls";
 
@@ -1095,6 +1121,7 @@ function initSpiderMap(getConfig, onConfigChange) {
           addSideButton(node.id);
         });
         controls.appendChild(addSideBtn);
+        inner.title = "Klicken zum Bearbeiten";
       }
 
       const renameBtn = document.createElement("button");
@@ -1145,6 +1172,9 @@ function initSpiderMap(getConfig, onConfigChange) {
       offsetX: clientX - rect.left - node.x,
       offsetY: clientY - rect.top - node.y,
       pointerId,
+      startX: clientX,
+      startY: clientY,
+      moved: false,
     };
     overlay.setPointerCapture(pointerId);
     const el = mapCanvas.querySelector(`[data-sm-id="${nodeId}"]`);
@@ -1153,6 +1183,9 @@ function initSpiderMap(getConfig, onConfigChange) {
 
   function moveDrag(clientX, clientY) {
     if (!dragging) return;
+    if (!dragging.moved && Math.hypot(clientX - dragging.startX, clientY - dragging.startY) > DRAG_THRESHOLD) {
+      dragging.moved = true;
+    }
     const node = nodes.find((n) => n.id === dragging.nodeId);
     if (!node) return;
     const rect = mapCanvas.getBoundingClientRect();
@@ -1188,6 +1221,8 @@ function initSpiderMap(getConfig, onConfigChange) {
   function endDrag() {
     if (!dragging) return;
     const node = nodes.find((n) => n.id === dragging.nodeId);
+    const wasMoved = dragging.moved;
+    const nodeId = dragging.nodeId;
 
     if (snapTargetId && node) {
       const target = nodes.find((n) => n.id === snapTargetId);
@@ -1209,6 +1244,13 @@ function initSpiderMap(getConfig, onConfigChange) {
     }
     dragging = null;
     renderConnections();
+
+    if (!wasMoved) {
+      const clickedNode = nodes.find((n) => n.id === nodeId);
+      if (clickedNode?.type === "haupt") {
+        openNodeEditor(nodeId);
+      }
+    }
   }
 
   overlay.addEventListener("pointermove", (e) => {
@@ -1336,22 +1378,336 @@ function initSpiderMap(getConfig, onConfigChange) {
     syncConfig();
   }
 
+  /* ── Inline editor helpers ─────────────────────────────────── */
+
+  function editorMakeLabel(text) {
+    const lbl = document.createElement("label");
+    lbl.textContent = text;
+    return lbl;
+  }
+
+  function editorMakeDivider() {
+    const hr = document.createElement("div");
+    hr.className = "sm-editor-divider";
+    return hr;
+  }
+
+  function editorMakeSectionLabel(text) {
+    const span = document.createElement("span");
+    span.className = "sm-editor-section-label";
+    span.textContent = text;
+    return span;
+  }
+
+  function editorMakeInput(type, value) {
+    const input = document.createElement("input");
+    input.type = type;
+    input.value = String(value ?? "");
+    return input;
+  }
+
+  function editorMakeSelect(optionsArr, currentValue) {
+    const sel = document.createElement("select");
+    optionsArr.forEach(([val, text]) => {
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = text;
+      if (val === String(currentValue)) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    return sel;
+  }
+
+  function editorMakeImageUpload(labelText, currentUrl) {
+    const lbl = editorMakeLabel(labelText);
+    const hidden = editorMakeInput("hidden", currentUrl || "");
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    const status = document.createElement("p");
+    status.className = "status";
+    status.style.margin = "0";
+    status.textContent = currentUrl ? "Bild gesetzt." : "Kein Bild gewählt.";
+    const clearBtn = document.createElement("button");
+    clearBtn.type = "button";
+    clearBtn.className = "action-button ghost small";
+    clearBtn.textContent = "Bild entfernen";
+
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      try {
+        const dataUrl = await readImageFileAsDataUrl(file);
+        hidden.value = sanitizeImageUrl(dataUrl);
+        status.textContent = hidden.value ? `Bild "${file.name}" geladen.` : "Ungültiges Bild.";
+      } catch {
+        hidden.value = "";
+        status.textContent = "Bild konnte nicht geladen werden.";
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      hidden.value = "";
+      fileInput.value = "";
+      status.textContent = "Kein Bild gewählt.";
+    });
+
+    return { elements: [lbl, hidden, fileInput, status, clearBtn], read: () => sanitizeImageUrl(hidden.value) };
+  }
+
+  function buildWebsiteEditorContent(config) {
+    const els = [];
+
+    els.push(editorMakeSectionLabel("Texte"));
+    const titleInput = editorMakeInput("text", config.title);
+    els.push(editorMakeLabel("Titel"), titleInput);
+    const subtitleInput = editorMakeInput("text", config.subtitle);
+    els.push(editorMakeLabel("Untertitel"), subtitleInput);
+    const startLabelInput = editorMakeInput("text", config.startLabel);
+    els.push(editorMakeLabel("Start-Button"), startLabelInput);
+    const categoryLabelInput = editorMakeInput("text", config.categoryLabel);
+    els.push(editorMakeLabel("Kategorie-Überschrift"), categoryLabelInput);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Hintergrundbilder"));
+    const landingBg = editorMakeImageUpload("Landingpage Hintergrundbild (optional)", config.theme.landingBackgroundImageUrl);
+    els.push(...landingBg.elements);
+    const categoryBg = editorMakeImageUpload("Kategorien Hintergrundbild (optional)", config.theme.categoryBackgroundImageUrl);
+    els.push(...categoryBg.elements);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Farben"));
+    const accentColorInput = editorMakeInput("color", config.theme.accentColor);
+    els.push(editorMakeLabel("Akzentfarbe"), accentColorInput);
+    const textColorInput = editorMakeInput("color", config.theme.textColor);
+    els.push(editorMakeLabel("Textfarbe"), textColorInput);
+    const bgColorInput = editorMakeInput("color", config.theme.backgroundColor);
+    els.push(editorMakeLabel("Hintergrundfarbe"), bgColorInput);
+    const overlayColorInput = editorMakeInput("color", config.theme.overlayColor);
+    els.push(editorMakeLabel("Overlay-Farbe"), overlayColorInput);
+    const overlayOpacityInput = editorMakeInput("range", config.theme.overlayOpacity);
+    overlayOpacityInput.min = "0"; overlayOpacityInput.max = "1"; overlayOpacityInput.step = "0.01";
+    els.push(editorMakeLabel("Overlay-Stärke"), overlayOpacityInput);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Animation"));
+    const animSpeedInput = editorMakeInput("range", config.webgl.animationSpeed);
+    animSpeedInput.min = "0.05"; animSpeedInput.max = "1.5"; animSpeedInput.step = "0.05";
+    els.push(editorMakeLabel("Animationsgeschwindigkeit"), animSpeedInput);
+    const waveStrengthInput = editorMakeInput("range", config.webgl.waveStrength);
+    waveStrengthInput.min = "0.1"; waveStrengthInput.max = "1.8"; waveStrengthInput.step = "0.05";
+    els.push(editorMakeLabel("Flow-Stärke"), waveStrengthInput);
+    const glowStrengthInput = editorMakeInput("range", config.webgl.glowStrength);
+    glowStrengthInput.min = "0.05"; glowStrengthInput.max = "1"; glowStrengthInput.step = "0.01";
+    els.push(editorMakeLabel("Glow-Stärke"), glowStrengthInput);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Button-Stil"));
+    const fontFamilyOptions = [
+      ["Arial, Helvetica, sans-serif", "Arial"],
+      ["Verdana, Geneva, sans-serif", "Verdana"],
+      ["Tahoma, Geneva, sans-serif", "Tahoma"],
+      ["'Trebuchet MS', Helvetica, sans-serif", "Trebuchet MS"],
+      ["Georgia, 'Times New Roman', serif", "Georgia"],
+      ["'Times New Roman', Times, serif", "Times New Roman"],
+      ["'Palatino Linotype', 'Book Antiqua', Palatino, serif", "Palatino"],
+      ["'Courier New', Courier, monospace", "Courier New"],
+      ["Impact, Charcoal, sans-serif", "Impact"],
+      ["'Comic Sans MS', cursive", "Comic Sans MS"],
+    ];
+    const fontFamilySelect = editorMakeSelect(fontFamilyOptions, config.theme.buttonFontFamily);
+    els.push(editorMakeLabel("Schriftart"), fontFamilySelect);
+    const fontWeightOptions = [
+      ["300", "Light (300)"], ["400", "Normal (400)"], ["500", "Medium (500)"],
+      ["600", "Semibold (600)"], ["700", "Bold (700)"], ["800", "Extrabold (800)"], ["900", "Black (900)"],
+    ];
+    const fontWeightSelect = editorMakeSelect(fontWeightOptions, String(config.theme.buttonFontWeight));
+    els.push(editorMakeLabel("Schriftstärke"), fontWeightSelect);
+    const borderRadiusInput = editorMakeInput("range", config.theme.buttonBorderRadius);
+    borderRadiusInput.min = "0"; borderRadiusInput.max = "3"; borderRadiusInput.step = "0.05";
+    els.push(editorMakeLabel("Eckenradius"), borderRadiusInput);
+    const fontSizeInput = editorMakeInput("range", config.theme.buttonFontSize);
+    fontSizeInput.min = "0.8"; fontSizeInput.max = "3"; fontSizeInput.step = "0.05";
+    els.push(editorMakeLabel("Schriftgröße"), fontSizeInput);
+
+    smEditorContent.replaceChildren(...els);
+
+    return () => {
+      return normalizeSiteConfig({
+        ...config,
+        title: sanitizeString(titleInput.value, DEFAULT_SITE_CONFIG.title),
+        subtitle: sanitizeString(subtitleInput.value, DEFAULT_SITE_CONFIG.subtitle),
+        startLabel: sanitizeString(startLabelInput.value, DEFAULT_SITE_CONFIG.startLabel),
+        categoryLabel: sanitizeString(categoryLabelInput.value, DEFAULT_SITE_CONFIG.categoryLabel),
+        theme: {
+          ...config.theme,
+          accentColor: accentColorInput.value || DEFAULT_SITE_CONFIG.theme.accentColor,
+          textColor: textColorInput.value || DEFAULT_SITE_CONFIG.theme.textColor,
+          backgroundColor: bgColorInput.value || DEFAULT_SITE_CONFIG.theme.backgroundColor,
+          overlayColor: overlayColorInput.value || DEFAULT_SITE_CONFIG.theme.overlayColor,
+          overlayOpacity: clamp(overlayOpacityInput.value, 0, 1, DEFAULT_SITE_CONFIG.theme.overlayOpacity),
+          landingBackgroundImageUrl: landingBg.read(),
+          categoryBackgroundImageUrl: categoryBg.read(),
+          buttonFontFamily: sanitizeString(fontFamilySelect.value, DEFAULT_SITE_CONFIG.theme.buttonFontFamily),
+          buttonFontWeight: clamp(fontWeightSelect.value, 100, 900, DEFAULT_SITE_CONFIG.theme.buttonFontWeight),
+          buttonBorderRadius: clamp(borderRadiusInput.value, 0, 3, DEFAULT_SITE_CONFIG.theme.buttonBorderRadius),
+          buttonFontSize: clamp(fontSizeInput.value, 0.8, 3, DEFAULT_SITE_CONFIG.theme.buttonFontSize),
+        },
+        webgl: {
+          animationSpeed: clamp(animSpeedInput.value, 0.05, 1.5, DEFAULT_SITE_CONFIG.webgl.animationSpeed),
+          waveStrength: clamp(waveStrengthInput.value, 0.1, 1.8, DEFAULT_SITE_CONFIG.webgl.waveStrength),
+          glowStrength: clamp(glowStrengthInput.value, 0.05, 1, DEFAULT_SITE_CONFIG.webgl.glowStrength),
+        },
+      });
+    };
+  }
+
+  function buildButtonEditorContent(haupt, buttonConfig) {
+    const els = [];
+
+    els.push(editorMakeSectionLabel("Button"));
+    const labelInput = editorMakeInput("text", buttonConfig.label);
+    els.push(editorMakeLabel("Button Name"), labelInput);
+    const titleInput = editorMakeInput("text", buttonConfig.title);
+    els.push(editorMakeLabel("Optionen Titel"), titleInput);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Farben"));
+    const bgColorInput = editorMakeInput("color", sanitizeColor(buttonConfig.backgroundColor, "#00d4ff"));
+    els.push(editorMakeLabel("Button Hintergrundfarbe"), bgColorInput);
+    const textColorInput = editorMakeInput("color", sanitizeColor(buttonConfig.textColor, "#ffffff"));
+    els.push(editorMakeLabel("Button Textfarbe"), textColorInput);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Bilder"));
+    const buttonImg = editorMakeImageUpload("Button Hintergrundbild (optional)", buttonConfig.imageUrl);
+    els.push(...buttonImg.elements);
+    const stepBgImg = editorMakeImageUpload("Schritt Hintergrundbild (optional)", buttonConfig.stepBackgroundImageUrl);
+    els.push(...stepBgImg.elements);
+
+    els.push(editorMakeDivider(), editorMakeSectionLabel("Optionen"));
+    const itemsTextarea = document.createElement("textarea");
+    itemsTextarea.rows = 6;
+    itemsTextarea.value = buttonConfig.items.join("\n");
+    els.push(editorMakeLabel("Einträge (je Zeile ein Eintrag)"), itemsTextarea);
+
+    smEditorContent.replaceChildren(...els);
+
+    return () => {
+      const newLabel = sanitizeString(labelInput.value, haupt.label);
+      const newTitle = sanitizeString(titleInput.value, buttonConfig.title);
+      const newBgColor = sanitizeColor(bgColorInput.value);
+      const newTextColor = sanitizeColor(textColorInput.value);
+      const newImageUrl = buttonImg.read();
+      const newStepBgUrl = stepBgImg.read();
+      const newItems = sanitizeItems(itemsTextarea.value, buttonConfig.items);
+
+      haupt.label = newLabel;
+      haupt.title = newTitle;
+      haupt.backgroundColor = newBgColor;
+      haupt.textColor = newTextColor;
+      haupt.imageUrl = newImageUrl;
+      haupt.stepBackgroundImageUrl = newStepBgUrl;
+
+      nodes = nodes.filter((n) => !(n.type === "side" && n.parentId === haupt.id));
+      const center = nodes.find((n) => n.id === "center");
+      const awayAngle = center ? Math.atan2(haupt.y - center.y, haupt.x - center.x) : 0;
+      const count = newItems.length;
+      newItems.forEach((item, idx) => {
+        const sideAngle = count > 1 ? awayAngle + FAN_SPREAD * (idx / (count - 1) - 0.5) : awayAngle;
+        nodes.push({
+          id: `side-${haupt.id}-${idx}`,
+          type: "side",
+          label: item,
+          x: haupt.x + Math.cos(sideAngle) * SIDE_RADIUS,
+          y: haupt.y + Math.sin(sideAngle) * SIDE_RADIUS,
+          parentId: haupt.id,
+          buttonId: haupt.buttonId,
+          itemIndex: idx,
+          createdOrder: idx,
+        });
+      });
+
+      renderAll();
+
+      const current = getConfig();
+      return normalizeSiteConfig({ ...current, buttons: rebuildConfigButtons() });
+    };
+  }
+
+  function openNodeEditor(nodeId) {
+    const node = nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+
+    if (node.type === "center") {
+      if (smEditorTitle) smEditorTitle.textContent = "Webseite bearbeiten";
+      currentEditNodeReadFn = buildWebsiteEditorContent(getConfig());
+    } else if (node.type === "haupt") {
+      if (smEditorTitle) smEditorTitle.textContent = `"${node.label}" bearbeiten`;
+      const config = getConfig();
+      const buttonConfig = config.buttons.find((b) => b.id === node.buttonId) || {
+        id: node.buttonId,
+        label: node.label,
+        title: node.title || `${node.label} Optionen`,
+        backgroundColor: node.backgroundColor || "",
+        textColor: node.textColor || "",
+        imageUrl: node.imageUrl || "",
+        stepBackgroundImageUrl: node.stepBackgroundImageUrl || "",
+        items: [],
+      };
+      currentEditNodeReadFn = buildButtonEditorContent(node, buttonConfig);
+    } else {
+      return;
+    }
+
+    smEditorPanel?.classList.remove("hidden");
+  }
+
+  function closeNodeEditor() {
+    currentEditNodeReadFn = null;
+    smEditorPanel?.classList.add("hidden");
+    if (smEditorContent) smEditorContent.replaceChildren();
+  }
+
+  smEditorCloseBtn?.addEventListener("click", closeNodeEditor);
+
+  smEditorSaveBtn?.addEventListener("click", () => {
+    if (!currentEditNodeReadFn) return;
+    const newConfig = currentEditNodeReadFn();
+    onSave(newConfig);
+    closeNodeEditor();
+  });
+
+  smUndoBtn?.addEventListener("click", () => onUndo?.());
+  smRedoBtn?.addEventListener("click", () => onRedo?.());
+  smSaveBtn?.addEventListener("click", () => onSave?.(getConfig()));
+  smResetBtn?.addEventListener("click", () => onReset?.());
+  smLogoutBtn?.addEventListener("click", () => onLogout?.());
+  closeBtn?.addEventListener("click", close);
+  addHauptBtn?.addEventListener("click", addHauptButton);
+
   function open() {
     overlay.classList.remove("hidden");
     overlay.setAttribute("aria-hidden", "false");
     nodes = buildNodesFromConfig(getConfig());
     renderAll();
+    updateHistoryButtons();
   }
 
   function close() {
     overlay.classList.add("hidden");
     overlay.setAttribute("aria-hidden", "true");
     if (dragging) endDrag();
+    closeNodeEditor();
   }
 
-  openBtn?.addEventListener("click", open);
-  closeBtn?.addEventListener("click", close);
-  addHauptBtn?.addEventListener("click", addHauptButton);
+  function refresh() {
+    nodes = buildNodesFromConfig(getConfig());
+    renderAll();
+    updateHistoryButtons();
+  }
+
+  function updateHistoryButtons() {
+    const state = getHistoryState?.() || { canUndo: false, canRedo: false };
+    if (smUndoBtn instanceof HTMLButtonElement) smUndoBtn.disabled = !state.canUndo;
+    if (smRedoBtn instanceof HTMLButtonElement) smRedoBtn.disabled = !state.canRedo;
+  }
+
+  return { open, close, refresh, updateHistoryButtons };
 }
 
 async function initApp() {
@@ -1365,7 +1721,6 @@ async function initApp() {
 
   let currentConfig = normalizeSiteConfig(getStoredJSON(STORAGE_KEYS.siteConfig, deepClone(DEFAULT_SITE_CONFIG)));
   applySiteConfig(currentConfig);
-  populateEditorForm(currentConfig);
   setupWebGLBackground(() => currentConfig.webgl);
   initNavigation();
 
@@ -1374,23 +1729,9 @@ async function initApp() {
   const loginForm = document.getElementById("login-form");
   const logoutButton = document.getElementById("logout-button");
   const sessionStatus = document.getElementById("session-status");
-  const editorPanel = document.getElementById("editor-panel");
-  const editorForm = document.getElementById("editor-form");
-  const resetButton = document.getElementById("reset-button");
   const closeDockButton = document.getElementById("close-dock-button");
-  const addCategoryButton = document.getElementById("add-category-button");
-  const buttonEditList = document.getElementById("button-edit-list");
-  const landingBackgroundImageFileInput = document.getElementById("background-image-file-input");
-  const clearLandingBackgroundImageButton = document.getElementById("clear-background-image");
-  const landingBackgroundImageStatus = document.getElementById("background-image-status");
-  const categoryBackgroundImageFileInput = document.getElementById("category-background-image-file-input");
-  const clearCategoryBackgroundImageButton = document.getElementById("clear-category-background-image");
-  const categoryBackgroundImageStatus = document.getElementById("category-background-image-status");
-  const undoButton = document.getElementById("undo-button");
-  const redoButton = document.getElementById("redo-button");
   let editorHistory = [deepClone(currentConfig)];
   let editorHistoryIndex = 0;
-  let snapshotCaptureTimer = null;
 
   function setVisibility(element, isVisible) {
     if (!element) return;
@@ -1400,48 +1741,20 @@ async function initApp() {
 
   function setDockVisibility(isVisible) {
     setVisibility(controlDock, isVisible);
-    setVisibility(loginToggle, !isVisible);
-    loginToggle?.setAttribute("aria-expanded", String(isVisible));
     document.body.classList.toggle("dock-open", isVisible);
-  }
-
-  function updateHistoryButtons() {
-    if (undoButton instanceof HTMLButtonElement) undoButton.disabled = editorHistoryIndex <= 0;
-    if (redoButton instanceof HTMLButtonElement) redoButton.disabled = editorHistoryIndex >= editorHistory.length - 1;
-  }
-
-  function applyEditorSnapshot(snapshot) {
-    currentConfig = normalizeSiteConfig(snapshot);
-    applySiteConfig(currentConfig);
-    populateEditorForm(currentConfig);
-    hideAllOptionSections();
   }
 
   function pushEditorHistory(snapshot) {
     const normalizedSnapshot = normalizeSiteConfig(snapshot);
     const currentSnapshot = editorHistory[editorHistoryIndex];
     if (currentSnapshot && JSON.stringify(currentSnapshot) === JSON.stringify(normalizedSnapshot)) {
-      updateHistoryButtons();
+      spiderMap.updateHistoryButtons();
       return;
     }
     editorHistory = editorHistory.slice(0, editorHistoryIndex + 1);
     editorHistory.push(deepClone(normalizedSnapshot));
     editorHistoryIndex = editorHistory.length - 1;
-    updateHistoryButtons();
-  }
-
-  function captureEditorSnapshot() {
-    if (!activeSession) return;
-    pushEditorHistory(readEditorForm(currentConfig));
-  }
-
-  function scheduleEditorSnapshot() {
-    if (!activeSession) return;
-    if (snapshotCaptureTimer) window.clearTimeout(snapshotCaptureTimer);
-    snapshotCaptureTimer = window.setTimeout(() => {
-      snapshotCaptureTimer = null;
-      captureEditorSnapshot();
-    }, EDITOR_SNAPSHOT_DEBOUNCE_MS);
+    spiderMap.updateHistoryButtons();
   }
 
   function findUserByName(username) {
@@ -1457,6 +1770,56 @@ async function initApp() {
 
   let activeSession = readSessionUser();
 
+  const spiderMap = initSpiderMap({
+    getConfig: () => currentConfig,
+    onConfigChange: (newConfig) => {
+      currentConfig = newConfig;
+      applySiteConfig(currentConfig);
+      pushEditorHistory(currentConfig);
+    },
+    onSave: (config) => {
+      currentConfig = normalizeSiteConfig(config);
+      applySiteConfig(currentConfig);
+      saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
+      pushEditorHistory(currentConfig);
+    },
+    onUndo: () => {
+      if (!activeSession) return;
+      if (editorHistoryIndex <= 0) return;
+      editorHistoryIndex -= 1;
+      currentConfig = normalizeSiteConfig(editorHistory[editorHistoryIndex]);
+      applySiteConfig(currentConfig);
+      spiderMap.refresh();
+    },
+    onRedo: () => {
+      if (!activeSession) return;
+      if (editorHistoryIndex >= editorHistory.length - 1) return;
+      editorHistoryIndex += 1;
+      currentConfig = normalizeSiteConfig(editorHistory[editorHistoryIndex]);
+      applySiteConfig(currentConfig);
+      spiderMap.refresh();
+    },
+    onReset: () => {
+      if (!activeSession) return;
+      currentConfig = deepClone(DEFAULT_SITE_CONFIG);
+      applySiteConfig(currentConfig);
+      saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
+      editorHistory = [deepClone(currentConfig)];
+      editorHistoryIndex = 0;
+      spiderMap.refresh();
+    },
+    onLogout: () => {
+      activeSession = null;
+      localStorage.removeItem(STORAGE_KEYS.session);
+      spiderMap.close();
+      renderSessionState();
+    },
+    getHistoryState: () => ({
+      canUndo: editorHistoryIndex > 0,
+      canRedo: editorHistoryIndex < editorHistory.length - 1,
+    }),
+  });
+
   function renderSessionState() {
     if (!sessionStatus) return;
     const hasUsers = users.length > 0;
@@ -1465,123 +1828,46 @@ async function initApp() {
       activeSession = null;
       localStorage.removeItem(STORAGE_KEYS.session);
       sessionStatus.textContent = "Keine gespeicherten Nutzer gefunden. Bitte dieses Gerät mit vorhandenen Logins verwenden.";
-      setVisibility(editorPanel, false);
       setVisibility(loginForm, false);
       setVisibility(logoutButton, false);
       setDockVisibility(false);
+      setVisibility(loginToggle, false);
       return;
     }
 
     if (!activeSession) {
       sessionStatus.textContent = "Nicht angemeldet.";
-      setVisibility(editorPanel, false);
       setVisibility(loginForm, true);
       setVisibility(logoutButton, false);
       setDockVisibility(false);
+      setVisibility(loginToggle, true);
       return;
     }
 
     sessionStatus.textContent = `Angemeldet als ${activeSession.username}.`;
-    setVisibility(editorPanel, true);
     setVisibility(loginForm, false);
-    setVisibility(logoutButton, true);
-    setDockVisibility(true);
+    setVisibility(logoutButton, false);
+    setDockVisibility(false);
+    setVisibility(loginToggle, false);
     editorHistory = [deepClone(currentConfig)];
     editorHistoryIndex = 0;
-    updateHistoryButtons();
+    spiderMap.open();
   }
 
   loginToggle?.addEventListener("click", () => {
     setDockVisibility(true);
+    setVisibility(loginToggle, false);
   });
 
   closeDockButton?.addEventListener("click", () => {
     setDockVisibility(false);
+    if (!activeSession) setVisibility(loginToggle, true);
   });
 
-  buttonEditList?.addEventListener("click", (event) => {
-    const removeButton = event.target.closest(".remove-button-item");
-    if (!removeButton) return;
-    const allItems = buttonEditList.querySelectorAll(".button-edit-item");
-    if (allItems.length <= 1) return;
-    const item = removeButton.closest(".button-edit-item");
-    item?.remove();
-    captureEditorSnapshot();
-  });
-
-  addCategoryButton?.addEventListener("click", () => {
-    if (!buttonEditList) return;
-    buttonEditList.append(
-      createButtonEditorItem({
-        id: crypto.randomUUID(),
-        label: "Neuer Button",
-        title: "Neue Optionen",
-        backgroundColor: sanitizeColor(currentConfig.theme.accentColor, "#00d4ff"),
-        textColor: sanitizeColor(currentConfig.theme.textColor, "#ffffff"),
-        imageUrl: "",
-        stepBackgroundImageUrl: "",
-        items: ["Option 1"],
-      }),
-    );
-    captureEditorSnapshot();
-  });
-
-  landingBackgroundImageFileInput?.addEventListener("change", async () => {
-    if (!(editorForm instanceof HTMLFormElement)) return;
-    const file = landingBackgroundImageFileInput.files?.[0];
-    if (!file) return;
-    try {
-      const fileDataUrl = await readImageFileAsDataUrl(file);
-      editorForm.backgroundImageUrl.value = sanitizeImageUrl(fileDataUrl);
-      if (landingBackgroundImageStatus) {
-        landingBackgroundImageStatus.textContent = editorForm.backgroundImageUrl.value
-          ? `Bild "${file.name}" geladen.`
-          : "Ungültiges Bild.";
-      }
-      captureEditorSnapshot();
-    } catch {
-      editorForm.backgroundImageUrl.value = "";
-      if (landingBackgroundImageStatus) landingBackgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
-    }
-  });
-
-  clearLandingBackgroundImageButton?.addEventListener("click", () => {
-    if (!(editorForm instanceof HTMLFormElement)) return;
-    editorForm.backgroundImageUrl.value = "";
-    if (landingBackgroundImageFileInput instanceof HTMLInputElement) {
-      landingBackgroundImageFileInput.value = "";
-    }
-    if (landingBackgroundImageStatus) landingBackgroundImageStatus.textContent = "Kein Bild gewählt.";
-    captureEditorSnapshot();
-  });
-
-  categoryBackgroundImageFileInput?.addEventListener("change", async () => {
-    if (!(editorForm instanceof HTMLFormElement)) return;
-    const file = categoryBackgroundImageFileInput.files?.[0];
-    if (!file) return;
-    try {
-      const fileDataUrl = await readImageFileAsDataUrl(file);
-      editorForm.categoryBackgroundImageUrl.value = sanitizeImageUrl(fileDataUrl);
-      if (categoryBackgroundImageStatus) {
-        categoryBackgroundImageStatus.textContent = editorForm.categoryBackgroundImageUrl.value
-          ? `Bild "${file.name}" geladen.`
-          : "Ungültiges Bild.";
-      }
-      captureEditorSnapshot();
-    } catch {
-      editorForm.categoryBackgroundImageUrl.value = "";
-      if (categoryBackgroundImageStatus) categoryBackgroundImageStatus.textContent = "Bild konnte nicht geladen werden.";
-    }
-  });
-
-  clearCategoryBackgroundImageButton?.addEventListener("click", () => {
-    if (!(editorForm instanceof HTMLFormElement)) return;
-    editorForm.categoryBackgroundImageUrl.value = "";
-    if (categoryBackgroundImageFileInput instanceof HTMLInputElement) {
-      categoryBackgroundImageFileInput.value = "";
-    }
-    if (categoryBackgroundImageStatus) categoryBackgroundImageStatus.textContent = "Kein Bild gewählt.";
-    captureEditorSnapshot();
+  logoutButton?.addEventListener("click", () => {
+    activeSession = null;
+    localStorage.removeItem(STORAGE_KEYS.session);
+    renderSessionState();
   });
 
   loginForm?.addEventListener("submit", async (event) => {
@@ -1616,84 +1902,11 @@ async function initApp() {
     activeSession = { username: user.username, role: user.role };
     saveStoredJSON(STORAGE_KEYS.session, activeSession);
     loginForm.reset();
+    setDockVisibility(false);
     renderSessionState();
-  });
-
-  logoutButton?.addEventListener("click", () => {
-    activeSession = null;
-    localStorage.removeItem(STORAGE_KEYS.session);
-    renderSessionState();
-  });
-
-  editorForm?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!activeSession) {
-      sessionStatus.textContent = "Bitte zuerst anmelden.";
-      return;
-    }
-
-    currentConfig = readEditorForm(currentConfig);
-    applySiteConfig(currentConfig);
-    saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
-    hideAllOptionSections();
-    pushEditorHistory(currentConfig);
-    sessionStatus.textContent = "Änderungen gespeichert.";
-  });
-
-  editorForm?.addEventListener("input", (event) => {
-    if (event.target instanceof HTMLInputElement && event.target.type === "file") return;
-    scheduleEditorSnapshot();
-  });
-
-  resetButton?.addEventListener("click", () => {
-    if (!activeSession) {
-      sessionStatus.textContent = "Bitte zuerst anmelden.";
-      return;
-    }
-    currentConfig = deepClone(DEFAULT_SITE_CONFIG);
-    applySiteConfig(currentConfig);
-    populateEditorForm(currentConfig);
-    saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
-    hideAllOptionSections();
-    pushEditorHistory(currentConfig);
-    sessionStatus.textContent = "Standardwerte wiederhergestellt.";
-  });
-
-  undoButton?.addEventListener("click", () => {
-    if (!activeSession) {
-      sessionStatus.textContent = "Bitte zuerst anmelden.";
-      return;
-    }
-    if (editorHistoryIndex <= 0) return;
-    editorHistoryIndex -= 1;
-    applyEditorSnapshot(editorHistory[editorHistoryIndex]);
-    updateHistoryButtons();
-    sessionStatus.textContent = "Änderung rückgängig gemacht.";
-  });
-
-  redoButton?.addEventListener("click", () => {
-    if (!activeSession) {
-      sessionStatus.textContent = "Bitte zuerst anmelden.";
-      return;
-    }
-    if (editorHistoryIndex >= editorHistory.length - 1) return;
-    editorHistoryIndex += 1;
-    applyEditorSnapshot(editorHistory[editorHistoryIndex]);
-    updateHistoryButtons();
-    sessionStatus.textContent = "Änderung wiederhergestellt.";
   });
 
   renderSessionState();
-
-  initSpiderMap(
-    () => currentConfig,
-    (newConfig) => {
-      currentConfig = newConfig;
-      applySiteConfig(currentConfig);
-      populateEditorForm(currentConfig);
-      pushEditorHistory(currentConfig);
-    },
-  );
 }
 
 initApp();
