@@ -34,86 +34,6 @@
         <button id="logout-button" type="button" class="action-button ghost small hidden">Abmelden</button>
       </section>
 
-      <section class="control-card hidden" id="editor-panel" aria-labelledby="editor-title">
-        <h3 id="editor-title">Design & Inhalte bearbeiten</h3>
-        <div class="spider-map-open-wrapper">
-          <button id="spider-map-open" type="button" class="action-button small">🕸 Spider Map</button>
-        </div>
-        <form id="editor-form" class="stack">
-          <label for="title-input">Titel</label>
-          <input id="title-input" name="title" type="text" />
-          <label for="subtitle-input">Untertitel</label>
-          <input id="subtitle-input" name="subtitle" type="text" />
-          <label for="start-label-input">Start-Button</label>
-          <input id="start-label-input" name="startLabel" type="text" />
-          <label for="category-label-input">Kategorie-Überschrift</label>
-          <input id="category-label-input" name="categoryLabel" type="text" />
-          <label for="background-image-file-input">Landingpage Hintergrundbild (optional)</label>
-          <input id="background-image-input" name="backgroundImageUrl" type="hidden" />
-          <input id="background-image-file-input" name="backgroundImageFile" type="file" accept="image/*" />
-          <p id="background-image-status" class="status">Kein Bild gewählt.</p>
-          <button id="clear-background-image" type="button" class="action-button ghost small">Bild entfernen</button>
-          <label for="category-background-image-file-input">Kategorien Hintergrundbild (optional)</label>
-          <input id="category-background-image-input" name="categoryBackgroundImageUrl" type="hidden" />
-          <input id="category-background-image-file-input" name="categoryBackgroundImageFile" type="file" accept="image/*" />
-          <p id="category-background-image-status" class="status">Kein Bild gewählt.</p>
-          <button id="clear-category-background-image" type="button" class="action-button ghost small">Bild entfernen</button>
-          <label for="accent-color-input">Akzentfarbe</label>
-          <input id="accent-color-input" name="accentColor" type="color" />
-          <label for="text-color-input">Textfarbe</label>
-          <input id="text-color-input" name="textColor" type="color" />
-          <label for="bg-color-input">Hintergrundfarbe</label>
-          <input id="bg-color-input" name="backgroundColor" type="color" />
-          <label for="overlay-color-input">Overlay-Farbe</label>
-          <input id="overlay-color-input" name="overlayColor" type="color" />
-          <label for="overlay-opacity-input">Overlay-Stärke</label>
-          <input id="overlay-opacity-input" name="overlayOpacity" type="range" min="0" max="1" step="0.01" />
-          <label for="animation-speed-input">Animationsgeschwindigkeit</label>
-          <input id="animation-speed-input" name="animationSpeed" type="range" min="0.05" max="1.5" step="0.05" />
-          <label for="wave-strength-input">Flow-Stärke</label>
-          <input id="wave-strength-input" name="waveStrength" type="range" min="0.1" max="1.8" step="0.05" />
-          <label for="glow-strength-input">Glow-Stärke</label>
-          <input id="glow-strength-input" name="glowStrength" type="range" min="0.05" max="1" step="0.01" />
-          <label for="btn-font-family-input">Button Schriftart</label>
-          <select id="btn-font-family-input" name="buttonFontFamily">
-            <option value="Arial, Helvetica, sans-serif">Arial</option>
-            <option value="Verdana, Geneva, sans-serif">Verdana</option>
-            <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
-            <option value="'Trebuchet MS', Helvetica, sans-serif">Trebuchet MS</option>
-            <option value="Georgia, 'Times New Roman', serif">Georgia</option>
-            <option value="'Times New Roman', Times, serif">Times New Roman</option>
-            <option value="'Palatino Linotype', 'Book Antiqua', Palatino, serif">Palatino</option>
-            <option value="'Courier New', Courier, monospace">Courier New</option>
-            <option value="Impact, Charcoal, sans-serif">Impact</option>
-            <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
-          </select>
-          <label for="btn-font-weight-input">Button Schriftstärke</label>
-          <select id="btn-font-weight-input" name="buttonFontWeight">
-            <option value="300">Light (300)</option>
-            <option value="400">Normal (400)</option>
-            <option value="500">Medium (500)</option>
-            <option value="600">Semibold (600)</option>
-            <option value="700">Bold (700)</option>
-            <option value="800">Extrabold (800)</option>
-            <option value="900">Black (900)</option>
-          </select>
-          <label for="btn-border-radius-input">Button Eckenradius</label>
-          <input id="btn-border-radius-input" name="buttonBorderRadius" type="range" min="0" max="3" step="0.05" />
-          <label for="btn-font-size-input">Button Schriftgröße</label>
-          <input id="btn-font-size-input" name="buttonFontSize" type="range" min="0.8" max="3" step="0.05" />
-          <div class="button-editor-header">
-            <h4>Kategorie-Buttons</h4>
-            <button id="add-category-button" type="button" class="action-button ghost small">Button hinzufügen</button>
-          </div>
-          <div id="button-edit-list" class="stack"></div>
-          <div class="button-grid">
-            <button id="undo-button" type="button" class="action-button ghost small">Rückgängig</button>
-            <button id="redo-button" type="button" class="action-button ghost small">Wiederholen</button>
-            <button type="submit" class="action-button small">Änderungen speichern</button>
-            <button id="reset-button" type="button" class="action-button ghost small">Standard wiederherstellen</button>
-          </div>
-        </form>
-      </section>
     </aside>
 
     <main>
@@ -131,16 +51,33 @@
     </main>
     <div id="spider-map-overlay" class="spider-map-overlay hidden" aria-hidden="true" role="dialog" aria-label="Spider Map Editor" aria-modal="true">
       <div class="spider-map-toolbar">
-        <span class="spider-map-title">Spider Map – Webseiten-Übersicht</span>
+        <span class="spider-map-title">Webseite bearbeiten</span>
         <span class="spider-map-legend" aria-hidden="true">
           <span class="sm-legend-dot haupt"></span> Haupt-Button
           <span class="sm-legend-dot side"></span> Side-Button
         </span>
         <button id="spider-map-add-haupt" type="button" class="action-button small">+ Haupt-Button</button>
-        <button id="spider-map-close" type="button" class="action-button ghost small">Schließen</button>
+        <button id="spider-map-undo" type="button" class="action-button ghost small" disabled>↩ Rückgängig</button>
+        <button id="spider-map-redo" type="button" class="action-button ghost small" disabled>↪ Wiederholen</button>
+        <button id="spider-map-save" type="button" class="action-button small">💾 Speichern</button>
+        <button id="spider-map-reset" type="button" class="action-button ghost small">↺ Standard</button>
+        <button id="spider-map-logout" type="button" class="action-button ghost small">Abmelden</button>
+        <button id="spider-map-close" type="button" class="action-button ghost small">✕ Schließen</button>
       </div>
-      <div id="spider-map-canvas" class="spider-map-canvas">
-        <svg id="spider-map-svg" class="spider-map-svg" aria-hidden="true"></svg>
+      <div class="spider-map-body">
+        <aside id="sm-editor-panel" class="sm-editor-panel hidden" aria-label="Element bearbeiten">
+          <div class="sm-editor-panel-header">
+            <strong id="sm-editor-title">Bearbeiten</strong>
+            <button id="sm-editor-close" type="button" class="sm-node-btn" aria-label="Panel schließen">✕</button>
+          </div>
+          <div id="sm-editor-content" class="stack"></div>
+          <div class="sm-editor-panel-footer">
+            <button id="sm-editor-save" type="button" class="action-button small">Speichern</button>
+          </div>
+        </aside>
+        <div id="spider-map-canvas" class="spider-map-canvas">
+          <svg id="spider-map-svg" class="spider-map-svg" aria-hidden="true"></svg>
+        </div>
       </div>
     </div>
     <script src="./app.js"></script>
