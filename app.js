@@ -572,7 +572,7 @@ function initNavigation() {
   });
 }
 
-function createButtonEditorItem(buttonConfig) {
+function createButtonEditorItem(buttonConfig, onSnapshot) {
   const item = document.createElement("div");
   item.className = "button-edit-item stack";
 
@@ -664,6 +664,7 @@ function createButtonEditorItem(buttonConfig) {
       const fileDataUrl = await readImageFileAsDataUrl(file);
       imageInput.value = sanitizeImageUrl(fileDataUrl);
       imageStatus.textContent = imageInput.value ? `Bild "${file.name}" geladen.` : "Ungültiges Bild.";
+      onSnapshot?.();
     } catch {
       imageInput.value = "";
       imageStatus.textContent = "Bild konnte nicht geladen werden.";
@@ -674,6 +675,7 @@ function createButtonEditorItem(buttonConfig) {
     imageInput.value = "";
     imageFileInput.value = "";
     imageStatus.textContent = "Kein Bild gewählt.";
+    onSnapshot?.();
   });
   stepBackgroundFileInput.addEventListener("change", async () => {
     const file = stepBackgroundFileInput.files?.[0];
@@ -682,6 +684,7 @@ function createButtonEditorItem(buttonConfig) {
       const fileDataUrl = await readImageFileAsDataUrl(file);
       stepBackgroundInput.value = sanitizeImageUrl(fileDataUrl);
       stepBackgroundStatus.textContent = stepBackgroundInput.value ? `Bild "${file.name}" geladen.` : "Ungültiges Bild.";
+      onSnapshot?.();
     } catch {
       stepBackgroundInput.value = "";
       stepBackgroundStatus.textContent = "Bild konnte nicht geladen werden.";
@@ -691,6 +694,7 @@ function createButtonEditorItem(buttonConfig) {
     stepBackgroundInput.value = "";
     stepBackgroundFileInput.value = "";
     stepBackgroundStatus.textContent = "Kein Bild gewählt.";
+    onSnapshot?.();
   });
 
   item.append(
@@ -718,7 +722,7 @@ function createButtonEditorItem(buttonConfig) {
   return item;
 }
 
-function populateEditorForm(config) {
+function populateEditorForm(config, onSnapshot) {
   const form = document.getElementById("editor-form");
   const list = document.getElementById("button-edit-list");
   if (!form || !list) return;
@@ -750,7 +754,7 @@ function populateEditorForm(config) {
   form.waveStrength.value = config.webgl.waveStrength;
   form.glowStrength.value = config.webgl.glowStrength;
 
-  list.replaceChildren(...config.buttons.map((buttonConfig) => createButtonEditorItem(buttonConfig)));
+  list.replaceChildren(...config.buttons.map((buttonConfig) => createButtonEditorItem(buttonConfig, onSnapshot)));
 }
 
 function readButtonEditorList() {
@@ -960,7 +964,7 @@ async function initApp() {
   function applyEditorSnapshot(snapshot) {
     currentConfig = normalizeSiteConfig(snapshot);
     applySiteConfig(currentConfig);
-    populateEditorForm(currentConfig);
+    populateEditorForm(currentConfig, captureEditorSnapshot);
     hideAllOptionSections();
   }
 
@@ -1068,7 +1072,7 @@ async function initApp() {
         imageUrl: "",
         stepBackgroundImageUrl: "",
         items: ["Option 1"],
-      }),
+      }, captureEditorSnapshot),
     );
     captureEditorSnapshot();
   });
@@ -1199,7 +1203,7 @@ async function initApp() {
     }
     currentConfig = deepClone(DEFAULT_SITE_CONFIG);
     applySiteConfig(currentConfig);
-    populateEditorForm(currentConfig);
+    populateEditorForm(currentConfig, captureEditorSnapshot);
     saveStoredJSON(STORAGE_KEYS.siteConfig, currentConfig);
     hideAllOptionSections();
     pushEditorHistory(currentConfig);
