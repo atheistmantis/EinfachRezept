@@ -7,6 +7,10 @@
   --background: #02040a;
   --panel-bg-image: none;
   --dock-width: min(31rem, 40vw);
+  --btn-border-radius: 1rem;
+  --btn-font-size: 1.65rem;
+  --btn-font-family: Arial, Helvetica, sans-serif;
+  --btn-font-weight: 700;
 }
 
 * {
@@ -85,11 +89,12 @@ h3 {
 
 .action-button {
   border: 3px solid transparent;
-  border-radius: 1rem;
-  padding: 1.15rem 2.6rem;
+  border-radius: var(--btn-border-radius);
+  padding: 0.7em 1.6em;
   margin: 0.5rem;
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  font-weight: 700;
+  font-size: var(--btn-font-size);
+  font-family: var(--btn-font-family);
+  font-weight: var(--btn-font-weight);
   background: var(--accent);
   color: var(--accent-contrast);
   cursor: pointer;
@@ -109,6 +114,9 @@ h3 {
   min-width: 0;
   padding: 0.8rem 1.2rem;
   font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  border-radius: 1rem;
   border-width: 2px;
 }
 
