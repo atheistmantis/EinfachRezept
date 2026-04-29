@@ -1726,6 +1726,7 @@ async function initApp() {
 
   const controlDock = document.getElementById("control-dock");
   const loginToggle = document.getElementById("login-toggle");
+  const spiderMapToggle = document.getElementById("spider-map-toggle");
   const loginForm = document.getElementById("login-form");
   const logoutButton = document.getElementById("logout-button");
   const sessionStatus = document.getElementById("session-status");
@@ -1832,6 +1833,7 @@ async function initApp() {
       setVisibility(logoutButton, false);
       setDockVisibility(false);
       setVisibility(loginToggle, false);
+      setVisibility(spiderMapToggle, false);
       return;
     }
 
@@ -1841,6 +1843,7 @@ async function initApp() {
       setVisibility(logoutButton, false);
       setDockVisibility(false);
       setVisibility(loginToggle, true);
+      setVisibility(spiderMapToggle, false);
       return;
     }
 
@@ -1849,6 +1852,7 @@ async function initApp() {
     setVisibility(logoutButton, false);
     setDockVisibility(false);
     setVisibility(loginToggle, false);
+    setVisibility(spiderMapToggle, true);
     editorHistory = [deepClone(currentConfig)];
     editorHistoryIndex = 0;
     spiderMap.open();
@@ -1857,6 +1861,10 @@ async function initApp() {
   loginToggle?.addEventListener("click", () => {
     setDockVisibility(true);
     setVisibility(loginToggle, false);
+  });
+
+  spiderMapToggle?.addEventListener("click", () => {
+    spiderMap.open();
   });
 
   closeDockButton?.addEventListener("click", () => {

@@ -221,6 +221,13 @@ li {
   z-index: 5;
 }
 
+.spider-map-toggle {
+  position: fixed;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 5;
+}
+
 .control-card {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
