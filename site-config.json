@@ -28,7 +28,7 @@
           "id": "huhn",
           "label": "Huhn",
           "title": "Huhn Optionen",
-          "items": ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen", "Reis", "Nudeln"]
+          "items": ["Reis", "Nudeln"]
         },
         {
           "id": "schwein",
@@ -62,7 +62,22 @@
       "textColor": "",
       "imageUrl": "",
       "stepBackgroundImageUrl": "",
-      "items": ["Tomatensauce", "Pesto", "Gemüse-Nudeln"]
+      "displayType": "recipe",
+      "items": [
+        "3 EL Olivenöl",
+        "600 g geschnetzeltes Pouletfleisch",
+        "Salz",
+        "Pfeffer",
+        "3 Zwiebeln",
+        "750 g Champignons",
+        "450 g Shiitake-Pilz",
+        "3 TL Mehl",
+        "6 EL Weisswein",
+        "4.5 dl Fleischbouillon",
+        "1.5 dl Halbrahm",
+        "6 EL Schnittlauch",
+        "360 g Teigwaren"
+      ]
     }
   ],
   "theme": {

@@ -69,6 +69,7 @@ export function normalizeButtons(rawButtons) {
       stepBackgroundImageUrl: sanitizeImageUrl(
         entry?.stepBackgroundImageUrl || entry?.sectionBackgroundImageUrl || "",
       ),
+      displayType: sanitizeString(entry?.displayType, fallbackSource.displayType || ""),
       items:
         Array.isArray(entry?.items) && entry.items.length
           ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
@@ -389,6 +390,25 @@ function _rebuildOptionSections(config) {
         });
 
         return [section, ...subSections];
+      }
+
+      // Recipe box: render items in a compact `.recipe-card` element.
+      if (buttonConfig.displayType === "recipe") {
+        const card = document.createElement("div");
+        card.className = "recipe-card";
+
+        const list = document.createElement("ul");
+        list.replaceChildren(
+          ...buttonConfig.items.map((itemText) => {
+            const item = document.createElement("li");
+            item.textContent = itemText;
+            return item;
+          }),
+        );
+
+        card.append(list);
+        section.append(heading, card);
+        return [section];
       }
 
       // Default: flat item list.

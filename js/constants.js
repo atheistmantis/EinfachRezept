@@ -59,6 +59,7 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
  * @property {string}   textColor          - CSS hex colour or empty string
  * @property {string}   imageUrl
  * @property {string}   stepBackgroundImageUrl
+ * @property {string}   displayType        - Optional display mode (e.g. "recipe")
  * @property {string[]} items
  * @property {SubcategoryConfig[] | null} subcategories
  */
@@ -123,7 +124,7 @@ export const DEFAULT_SITE_CONFIG = {
       stepBackgroundImageUrl: "",
       items: ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
       subcategories: [
-        { id: "huhn",   label: "Huhn",   title: "Huhn Optionen",   items: ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen", "Reis", "Nudeln"] },
+        { id: "huhn",   label: "Huhn",   title: "Huhn Optionen",   items: ["Reis", "Nudeln"] },
         { id: "schwein", label: "Schwein", title: "Schwein Optionen", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
         { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
       ],
@@ -146,7 +147,22 @@ export const DEFAULT_SITE_CONFIG = {
       textColor: "",
       imageUrl: "",
       stepBackgroundImageUrl: "",
-      items: ["Tomatensauce", "Pesto", "Gemüse-Nudeln"],
+      displayType: "recipe",
+      items: [
+        "3 EL Olivenöl",
+        "600 g geschnetzeltes Pouletfleisch",
+        "Salz",
+        "Pfeffer",
+        "3 Zwiebeln",
+        "750 g Champignons",
+        "450 g Shiitake-Pilz",
+        "3 TL Mehl",
+        "6 EL Weisswein",
+        "4.5 dl Fleischbouillon",
+        "1.5 dl Halbrahm",
+        "6 EL Schnittlauch",
+        "360 g Teigwaren",
+      ],
     },
   ],
   theme: {
