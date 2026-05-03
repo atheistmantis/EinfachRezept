@@ -123,7 +123,7 @@ export const DEFAULT_SITE_CONFIG = {
       stepBackgroundImageUrl: "",
       items: ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
       subcategories: [
-        { id: "huhn",   label: "Huhn",   title: "Huhn Optionen",   items: ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen"] },
+        { id: "huhn",   label: "Huhn",   title: "Huhn Optionen",   items: ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen", "Reis", "Nudeln"] },
         { id: "schwein", label: "Schwein", title: "Schwein Optionen", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
         { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
       ],

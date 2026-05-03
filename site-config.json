@@ -28,7 +28,7 @@
           "id": "huhn",
           "label": "Huhn",
           "title": "Huhn Optionen",
-          "items": ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen"]
+          "items": ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen", "Reis", "Nudeln"]
         },
         {
           "id": "schwein",
