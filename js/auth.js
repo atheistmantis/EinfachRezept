@@ -4,6 +4,11 @@
  * Passwords are hashed with PBKDF2-SHA-256 and stored in localStorage.
  * A legacy unsalted-SHA-256 path is retained for backwards compatibility
  * and is transparently upgraded to V2 on first successful login.
+ *
+ * **Security note:** This app uses client-side localStorage for auth state.
+ * Only PBKDF2-derived hashes (never raw passwords) are written to storage.
+ * This is an intentional architectural trade-off for a fully static site with
+ * no server-side session management.
  */
 
 import { PASSWORD_HASH_VERSION, PASSWORD_ITERATIONS, REQUIRED_ADMIN_USERS } from "./constants.js";

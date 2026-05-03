@@ -34,6 +34,10 @@ export function getStoredJSON(key, fallback) {
 /**
  * JSON-serialises `value` and writes it to localStorage under `key`.
  *
+ * Note: localStorage is unencrypted browser storage.  Callers must ensure
+ * that no raw credentials are passed — only derived values (e.g. PBKDF2
+ * hashes) or non-sensitive configuration data.
+ *
  * @param {string} key
  * @param {unknown} value
  */
