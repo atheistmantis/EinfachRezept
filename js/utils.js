@@ -34,10 +34,6 @@ export function getStoredJSON(key, fallback) {
 /**
  * JSON-serialises `value` and writes it to localStorage under `key`.
  *
- * Note: localStorage is unencrypted browser storage.  Callers must ensure
- * that no raw credentials are passed — only derived values (e.g. PBKDF2
- * hashes) or non-sensitive configuration data.
- *
  * @param {string} key
  * @param {unknown} value
  */
@@ -76,22 +72,6 @@ export function deepClone(value) {
 export function sanitizeString(value, fallback) {
   const cleaned = String(value ?? "").trim();
   return cleaned.length ? cleaned : fallback;
-}
-
-/**
- * Splits a newline-delimited string into an array of trimmed, non-empty entries.
- * Returns `fallbackItems` when the result would otherwise be empty.
- *
- * @param {unknown} multilineValue
- * @param {string[]} fallbackItems
- * @returns {string[]}
- */
-export function sanitizeItems(multilineValue, fallbackItems) {
-  const items = String(multilineValue ?? "")
-    .split("\n")
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-  return items.length ? items : fallbackItems;
 }
 
 /**
@@ -231,65 +211,4 @@ export function slugify(value) {
  */
 export function cssUrlValue(url) {
   return `url("${String(url).replace(/["\\\n\r\f]/g, "\\$&")}")`;
-}
-
-/**
- * Reads an image `File` object and resolves with its data-URL representation.
- * Rejects when `file` is absent or not an image MIME type.
- *
- * @param {File} file
- * @returns {Promise<string>}
- */
-export function readImageFileAsDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    if (!file || !file.type?.startsWith("image/")) {
-      reject(new Error("Invalid image file."));
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result ?? ""));
-    reader.onerror = () => reject(new Error("Unable to read image file."));
-    reader.readAsDataURL(file);
-  });
-}
-
-// ---------------------------------------------------------------------------
-// Binary / crypto helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Converts an `ArrayBuffer` or `Uint8Array` to a lowercase hex string.
- *
- * @param {ArrayBuffer | Uint8Array} buffer
- * @returns {string}
- */
-export function toHex(buffer) {
-  return Array.from(new Uint8Array(buffer))
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-/**
- * Converts a lowercase hex string back to a `Uint8Array`.
- *
- * @param {string} hexString
- * @returns {Uint8Array}
- */
-export function fromHex(hexString) {
-  const pairs = hexString.match(/.{1,2}/g) ?? [];
-  return new Uint8Array(pairs.map((pair) => Number.parseInt(pair, 16)));
-}
-
-/**
- * Base-64 encodes `config` as a UTF-8 JSON string.
- * Required by the GitHub Contents API, which expects base-64 file content.
- *
- * @param {object} config
- * @returns {string}
- */
-export function configToBase64(config) {
-  const jsonStr = JSON.stringify(config, null, 2);
-  const bytes = new TextEncoder().encode(jsonStr);
-  const binary = Array.from(bytes, (b) => String.fromCharCode(b)).join("");
-  return btoa(binary);
 }
