@@ -73,6 +73,7 @@ export function normalizeButtons(rawButtons) {
         Array.isArray(entry?.items) && entry.items.length
           ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
           : deepClone(fallbackSource.items),
+      subcategories: _normalizeSubcategories(entry?.subcategories, fallbackSource.subcategories),
     });
   });
 
@@ -193,6 +194,47 @@ export function applySiteConfig(config) {
 // ── Private helpers ──────────────────────────────────────────────────────────
 
 /**
+ * Normalises a raw subcategories array into valid `SubcategoryConfig` records.
+ * Returns `null` when no valid subcategories are provided.
+ *
+ * @param {unknown} rawSubcategories
+ * @param {import('./constants.js').SubcategoryConfig[] | null} [fallback]
+ * @returns {import('./constants.js').SubcategoryConfig[] | null}
+ */
+function _normalizeSubcategories(rawSubcategories, fallback) {
+  if (!Array.isArray(rawSubcategories) || !rawSubcategories.length) {
+    return fallback ? deepClone(fallback) : null;
+  }
+
+  const usedIds = new Set();
+  const normalized = rawSubcategories.map((entry, index) => {
+    const label = sanitizeString(entry?.label, `Unterkategorie ${index + 1}`);
+    const title = sanitizeString(entry?.title, `${label} Optionen`);
+    const idBase = sanitizeString(entry?.id, slugify(label) || `sub-${index + 1}`);
+
+    let id = idBase;
+    let suffix = 2;
+    while (usedIds.has(id)) {
+      id = `${idBase}-${suffix}`;
+      suffix += 1;
+    }
+    usedIds.add(id);
+
+    return {
+      id,
+      label,
+      title,
+      items:
+        Array.isArray(entry?.items) && entry.items.length
+          ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
+          : [],
+    };
+  });
+
+  return normalized.length ? normalized : null;
+}
+
+/**
  * Updates the text content of the title, subtitle, start-button,
  * and category-heading elements.
  *
@@ -282,7 +324,7 @@ function _rebuildOptionSections(config) {
   if (!container) return;
 
   container.replaceChildren(
-    ...config.buttons.map((buttonConfig, index) => {
+    ...config.buttons.flatMap((buttonConfig, index) => {
       const section = document.createElement("section");
       section.className = "panel options";
       section.id = `options-${buttonConfig.id || index + 1}`;
@@ -298,6 +340,58 @@ function _rebuildOptionSections(config) {
       const heading = document.createElement("h3");
       heading.textContent = buttonConfig.title;
 
+      if (buttonConfig.subcategories && buttonConfig.subcategories.length) {
+        // Render subcategory buttons instead of a flat item list.
+        const subcatGrid = document.createElement("div");
+        subcatGrid.className = "button-grid button-row";
+
+        buttonConfig.subcategories.forEach((subcat) => {
+          const subButton = document.createElement("button");
+          subButton.type = "button";
+          subButton.className = "action-button option-button";
+          subButton.dataset.target = `suboptions-${buttonConfig.id}-${subcat.id}`;
+          const subLabel = document.createElement("span");
+          subLabel.textContent = subcat.label;
+          subButton.append(subLabel);
+          subcatGrid.append(subButton);
+        });
+
+        section.append(heading, subcatGrid);
+
+        // Build a sub-option section for each subcategory.
+        const subSections = buttonConfig.subcategories.map((subcat) => {
+          const subSection = document.createElement("section");
+          subSection.className = "panel options sub-options";
+          subSection.id = `suboptions-${buttonConfig.id}-${subcat.id}`;
+          subSection.style.setProperty(
+            "--section-bg-image",
+            buttonConfig.stepBackgroundImageUrl
+              ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
+              : config.theme.categoryBackgroundImageUrl
+                ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
+                : "none",
+          );
+
+          const subHeading = document.createElement("h3");
+          subHeading.textContent = subcat.title;
+
+          const list = document.createElement("ul");
+          list.replaceChildren(
+            ...subcat.items.map((itemText) => {
+              const item = document.createElement("li");
+              item.textContent = itemText;
+              return item;
+            }),
+          );
+
+          subSection.append(subHeading, list);
+          return subSection;
+        });
+
+        return [section, ...subSections];
+      }
+
+      // Default: flat item list.
       const list = document.createElement("ul");
       list.replaceChildren(
         ...buttonConfig.items.map((itemText) => {
@@ -308,7 +402,7 @@ function _rebuildOptionSections(config) {
       );
 
       section.append(heading, list);
-      return section;
+      return [section];
     }),
   );
 }
