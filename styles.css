@@ -200,10 +200,46 @@ li {
   border-radius: 1rem;
   padding: 1.5rem 2rem;
   width: min(28rem, 92vw);
+  text-align: left;
 }
 
 .recipe-card ul {
   width: 100%;
+}
+
+.recipe-name {
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+}
+
+.recipe-section-title {
+  margin: 1rem 0 0.4rem;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(var(--accent-rgb), 0.85);
+}
+
+.recipe-steps {
+  list-style: decimal inside;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.recipe-steps li {
+  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.85rem;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  font-weight: 400;
+  background: rgba(255, 255, 255, 0.14);
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  line-height: 1.5;
 }
 
 @media (prefers-reduced-motion: reduce) {

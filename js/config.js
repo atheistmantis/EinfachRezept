@@ -70,10 +70,15 @@ export function normalizeButtons(rawButtons) {
         entry?.stepBackgroundImageUrl || entry?.sectionBackgroundImageUrl || "",
       ),
       displayType: sanitizeString(entry?.displayType, fallbackSource.displayType || ""),
+      recipeName: sanitizeString(entry?.recipeName, fallbackSource.recipeName || ""),
       items:
         Array.isArray(entry?.items) && entry.items.length
           ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
           : deepClone(fallbackSource.items),
+      steps:
+        Array.isArray(entry?.steps) && entry.steps.length
+          ? entry.steps.map((step) => sanitizeString(step, "")).filter(Boolean)
+          : deepClone(fallbackSource.steps || []),
       subcategories: _normalizeSubcategories(entry?.subcategories, fallbackSource.subcategories),
     });
   });
@@ -392,10 +397,21 @@ function _rebuildOptionSections(config) {
         return [section, ...subSections];
       }
 
-      // Recipe box: render items in a compact `.recipe-card` element.
+      // Recipe box: render items as ingredients and optionally steps.
       if (buttonConfig.displayType === "recipe") {
         const card = document.createElement("div");
         card.className = "recipe-card";
+
+        if (buttonConfig.recipeName) {
+          const recipeName = document.createElement("p");
+          recipeName.className = "recipe-name";
+          recipeName.textContent = buttonConfig.recipeName;
+          card.append(recipeName);
+        }
+
+        const ingredientsTitle = document.createElement("p");
+        ingredientsTitle.className = "recipe-section-title";
+        ingredientsTitle.textContent = "Zutaten";
 
         const list = document.createElement("ul");
         list.replaceChildren(
@@ -406,7 +422,26 @@ function _rebuildOptionSections(config) {
           }),
         );
 
-        card.append(list);
+        card.append(ingredientsTitle, list);
+
+        if (buttonConfig.steps && buttonConfig.steps.length) {
+          const stepsTitle = document.createElement("p");
+          stepsTitle.className = "recipe-section-title";
+          stepsTitle.textContent = "Zubereitung";
+
+          const stepsList = document.createElement("ol");
+          stepsList.className = "recipe-steps";
+          stepsList.replaceChildren(
+            ...buttonConfig.steps.map((stepText) => {
+              const item = document.createElement("li");
+              item.textContent = stepText;
+              return item;
+            }),
+          );
+
+          card.append(stepsTitle, stepsList);
+        }
+
         section.append(heading, card);
         return [section];
       }
