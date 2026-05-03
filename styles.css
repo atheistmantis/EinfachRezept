@@ -194,6 +194,18 @@ li {
   box-shadow: none;
 }
 
+.recipe-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 2px solid rgba(var(--accent-rgb), 0.55);
+  border-radius: 1rem;
+  padding: 1.5rem 2rem;
+  width: min(28rem, 92vw);
+}
+
+.recipe-card ul {
+  width: 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
