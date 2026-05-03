@@ -31,7 +31,7 @@ jobs:
             echo "::warning::Repository secret SITE_PAT is not set. Admins will not be able to save changes globally."
           else
             ENCODED=$(printf '%s' "$SITE_PAT" | base64 -w 0)
-            sed -i "s|__SITE_PAT_B64__|${ENCODED}|g" app.js
+            sed -i "s|__SITE_PAT_B64__|${ENCODED}|g" js/github.js
           fi
 
       - uses: actions/configure-pages@v5
