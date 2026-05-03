@@ -95,6 +95,26 @@ export const DEFAULT_SITE_CONFIG = {
   categoryLabel: "Wähle eine Basis",
   buttons: [
     {
+      id: "gemuese",
+      label: "Gemüse",
+      title: "Gemüse Optionen",
+      backgroundColor: "",
+      textColor: "",
+      imageUrl: "",
+      stepBackgroundImageUrl: "",
+      items: ["Gemüsepfanne", "Gemüsesuppe", "Geröstetes Gemüse"],
+    },
+    {
+      id: "fleisch",
+      label: "Fleisch",
+      title: "Fleisch Optionen",
+      backgroundColor: "",
+      textColor: "",
+      imageUrl: "",
+      stepBackgroundImageUrl: "",
+      items: ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
+    },
+    {
       id: "reis",
       label: "Reis",
       title: "Reis Optionen",

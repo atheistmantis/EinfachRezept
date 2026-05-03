@@ -126,9 +126,9 @@ h3 {
 }
 
 .button-row {
-  width: min(70rem, 100vw);
-  overflow-x: auto;
-  justify-content: flex-start;
+  width: min(70rem, 100%);
+  flex-wrap: wrap;
+  justify-content: center;
   padding-inline: 0.6rem;
   padding-bottom: 0.4rem;
 }
