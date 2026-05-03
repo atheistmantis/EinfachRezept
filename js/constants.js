@@ -60,7 +60,9 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
  * @property {string}   imageUrl
  * @property {string}   stepBackgroundImageUrl
  * @property {string}   displayType        - Optional display mode (e.g. "recipe")
+ * @property {string}   recipeName         - Optional recipe name shown inside the recipe card
  * @property {string[]} items
+ * @property {string[]} steps              - Optional preparation steps for recipe display
  * @property {SubcategoryConfig[] | null} subcategories
  */
 
@@ -148,6 +150,7 @@ export const DEFAULT_SITE_CONFIG = {
       imageUrl: "",
       stepBackgroundImageUrl: "",
       displayType: "recipe",
+      recipeName: "Poulet-Pilz-Teigwaren",
       items: [
         "3 EL Olivenöl",
         "600 g geschnetzeltes Pouletfleisch",
@@ -162,6 +165,16 @@ export const DEFAULT_SITE_CONFIG = {
         "1.5 dl Halbrahm",
         "6 EL Schnittlauch",
         "360 g Teigwaren",
+      ],
+      steps: [
+        "Teigwaren nach Packungsanleitung in gesalzenem Wasser kochen.",
+        "Olivenöl in einer Pfanne erhitzen. Pouletfleisch portionenweise anbraten, salzen und pfeffern. Herausnehmen und beiseite stellen.",
+        "Zwiebeln im selben Öl glasig dünsten. Champignons und Shiitake-Pilze beigeben und mitbraten, bis die Flüssigkeit verdunstet ist.",
+        "Mehl darüberstäuben und kurz mitrösten.",
+        "Mit Weisswein ablöschen und kurz einkochen lassen.",
+        "Fleischbouillon und Halbrahm beigeben, aufkochen und ca. 5 Minuten köcheln lassen.",
+        "Pouletfleisch wieder beigeben und alles kurz erhitzen.",
+        "Schnittlauch untermischen, mit Salz und Pfeffer abschmecken und mit den Teigwaren servieren.",
       ],
     },
   ],
