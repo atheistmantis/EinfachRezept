@@ -8,36 +8,6 @@
   </head>
   <body>
     <canvas id="bg" aria-hidden="true"></canvas>
-    <button id="login-toggle" type="button" class="action-button small ghost login-toggle" aria-expanded="false">
-      Login
-    </button>
-    <button id="spider-map-toggle" type="button" class="action-button small ghost spider-map-toggle hidden" aria-hidden="true">
-      Spider-Map
-    </button>
-    <aside class="control-dock hidden" id="control-dock" aria-label="Seitenverwaltung" aria-hidden="true">
-      <div class="control-dock-header">
-        <button id="close-dock-button" type="button" class="action-button ghost small">Schließen</button>
-      </div>
-      <section class="control-card" aria-labelledby="login-title">
-        <h2 id="login-title">Login</h2>
-        <form id="login-form" class="stack">
-          <label for="login-username">Benutzername</label>
-          <input id="login-username" name="username" type="text" required autocomplete="username" />
-          <label for="login-password">Passwort</label>
-          <input
-            id="login-password"
-            name="password"
-            type="password"
-            required
-            autocomplete="current-password"
-          />
-          <button type="submit" class="action-button small">Anmelden</button>
-        </form>
-        <p id="session-status" class="status" role="status" aria-live="polite">Nicht angemeldet.</p>
-        <button id="logout-button" type="button" class="action-button ghost small hidden">Abmelden</button>
-      </section>
-
-    </aside>
 
     <main>
       <section class="panel hero" id="top" aria-labelledby="site-title">
@@ -52,38 +22,6 @@
       </section>
       <div id="options-container"></div>
     </main>
-    <div id="spider-map-overlay" class="spider-map-overlay hidden" aria-hidden="true" role="dialog" aria-label="Spider Map Editor" aria-modal="true">
-      <div class="spider-map-toolbar">
-        <span class="spider-map-title">Webseite bearbeiten</span>
-        <span class="spider-map-legend" aria-hidden="true">
-          <span class="sm-legend-dot haupt"></span> Haupt-Button
-          <span class="sm-legend-dot side"></span> Side-Button
-        </span>
-        <button id="spider-map-add-haupt" type="button" class="action-button small">+ Haupt-Button</button>
-        <button id="spider-map-undo" type="button" class="action-button ghost small" disabled>↩ Rückgängig</button>
-        <button id="spider-map-redo" type="button" class="action-button ghost small" disabled>↪ Wiederholen</button>
-        <button id="spider-map-save" type="button" class="action-button small">💾 Speichern</button>
-        <span id="sm-save-status" class="status" role="status" aria-live="polite"></span>
-        <button id="spider-map-reset" type="button" class="action-button ghost small">↺ Standard</button>
-        <button id="spider-map-logout" type="button" class="action-button ghost small">Abmelden</button>
-        <button id="spider-map-close" type="button" class="action-button ghost small">✕ Schließen</button>
-      </div>
-      <div class="spider-map-body">
-        <aside id="sm-editor-panel" class="sm-editor-panel hidden" aria-label="Element bearbeiten">
-          <div class="sm-editor-panel-header">
-            <strong id="sm-editor-title">Bearbeiten</strong>
-            <button id="sm-editor-close" type="button" class="sm-node-btn" aria-label="Panel schließen">✕</button>
-          </div>
-          <div id="sm-editor-content" class="stack"></div>
-          <div class="sm-editor-panel-footer">
-            <button id="sm-editor-save" type="button" class="action-button small">Speichern</button>
-          </div>
-        </aside>
-        <div id="spider-map-canvas" class="spider-map-canvas">
-          <svg id="spider-map-svg" class="spider-map-svg" aria-hidden="true"></svg>
-        </div>
-      </div>
-    </div>
     <script type="module" src="./js/app.js"></script>
   </body>
 </html>
