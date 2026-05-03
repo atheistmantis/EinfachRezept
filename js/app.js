@@ -106,4 +106,18 @@ function initNavigation() {
     targetSection?.classList.add("active");
     targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  const optionsContainer = document.getElementById("options-container");
+  optionsContainer?.addEventListener("click", (event) => {
+    const button = event.target.closest(".option-button");
+    if (!button) return;
+    const targetId = button.dataset.target;
+    if (!targetId) return;
+
+    // Hide all sub-option sections, then reveal the target.
+    document.querySelectorAll(".sub-options").forEach((s) => s.classList.remove("active"));
+    const targetSection = document.getElementById(targetId);
+    targetSection?.classList.add("active");
+    targetSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }

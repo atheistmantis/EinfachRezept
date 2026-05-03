@@ -43,6 +43,14 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
 // ---------------------------------------------------------------------------
 
 /**
+ * @typedef {Object} SubcategoryConfig
+ * @property {string}   id
+ * @property {string}   label
+ * @property {string}   title
+ * @property {string[]} items
+ */
+
+/**
  * @typedef {Object} ButtonConfig
  * @property {string}   id
  * @property {string}   label
@@ -52,6 +60,7 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
  * @property {string}   imageUrl
  * @property {string}   stepBackgroundImageUrl
  * @property {string[]} items
+ * @property {SubcategoryConfig[] | null} subcategories
  */
 
 /**
@@ -113,6 +122,11 @@ export const DEFAULT_SITE_CONFIG = {
       imageUrl: "",
       stepBackgroundImageUrl: "",
       items: ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
+      subcategories: [
+        { id: "huhn",   label: "Huhn",   title: "Huhn Optionen",   items: ["Hähnchenpfanne", "Hähnchensuppe", "Grillhähnchen"] },
+        { id: "schwein", label: "Schwein", title: "Schwein Optionen", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
+        { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
+      ],
     },
     {
       id: "reis",
