@@ -134,12 +134,13 @@ export const DEFAULT_SITE_CONFIG = {
     {
       id: "reis",
       label: "Reis",
-      title: "Riz Casimir (6 Personen)",
+      title: "Riz Casimir",
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
       stepBackgroundImageUrl: "",
       displayType: "recipe",
+      recipeName: "Riz Casimir (6 Personen)",
       items: [
         "375 g Langkornreis",
         "750 g Pouletbrust",

@@ -195,12 +195,16 @@ li {
 }
 
 .recipe-card {
-  background: rgba(255, 255, 255, 0.07);
-  border: 2px solid rgba(var(--accent-rgb), 0.55);
-  border-radius: 1rem;
-  padding: 1.5rem 2rem;
-  width: min(28rem, 92vw);
+  background: #fffef8;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 0.5rem;
+  padding: 2rem 2.5rem;
+  width: min(32rem, 92vw);
   text-align: left;
+  color: #1a1a1a;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
 .recipe-card ul {
@@ -211,7 +215,7 @@ li {
   margin: 0 0 1.2rem;
   font-size: clamp(1.3rem, 3vw, 1.7rem);
   font-weight: 700;
-  color: var(--accent);
+  color: #1a1a1a;
   text-align: center;
 }
 
@@ -221,7 +225,13 @@ li {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(var(--accent-rgb), 0.85);
+  color: #555;
+}
+
+.recipe-card li {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a1a1a;
 }
 
 .recipe-steps {
@@ -237,8 +247,9 @@ li {
   border-radius: 0.85rem;
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   font-weight: 400;
-  background: rgba(255, 255, 255, 0.14);
-  border: 2px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #1a1a1a;
   line-height: 1.5;
 }
 
