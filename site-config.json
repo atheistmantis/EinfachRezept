@@ -28,7 +28,59 @@
           "id": "huhn",
           "label": "Huhn",
           "title": "Huhn Optionen",
-          "items": ["Reis", "Nudeln"]
+          "items": [],
+          "subcategories": [
+            {
+              "id": "reis",
+              "label": "Reis",
+              "title": "Riz Casimir",
+              "displayType": "recipe",
+              "recipeName": "Riz Casimir (6 Personen)",
+              "items": [
+                "375 g Langkornreis",
+                "750 g Pouletbrust",
+                "Salz",
+                "Pfeffer",
+                "1.5 EL Bratbutter",
+                "1-2 Früchte-Konservedosen",
+                "1.5 EL Curry",
+                "3 dl Halbrahm"
+              ],
+              "steps": []
+            },
+            {
+              "id": "nudeln",
+              "label": "Nudeln",
+              "title": "Nudeln Optionen",
+              "displayType": "recipe",
+              "recipeName": "Poulet-Pilz-Teigwaren",
+              "items": [
+                "3 EL Olivenöl",
+                "600 g geschnetzeltes Pouletfleisch",
+                "Salz",
+                "Pfeffer",
+                "3 Zwiebeln",
+                "750 g Champignons",
+                "450 g Shiitake-Pilz",
+                "3 TL Mehl",
+                "6 EL Weisswein",
+                "4.5 dl Fleischbouillon",
+                "1.5 dl Halbrahm",
+                "6 EL Schnittlauch",
+                "360 g Teigwaren"
+              ],
+              "steps": [
+                "Teigwaren nach Packungsanleitung in gesalzenem Wasser kochen.",
+                "Olivenöl in einer Pfanne erhitzen. Pouletfleisch portionenweise anbraten, salzen und pfeffern. Herausnehmen und beiseite stellen.",
+                "Zwiebeln im selben Öl glasig dünsten. Champignons und Shiitake-Pilze beigeben und mitbraten, bis die Flüssigkeit verdunstet ist.",
+                "Mehl darüberstäuben und kurz mitrösten.",
+                "Mit Weisswein ablöschen und kurz einkochen lassen.",
+                "Fleischbouillon und Halbrahm beigeben, aufkochen und ca. 5 Minuten köcheln lassen.",
+                "Pouletfleisch wieder beigeben und alles kurz erhitzen.",
+                "Schnittlauch untermischen, mit Salz und Pfeffer abschmecken und mit den Teigwaren servieren."
+              ]
+            }
+          ]
         },
         {
           "id": "schwein",
@@ -42,63 +94,6 @@
           "title": "Kuh Optionen",
           "items": ["Rindersteak", "Hamburger", "Rindergulasch"]
         }
-      ]
-    },
-    {
-      "id": "reis",
-      "label": "Reis",
-      "title": "Riz Casimir",
-      "backgroundColor": "",
-      "textColor": "",
-      "imageUrl": "",
-      "stepBackgroundImageUrl": "",
-      "displayType": "recipe",
-      "recipeName": "Riz Casimir (6 Personen)",
-      "items": [
-        "375 g Langkornreis",
-        "750 g Pouletbrust",
-        "Salz",
-        "Pfeffer",
-        "1.5 EL Bratbutter",
-        "1-2 Früchte-Konservedosen",
-        "1.5 EL Curry",
-        "3 dl Halbrahm"
-      ]
-    },
-    {
-      "id": "nudeln",
-      "label": "Nudeln",
-      "title": "Nudeln Optionen",
-      "backgroundColor": "",
-      "textColor": "",
-      "imageUrl": "",
-      "stepBackgroundImageUrl": "",
-      "displayType": "recipe",
-      "recipeName": "Poulet-Pilz-Teigwaren",
-      "items": [
-        "3 EL Olivenöl",
-        "600 g geschnetzeltes Pouletfleisch",
-        "Salz",
-        "Pfeffer",
-        "3 Zwiebeln",
-        "750 g Champignons",
-        "450 g Shiitake-Pilz",
-        "3 TL Mehl",
-        "6 EL Weisswein",
-        "4.5 dl Fleischbouillon",
-        "1.5 dl Halbrahm",
-        "6 EL Schnittlauch",
-        "360 g Teigwaren"
-      ],
-      "steps": [
-        "Teigwaren nach Packungsanleitung in gesalzenem Wasser kochen.",
-        "Olivenöl in einer Pfanne erhitzen. Pouletfleisch portionenweise anbraten, salzen und pfeffern. Herausnehmen und beiseite stellen.",
-        "Zwiebeln im selben Öl glasig dünsten. Champignons und Shiitake-Pilze beigeben und mitbraten, bis die Flüssigkeit verdunstet ist.",
-        "Mehl darüberstäuben und kurz mitrösten.",
-        "Mit Weisswein ablöschen und kurz einkochen lassen.",
-        "Fleischbouillon und Halbrahm beigeben, aufkochen und ca. 5 Minuten köcheln lassen.",
-        "Pouletfleisch wieder beigeben und alles kurz erhitzen.",
-        "Schnittlauch untermischen, mit Salz und Pfeffer abschmecken und mit den Teigwaren servieren."
       ]
     }
   ],
