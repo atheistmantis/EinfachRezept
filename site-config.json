@@ -95,6 +95,26 @@
           "items": ["Rindersteak", "Hamburger", "Rindergulasch"]
         }
       ]
+    },
+    {
+      "id": "reis",
+      "label": "Reis",
+      "title": "Reis Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "",
+      "stepBackgroundImageUrl": "",
+      "items": ["Riz Casimir", "Risotto", "Gebratener Reis"]
+    },
+    {
+      "id": "nudeln",
+      "label": "Nudeln",
+      "title": "Nudeln Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "",
+      "stepBackgroundImageUrl": "",
+      "items": ["Poulet-Pilz-Teigwaren", "Pasta Bolognese", "Nudelsuppe"]
     }
   ],
   "theme": {
