@@ -230,14 +230,75 @@ function _normalizeSubcategories(rawSubcategories, fallback) {
       id,
       label,
       title,
+      displayType: sanitizeString(entry?.displayType, ""),
+      recipeName: sanitizeString(entry?.recipeName, ""),
       items:
         Array.isArray(entry?.items) && entry.items.length
           ? entry.items.map((item) => sanitizeString(item, "")).filter(Boolean)
           : [],
+      steps:
+        Array.isArray(entry?.steps) && entry.steps.length
+          ? entry.steps.map((step) => sanitizeString(step, "")).filter(Boolean)
+          : [],
+      subcategories: _normalizeSubcategories(entry?.subcategories, null),
     };
   });
 
   return normalized.length ? normalized : null;
+}
+
+/**
+ * Builds a recipe card DOM element from a config object that has
+ * `recipeName`, `items`, and optional `steps`.
+ *
+ * @param {{ recipeName: string, items: string[], steps: string[] }} recipeConfig
+ * @returns {HTMLDivElement}
+ */
+function _buildRecipeCard(recipeConfig) {
+  const card = document.createElement("div");
+  card.className = "recipe-card";
+
+  if (recipeConfig.recipeName) {
+    const recipeName = document.createElement("p");
+    recipeName.className = "recipe-name";
+    recipeName.textContent = recipeConfig.recipeName;
+    card.append(recipeName);
+  }
+
+  const ingredientsTitle = document.createElement("p");
+  ingredientsTitle.className = "recipe-section-title";
+  ingredientsTitle.textContent = "Zutaten";
+
+  const list = document.createElement("ul");
+  list.replaceChildren(
+    ...recipeConfig.items.map((itemText) => {
+      const item = document.createElement("li");
+      item.textContent = itemText;
+      return item;
+    }),
+  );
+
+  card.append(ingredientsTitle, list);
+
+  if (recipeConfig.steps && recipeConfig.steps.length) {
+    const stepsTitle = document.createElement("p");
+    stepsTitle.className = "recipe-section-title";
+    stepsTitle.textContent = "Zubereitung";
+
+    const stepsList = document.createElement("ol");
+    stepsList.className = "recipe-steps";
+    stepsList.replaceChildren(
+      ...recipeConfig.steps.map((stepText) => {
+        const item = document.createElement("li");
+        item.textContent = stepText;
+        return item;
+      }),
+    );
+
+    card.append(stepsTitle, stepsList);
+  }
+
+  return card;
 }
 
 /**
@@ -364,23 +425,77 @@ function _rebuildOptionSections(config) {
 
         section.append(heading, subcatGrid);
 
+        const bgValue = buttonConfig.stepBackgroundImageUrl
+          ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
+          : config.theme.categoryBackgroundImageUrl
+            ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
+            : "none";
+
         // Build a sub-option section for each subcategory.
-        const subSections = buttonConfig.subcategories.map((subcat) => {
+        const subSections = buttonConfig.subcategories.flatMap((subcat) => {
           const subSection = document.createElement("section");
           subSection.className = "panel options sub-options";
           subSection.id = `suboptions-${buttonConfig.id}-${subcat.id}`;
-          subSection.style.setProperty(
-            "--section-bg-image",
-            buttonConfig.stepBackgroundImageUrl
-              ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
-              : config.theme.categoryBackgroundImageUrl
-                ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
-                : "none",
-          );
+          subSection.style.setProperty("--section-bg-image", bgValue);
 
           const subHeading = document.createElement("h3");
           subHeading.textContent = subcat.title;
 
+          // Subcategory has its own nested subcategories → render as buttons.
+          if (subcat.subcategories && subcat.subcategories.length) {
+            const subSubcatGrid = document.createElement("div");
+            subSubcatGrid.className = "button-grid button-row";
+
+            subcat.subcategories.forEach((subSubcat) => {
+              const subSubButton = document.createElement("button");
+              subSubButton.type = "button";
+              subSubButton.className = "action-button option-button";
+              subSubButton.dataset.target = `suboptions-${buttonConfig.id}-${subcat.id}-${subSubcat.id}`;
+              const subSubLabel = document.createElement("span");
+              subSubLabel.textContent = subSubcat.label;
+              subSubButton.append(subSubLabel);
+              subSubcatGrid.append(subSubButton);
+            });
+
+            subSection.append(subHeading, subSubcatGrid);
+
+            // Build a recipe/list section for each nested subcategory.
+            const subSubSections = subcat.subcategories.map((subSubcat) => {
+              const subSubSection = document.createElement("section");
+              subSubSection.className = "panel options sub-options";
+              subSubSection.id = `suboptions-${buttonConfig.id}-${subcat.id}-${subSubcat.id}`;
+              subSubSection.style.setProperty("--section-bg-image", bgValue);
+
+              const subSubHeading = document.createElement("h3");
+              subSubHeading.textContent = subSubcat.title;
+
+              if (subSubcat.displayType === "recipe") {
+                subSubSection.append(subSubHeading, _buildRecipeCard(subSubcat));
+              } else {
+                const list = document.createElement("ul");
+                list.replaceChildren(
+                  ...subSubcat.items.map((itemText) => {
+                    const item = document.createElement("li");
+                    item.textContent = itemText;
+                    return item;
+                  }),
+                );
+                subSubSection.append(subSubHeading, list);
+              }
+
+              return subSubSection;
+            });
+
+            return [subSection, ...subSubSections];
+          }
+
+          // Subcategory is itself a recipe card.
+          if (subcat.displayType === "recipe") {
+            subSection.append(subHeading, _buildRecipeCard(subcat));
+            return [subSection];
+          }
+
+          // Default: flat item list.
           const list = document.createElement("ul");
           list.replaceChildren(
             ...subcat.items.map((itemText) => {
@@ -391,7 +506,7 @@ function _rebuildOptionSections(config) {
           );
 
           subSection.append(subHeading, list);
-          return subSection;
+          return [subSection];
         });
 
         return [section, ...subSections];
@@ -399,50 +514,7 @@ function _rebuildOptionSections(config) {
 
       // Recipe box: render items as ingredients and optionally steps.
       if (buttonConfig.displayType === "recipe") {
-        const card = document.createElement("div");
-        card.className = "recipe-card";
-
-        if (buttonConfig.recipeName) {
-          const recipeName = document.createElement("p");
-          recipeName.className = "recipe-name";
-          recipeName.textContent = buttonConfig.recipeName;
-          card.append(recipeName);
-        }
-
-        const ingredientsTitle = document.createElement("p");
-        ingredientsTitle.className = "recipe-section-title";
-        ingredientsTitle.textContent = "Zutaten";
-
-        const list = document.createElement("ul");
-        list.replaceChildren(
-          ...buttonConfig.items.map((itemText) => {
-            const item = document.createElement("li");
-            item.textContent = itemText;
-            return item;
-          }),
-        );
-
-        card.append(ingredientsTitle, list);
-
-        if (buttonConfig.steps && buttonConfig.steps.length) {
-          const stepsTitle = document.createElement("p");
-          stepsTitle.className = "recipe-section-title";
-          stepsTitle.textContent = "Zubereitung";
-
-          const stepsList = document.createElement("ol");
-          stepsList.className = "recipe-steps";
-          stepsList.replaceChildren(
-            ...buttonConfig.steps.map((stepText) => {
-              const item = document.createElement("li");
-              item.textContent = stepText;
-              return item;
-            }),
-          );
-
-          card.append(stepsTitle, stepsList);
-        }
-
-        section.append(heading, card);
+        section.append(heading, _buildRecipeCard(buttonConfig));
         return [section];
       }
 
