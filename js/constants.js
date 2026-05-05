@@ -48,8 +48,9 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
  * @property {string}   label
  * @property {string}   title
  * @property {string[]} items
- * @property {string}   [imageUrl]      - Optional background image URL for the button
- * @property {string}   [displayType]   - Optional display mode (e.g. "recipe")
+ * @property {string}   [imageUrl]        - Optional background image URL for the button
+ * @property {string}   [backgroundSize]  - Optional CSS background-size override (e.g. "contain")
+ * @property {string}   [displayType]     - Optional display mode (e.g. "recipe")
  * @property {string}   [recipeName]    - Optional recipe name shown inside the recipe card
  * @property {string[]} [steps]         - Optional preparation steps for recipe display
  * @property {SubcategoryConfig[] | null} [subcategories]
@@ -63,6 +64,7 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
  * @property {string}   backgroundColor   - CSS hex colour or empty string
  * @property {string}   textColor          - CSS hex colour or empty string
  * @property {string}   imageUrl
+ * @property {string}   [backgroundSize]   - Optional CSS background-size override (e.g. "contain")
  * @property {string}   stepBackgroundImageUrl
  * @property {string}   displayType        - Optional display mode (e.g. "recipe")
  * @property {string}   recipeName         - Optional recipe name shown inside the recipe card

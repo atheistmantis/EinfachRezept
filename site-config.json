@@ -37,6 +37,7 @@
                     "label": "Huhn",
                     "title": "Huhn Optionen",
                     "imageUrl": "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
+                    "backgroundSize": "contain",
                     "items": [],
                     "subcategories": [
                         {
@@ -88,7 +89,7 @@
                     "id": "schwein",
                     "label": "Schwein",
                     "title": "Schwein Optionen",
-                    "imageUrl": "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png",
+                    "imageUrl": "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
                     "items": [
                         "Schweinefilet",
                         "Schnitzel",
@@ -99,7 +100,7 @@
                     "id": "kuh",
                     "label": "Kuh",
                     "title": "Kuh Optionen",
-                    "imageUrl": "https://rinderhaltung.org/wp-content/uploads/vorstellung_fleckvieh_kuh_steckbrief-678x509.png",
+                    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
                     "items": [
                         "Rindersteak",
                         "Hamburger",

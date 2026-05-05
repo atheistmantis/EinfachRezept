@@ -231,6 +231,7 @@ function _normalizeSubcategories(rawSubcategories, fallback) {
       label,
       title,
       imageUrl: sanitizeImageUrl(entry?.imageUrl || ""),
+      backgroundSize: sanitizeString(entry?.backgroundSize, ""),
       displayType: sanitizeString(entry?.displayType, ""),
       recipeName: sanitizeString(entry?.recipeName, ""),
       items:
@@ -369,6 +370,9 @@ function _rebuildCategoryButtons(config) {
       if (buttonConfig.imageUrl) {
         button.classList.add("has-image");
         button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
+        if (buttonConfig.backgroundSize) {
+          button.style.backgroundSize = buttonConfig.backgroundSize;
+        }
       } else {
         button.style.backgroundImage = "";
       }
@@ -421,6 +425,9 @@ function _rebuildOptionSections(config) {
           if (subcat.imageUrl) {
             subButton.classList.add("has-image");
             subButton.style.backgroundImage = cssUrlValue(subcat.imageUrl);
+            if (subcat.backgroundSize) {
+              subButton.style.backgroundSize = subcat.backgroundSize;
+            }
           }
           const subLabel = document.createElement("span");
           subLabel.textContent = subcat.label;
@@ -459,6 +466,9 @@ function _rebuildOptionSections(config) {
               if (subSubcat.imageUrl) {
                 subSubButton.classList.add("has-image");
                 subSubButton.style.backgroundImage = cssUrlValue(subSubcat.imageUrl);
+                if (subSubcat.backgroundSize) {
+                  subSubButton.style.backgroundSize = subSubcat.backgroundSize;
+                }
               }
               const subSubLabel = document.createElement("span");
               subSubLabel.textContent = subSubcat.label;
