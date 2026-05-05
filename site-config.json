@@ -101,6 +101,7 @@
                     "label": "Kuh",
                     "title": "Kuh Optionen",
                     "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
+                    "backgroundSize": "contain",
                     "items": [
                         "Rindersteak",
                         "Hamburger",
@@ -154,7 +155,7 @@
                             "id": "pilzrisotto",
                             "label": "Pilzrisotto",
                             "title": "Pilzrisotto",
-                            "imageUrl": "https://images.pexels.com/photos/3848159/pexels-photo-3848159.jpeg?auto=compress&cs=tinysrgb&w=800",
+                            "imageUrl": "https://snikandtasty.de/wp-content/uploads/2020/10/IMG_20200328_185510_621.jpg",
                             "displayType": "recipe",
                             "recipeName": "Pilzrisotto",
                             "items": [
@@ -175,7 +176,7 @@
                             "id": "tomatenrisotto",
                             "label": "Tomatenrisotto",
                             "title": "Tomatenrisotto",
-                            "imageUrl": "https://images.pexels.com/photos/4519023/pexels-photo-4519023.jpeg?auto=compress&cs=tinysrgb&w=800",
+                            "imageUrl": "https://www.volg.ch/fileadmin/_processed_/9/7/csm_recipe_4315_322edd10dd.jpg",
                             "items": [
                                 "1.5 EL Olivenöl",
                                 "1.5 Zwiebel, fein gehackt",
