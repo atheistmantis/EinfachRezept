@@ -135,7 +135,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "huhn",
           label: "Huhn",
           title: "Huhn Optionen",
-          imageUrl: "https://images.pexels.com/photos/2673353/pexels-photo-2673353.jpeg?auto=compress&cs=tinysrgb&w=800",
+          imageUrl: "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
           items: [],
           subcategories: [
             {
@@ -183,8 +183,8 @@ export const DEFAULT_SITE_CONFIG = {
             },
           ],
         },
-        { id: "schwein", label: "Schwein", title: "Schwein Optionen", imageUrl: "https://images.pexels.com/photos/2675071/pexels-photo-2675071.jpeg?auto=compress&cs=tinysrgb&w=800", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
-        { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    imageUrl: "https://images.pexels.com/photos/299348/pexels-photo-299348.jpeg?auto=compress&cs=tinysrgb&w=800", items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
+        { id: "schwein", label: "Schwein", title: "Schwein Optionen", imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
+        { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    imageUrl: "https://rinderhaltung.org/wp-content/uploads/vorstellung_fleckvieh_kuh_steckbrief-678x509.png", items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
       ],
     },
     {
