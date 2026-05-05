@@ -117,7 +117,7 @@ export const DEFAULT_SITE_CONFIG = {
       title: "Gemüse Optionen",
       backgroundColor: "",
       textColor: "",
-      imageUrl: "",
+      imageUrl: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
       items: ["Gemüsepfanne", "Gemüsesuppe", "Geröstetes Gemüse"],
     },
@@ -127,7 +127,7 @@ export const DEFAULT_SITE_CONFIG = {
       title: "Fleisch Optionen",
       backgroundColor: "",
       textColor: "",
-      imageUrl: "",
+      imageUrl: "https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
       items: ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
       subcategories: [
@@ -135,6 +135,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "huhn",
           label: "Huhn",
           title: "Huhn Optionen",
+          imageUrl: "https://images.pexels.com/photos/2673353/pexels-photo-2673353.jpeg?auto=compress&cs=tinysrgb&w=800",
           items: [],
           subcategories: [
             {
@@ -159,6 +160,7 @@ export const DEFAULT_SITE_CONFIG = {
             {
               id: "nudeln",
               label: "Nudeln",
+              imageUrl: "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&w=800",
               title: "Nudeln Optionen",
               displayType: "recipe",
               recipeName: "Poulet-Pilz-Teigwaren",
@@ -181,8 +183,8 @@ export const DEFAULT_SITE_CONFIG = {
             },
           ],
         },
-        { id: "schwein", label: "Schwein", title: "Schwein Optionen", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
-        { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
+        { id: "schwein", label: "Schwein", title: "Schwein Optionen", imageUrl: "https://images.pexels.com/photos/2675071/pexels-photo-2675071.jpeg?auto=compress&cs=tinysrgb&w=800", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
+        { id: "kuh",    label: "Kuh",    title: "Kuh Optionen",    imageUrl: "https://images.pexels.com/photos/299348/pexels-photo-299348.jpeg?auto=compress&cs=tinysrgb&w=800", items: ["Rindersteak", "Hamburger", "Rindergulasch"] },
       ],
     },
     {
@@ -199,12 +201,14 @@ export const DEFAULT_SITE_CONFIG = {
           id: "risotto",
           label: "Risotto",
           title: "Risotto Optionen",
+          imageUrl: "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
           items: [],
           subcategories: [
             {
               id: "safranrisotto",
               label: "Safranrisotto",
               title: "Safranrisotto",
+              imageUrl: "https://images.pexels.com/photos/4518803/pexels-photo-4518803.jpeg?auto=compress&cs=tinysrgb&w=800",
               displayType: "recipe",
               recipeName: "Safranrisotto",
               items: [
@@ -224,12 +228,14 @@ export const DEFAULT_SITE_CONFIG = {
               id: "pilzrisotto",
               label: "Pilzrisotto",
               title: "Pilzrisotto Optionen",
+              imageUrl: "https://images.pexels.com/photos/3848159/pexels-photo-3848159.jpeg?auto=compress&cs=tinysrgb&w=800",
               items: [],
             },
             {
               id: "tomatenrisotto",
               label: "Tomatenrisotto",
               title: "Tomatenrisotto Optionen",
+              imageUrl: "https://images.pexels.com/photos/4519023/pexels-photo-4519023.jpeg?auto=compress&cs=tinysrgb&w=800",
               items: [],
             },
           ],
@@ -238,6 +244,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "jasminreis",
           label: "Jasminreis",
           title: "Jasminreis Optionen",
+          imageUrl: "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
           items: [],
         },
       ],
@@ -248,7 +255,7 @@ export const DEFAULT_SITE_CONFIG = {
       title: "Nudeln Optionen",
       backgroundColor: "",
       textColor: "",
-      imageUrl: "",
+      imageUrl: "https://images.pexels.com/photos/2703468/pexels-photo-2703468.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
       items: ["Poulet-Pilz-Teigwaren", "Pasta Bolognese", "Nudelsuppe"],
     },
