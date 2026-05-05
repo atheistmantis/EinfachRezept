@@ -140,7 +140,7 @@ export const DEFAULT_SITE_CONFIG = {
             {
               id: "reis",
               label: "Reis",
-              imageUrl: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
+              imageUrl: "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
               title: "Riz Casimir",
               displayType: "recipe",
               recipeName: "Riz Casimir (6 Personen)",
@@ -191,7 +191,7 @@ export const DEFAULT_SITE_CONFIG = {
       title: "Reis Optionen",
       backgroundColor: "",
       textColor: "",
-      imageUrl: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
+      imageUrl: "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
       items: ["Riz Casimir", "Risotto", "Gebratener Reis"],
       subcategories: [
