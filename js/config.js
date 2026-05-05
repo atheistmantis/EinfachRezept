@@ -230,6 +230,7 @@ function _normalizeSubcategories(rawSubcategories, fallback) {
       id,
       label,
       title,
+      imageUrl: sanitizeImageUrl(entry?.imageUrl || ""),
       displayType: sanitizeString(entry?.displayType, ""),
       recipeName: sanitizeString(entry?.recipeName, ""),
       items:
@@ -417,6 +418,10 @@ function _rebuildOptionSections(config) {
           subButton.type = "button";
           subButton.className = "action-button option-button";
           subButton.dataset.target = `suboptions-${buttonConfig.id}-${subcat.id}`;
+          if (subcat.imageUrl) {
+            subButton.classList.add("has-image");
+            subButton.style.backgroundImage = cssUrlValue(subcat.imageUrl);
+          }
           const subLabel = document.createElement("span");
           subLabel.textContent = subcat.label;
           subButton.append(subLabel);
@@ -451,6 +456,10 @@ function _rebuildOptionSections(config) {
               subSubButton.type = "button";
               subSubButton.className = "action-button option-button";
               subSubButton.dataset.target = `suboptions-${buttonConfig.id}-${subcat.id}-${subSubcat.id}`;
+              if (subSubcat.imageUrl) {
+                subSubButton.classList.add("has-image");
+                subSubButton.style.backgroundImage = cssUrlValue(subSubcat.imageUrl);
+              }
               const subSubLabel = document.createElement("span");
               subSubLabel.textContent = subSubcat.label;
               subSubButton.append(subSubLabel);

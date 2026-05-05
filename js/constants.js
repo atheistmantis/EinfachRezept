@@ -48,6 +48,7 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
  * @property {string}   label
  * @property {string}   title
  * @property {string[]} items
+ * @property {string}   [imageUrl]      - Optional background image URL for the button
  * @property {string}   [displayType]   - Optional display mode (e.g. "recipe")
  * @property {string}   [recipeName]    - Optional recipe name shown inside the recipe card
  * @property {string[]} [steps]         - Optional preparation steps for recipe display
@@ -139,6 +140,7 @@ export const DEFAULT_SITE_CONFIG = {
             {
               id: "reis",
               label: "Reis",
+              imageUrl: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
               title: "Riz Casimir",
               displayType: "recipe",
               recipeName: "Riz Casimir (6 Personen)",
@@ -189,7 +191,7 @@ export const DEFAULT_SITE_CONFIG = {
       title: "Reis Optionen",
       backgroundColor: "",
       textColor: "",
-      imageUrl: "",
+      imageUrl: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
       stepBackgroundImageUrl: "",
       items: ["Riz Casimir", "Risotto", "Gebratener Reis"],
       subcategories: [

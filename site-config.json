@@ -41,6 +41,7 @@
                         {
                             "id": "reis",
                             "label": "Reis",
+                            "imageUrl": "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
                             "title": "Riz Casimir",
                             "displayType": "recipe",
                             "recipeName": "Riz Casimir (6 Personen)",
@@ -109,7 +110,7 @@
             "title": "Reis Optionen",
             "backgroundColor": "",
             "textColor": "",
-            "imageUrl": "",
+            "imageUrl": "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80",
             "stepBackgroundImageUrl": "",
             "items": [
                 "Riz Casimir",
