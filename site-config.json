@@ -10,7 +10,7 @@
             "title": "Gemüse Optionen",
             "backgroundColor": "",
             "textColor": "",
-            "imageUrl": "",
+            "imageUrl": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
             "stepBackgroundImageUrl": "",
             "items": [
                 "Gemüsepfanne",
@@ -24,7 +24,7 @@
             "title": "Fleisch Optionen",
             "backgroundColor": "",
             "textColor": "",
-            "imageUrl": "",
+            "imageUrl": "https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=800",
             "stepBackgroundImageUrl": "",
             "items": [
                 "Hähnchenpfanne",
@@ -36,6 +36,7 @@
                     "id": "huhn",
                     "label": "Huhn",
                     "title": "Huhn Optionen",
+                    "imageUrl": "https://images.pexels.com/photos/2673353/pexels-photo-2673353.jpeg?auto=compress&cs=tinysrgb&w=800",
                     "items": [],
                     "subcategories": [
                         {
@@ -60,6 +61,7 @@
                         {
                             "id": "nudeln",
                             "label": "Nudeln",
+                            "imageUrl": "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&w=800",
                             "title": "Nudeln Optionen",
                             "displayType": "recipe",
                             "recipeName": "Poulet-Pilz-Teigwaren",
@@ -86,6 +88,7 @@
                     "id": "schwein",
                     "label": "Schwein",
                     "title": "Schwein Optionen",
+                    "imageUrl": "https://images.pexels.com/photos/2675071/pexels-photo-2675071.jpeg?auto=compress&cs=tinysrgb&w=800",
                     "items": [
                         "Schweinefilet",
                         "Schnitzel",
@@ -96,6 +99,7 @@
                     "id": "kuh",
                     "label": "Kuh",
                     "title": "Kuh Optionen",
+                    "imageUrl": "https://images.pexels.com/photos/299348/pexels-photo-299348.jpeg?auto=compress&cs=tinysrgb&w=800",
                     "items": [
                         "Rindersteak",
                         "Hamburger",
@@ -122,12 +126,14 @@
                     "id": "risotto",
                     "label": "Risotto",
                     "title": "Risotto Optionen",
+                    "imageUrl": "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
                     "items": [],
                     "subcategories": [
                         {
                             "id": "safranrisotto",
                             "label": "Safranrisotto",
                             "title": "Safranrisotto",
+                            "imageUrl": "https://images.pexels.com/photos/4518803/pexels-photo-4518803.jpeg?auto=compress&cs=tinysrgb&w=800",
                             "displayType": "recipe",
                             "recipeName": "Safranrisotto",
                             "items": [
@@ -147,6 +153,7 @@
                             "id": "pilzrisotto",
                             "label": "Pilzrisotto",
                             "title": "Pilzrisotto",
+                            "imageUrl": "https://images.pexels.com/photos/3848159/pexels-photo-3848159.jpeg?auto=compress&cs=tinysrgb&w=800",
                             "displayType": "recipe",
                             "recipeName": "Pilzrisotto",
                             "items": [
@@ -167,6 +174,7 @@
                             "id": "tomatenrisotto",
                             "label": "Tomatenrisotto",
                             "title": "Tomatenrisotto",
+                            "imageUrl": "https://images.pexels.com/photos/4519023/pexels-photo-4519023.jpeg?auto=compress&cs=tinysrgb&w=800",
                             "items": [
                                 "1.5 EL Olivenöl",
                                 "1.5 Zwiebel, fein gehackt",
@@ -187,6 +195,7 @@
                     "id": "jasminreis",
                     "label": "Jasminreis",
                     "title": "Jasminreis Optionen",
+                    "imageUrl": "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
                     "items": []
                 }
             ]
@@ -197,7 +206,7 @@
             "title": "Nudeln Optionen",
             "backgroundColor": "",
             "textColor": "",
-            "imageUrl": "",
+            "imageUrl": "https://images.pexels.com/photos/2703468/pexels-photo-2703468.jpeg?auto=compress&cs=tinysrgb&w=800",
             "stepBackgroundImageUrl": "",
             "items": [
                 "Poulet-Pilz-Teigwaren",
