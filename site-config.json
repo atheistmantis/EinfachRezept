@@ -61,7 +61,7 @@
                         {
                             "id": "nudeln",
                             "label": "Nudeln",
-                            "imageUrl": "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&w=800",
+                            "imageUrl": "images/nudeln.svg",
                             "title": "Nudeln Optionen",
                             "displayType": "recipe",
                             "recipeName": "Poulet-Pilz-Teigwaren",
@@ -88,7 +88,7 @@
                     "id": "schwein",
                     "label": "Schwein",
                     "title": "Schwein Optionen",
-                    "imageUrl": "https://images.pexels.com/photos/2675071/pexels-photo-2675071.jpeg?auto=compress&cs=tinysrgb&w=800",
+                    "imageUrl": "images/pig.svg",
                     "items": [
                         "Schweinefilet",
                         "Schnitzel",
