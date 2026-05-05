@@ -227,14 +227,14 @@ export const DEFAULT_SITE_CONFIG = {
             {
               id: "pilzrisotto",
               label: "Pilzrisotto",
-              title: "Pilzrisotto Optionen",
+              title: "Pilzrisotto",
               imageUrl: "https://images.pexels.com/photos/3848159/pexels-photo-3848159.jpeg?auto=compress&cs=tinysrgb&w=800",
               items: [],
             },
             {
               id: "tomatenrisotto",
               label: "Tomatenrisotto",
-              title: "Tomatenrisotto Optionen",
+              title: "Tomatenrisotto",
               imageUrl: "https://images.pexels.com/photos/4519023/pexels-photo-4519023.jpeg?auto=compress&cs=tinysrgb&w=800",
               items: [],
             },
