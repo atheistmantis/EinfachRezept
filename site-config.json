@@ -1,176 +1,212 @@
 {
-  "title": "EinfachRezept",
-  "subtitle": "Einfach. Schnell. Gut lesbar.",
-  "startLabel": "START",
-  "categoryLabel": "Wähle eine Basis",
-  "buttons": [
-    {
-      "id": "gemuese",
-      "label": "Gemüse",
-      "title": "Gemüse Optionen",
-      "backgroundColor": "",
-      "textColor": "",
-      "imageUrl": "",
-      "stepBackgroundImageUrl": "",
-      "items": ["Gemüsepfanne", "Gemüsesuppe", "Geröstetes Gemüse"]
-    },
-    {
-      "id": "fleisch",
-      "label": "Fleisch",
-      "title": "Fleisch Optionen",
-      "backgroundColor": "",
-      "textColor": "",
-      "imageUrl": "",
-      "stepBackgroundImageUrl": "",
-      "items": ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
-      "subcategories": [
+    "title": "EinfachRezept",
+    "subtitle": "Einfach. Schnell. Gut lesbar.",
+    "startLabel": "START",
+    "categoryLabel": "Wähle eine Basis",
+    "buttons": [
         {
-          "id": "huhn",
-          "label": "Huhn",
-          "title": "Huhn Optionen",
-          "items": [],
-          "subcategories": [
-            {
-              "id": "reis",
-              "label": "Reis",
-              "title": "Riz Casimir",
-              "displayType": "recipe",
-              "recipeName": "Riz Casimir (6 Personen)",
-              "items": [
-                "375 g Langkornreis",
-                "750 g Pouletbrust",
-                "Salz",
-                "Pfeffer",
-                "1.5 EL Bratbutter",
-                "1-2 Früchte-Konservedosen",
-                "1.5 EL Curry",
-                "3 dl Halbrahm"
-              ],
-              "steps": []
-            },
-            {
-              "id": "nudeln",
-              "label": "Nudeln",
-              "title": "Nudeln Optionen",
-              "displayType": "recipe",
-              "recipeName": "Poulet-Pilz-Teigwaren",
-              "items": [
-                "3 EL Olivenöl",
-                "600 g geschnetzeltes Pouletfleisch",
-                "Salz",
-                "Pfeffer",
-                "3 Zwiebeln",
-                "750 g Champignons",
-                "450 g Shiitake-Pilz",
-                "3 TL Mehl",
-                "6 EL Weisswein",
-                "4.5 dl Fleischbouillon",
-                "1.5 dl Halbrahm",
-                "6 EL Schnittlauch",
-                "360 g Teigwaren"
-              ],
-              "steps": []
-            }
-          ]
+            "id": "gemuese",
+            "label": "Gemüse",
+            "title": "Gemüse Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "",
+            "stepBackgroundImageUrl": "",
+            "items": [
+                "Gemüsepfanne",
+                "Gemüsesuppe",
+                "Geröstetes Gemüse"
+            ]
         },
         {
-          "id": "schwein",
-          "label": "Schwein",
-          "title": "Schwein Optionen",
-          "items": ["Schweinefilet", "Schnitzel", "Spareribs"]
+            "id": "fleisch",
+            "label": "Fleisch",
+            "title": "Fleisch Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "",
+            "stepBackgroundImageUrl": "",
+            "items": [
+                "Hähnchenpfanne",
+                "Rindersteak",
+                "Schweinefilet"
+            ],
+            "subcategories": [
+                {
+                    "id": "huhn",
+                    "label": "Huhn",
+                    "title": "Huhn Optionen",
+                    "items": [],
+                    "subcategories": [
+                        {
+                            "id": "reis",
+                            "label": "Reis",
+                            "title": "Riz Casimir",
+                            "displayType": "recipe",
+                            "recipeName": "Riz Casimir (6 Personen)",
+                            "items": [
+                                "375 g Langkornreis",
+                                "750 g Pouletbrust",
+                                "Salz",
+                                "Pfeffer",
+                                "1.5 EL Bratbutter",
+                                "1-2 Früchte-Konservedosen",
+                                "1.5 EL Curry",
+                                "3 dl Halbrahm"
+                            ],
+                            "steps": []
+                        },
+                        {
+                            "id": "nudeln",
+                            "label": "Nudeln",
+                            "title": "Nudeln Optionen",
+                            "displayType": "recipe",
+                            "recipeName": "Poulet-Pilz-Teigwaren",
+                            "items": [
+                                "3 EL Olivenöl",
+                                "600 g geschnetzeltes Pouletfleisch",
+                                "Salz",
+                                "Pfeffer",
+                                "3 Zwiebeln",
+                                "750 g Champignons",
+                                "450 g Shiitake-Pilz",
+                                "3 TL Mehl",
+                                "6 EL Weisswein",
+                                "4.5 dl Fleischbouillon",
+                                "1.5 dl Halbrahm",
+                                "6 EL Schnittlauch",
+                                "360 g Teigwaren"
+                            ],
+                            "steps": []
+                        }
+                    ]
+                },
+                {
+                    "id": "schwein",
+                    "label": "Schwein",
+                    "title": "Schwein Optionen",
+                    "items": [
+                        "Schweinefilet",
+                        "Schnitzel",
+                        "Spareribs"
+                    ]
+                },
+                {
+                    "id": "kuh",
+                    "label": "Kuh",
+                    "title": "Kuh Optionen",
+                    "items": [
+                        "Rindersteak",
+                        "Hamburger",
+                        "Rindergulasch"
+                    ]
+                }
+            ]
         },
         {
-          "id": "kuh",
-          "label": "Kuh",
-          "title": "Kuh Optionen",
-          "items": ["Rindersteak", "Hamburger", "Rindergulasch"]
+            "id": "reis",
+            "label": "Reis",
+            "title": "Reis Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "",
+            "stepBackgroundImageUrl": "",
+            "items": [
+                "Riz Casimir",
+                "Risotto",
+                "Gebratener Reis"
+            ],
+            "subcategories": [
+                {
+                    "id": "risotto",
+                    "label": "Risotto",
+                    "title": "Risotto Optionen",
+                    "items": [],
+                    "subcategories": [
+                        {
+                            "id": "safranrisotto",
+                            "label": "Safranrisotto",
+                            "title": "Safranrisotto",
+                            "displayType": "recipe",
+                            "recipeName": "Safranrisotto",
+                            "items": [
+                                "1.5 EL Butter",
+                                "1.5 Zwiebel, fein gehackt",
+                                "3 Knoblauchzehen, gepresst",
+                                "450 g Risottoreis (zB. Carnaroli)",
+                                "3 dl Weisswein",
+                                "3 Briefchen Safran",
+                                "13.5 dl Gemüsebouillon",
+                                "120 g Parmesan am Stück, gerieben",
+                                "30 g Butter"
+                            ],
+                            "steps": []
+                        },
+                        {
+                            "id": "pilzrisotto",
+                            "label": "Pilzrisotto",
+                            "title": "Pilzrisotto Optionen",
+                            "items": []
+                        },
+                        {
+                            "id": "tomatenrisotto",
+                            "label": "Tomatenrisotto",
+                            "title": "Tomatenrisotto",
+                            "items": [
+                                "1.5 EL Olivenöl",
+                                "1.5 Zwiebel, fein gehackt",
+                                "600 g Risottoreis (z.B. Arborio)",
+                                "3 EL Tomatenpüree",
+                                "1.5 dl Weisswein",
+                                "1.5 L Gemüsebouillon, heiss",
+                                "225 g Cherry-Tomaten, halbiert",
+                                "150 g geriebener Parmesan"
+                            ],
+                            "displayType": "recipe",
+                            "recipeName": "Tomatenrisotto",
+                            "steps": []
+                        }
+                    ]
+                },
+                {
+                    "id": "jasminreis",
+                    "label": "Jasminreis",
+                    "title": "Jasminreis Optionen",
+                    "items": []
+                }
+            ]
+        },
+        {
+            "id": "nudeln",
+            "label": "Nudeln",
+            "title": "Nudeln Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "",
+            "stepBackgroundImageUrl": "",
+            "items": [
+                "Poulet-Pilz-Teigwaren",
+                "Pasta Bolognese",
+                "Nudelsuppe"
+            ]
         }
-      ]
+    ],
+    "theme": {
+        "accentColor": "#00d4ff",
+        "textColor": "#ffffff",
+        "backgroundColor": "#02040a",
+        "overlayColor": "#080c14",
+        "overlayOpacity": 0.75,
+        "landingBackgroundImageUrl": "",
+        "categoryBackgroundImageUrl": "",
+        "buttonFontFamily": "Arial, Helvetica, sans-serif",
+        "buttonFontWeight": 700,
+        "buttonBorderRadius": 1,
+        "buttonFontSize": 1.65
     },
-    {
-      "id": "reis",
-      "label": "Reis",
-      "title": "Reis Optionen",
-      "backgroundColor": "",
-      "textColor": "",
-      "imageUrl": "",
-      "stepBackgroundImageUrl": "",
-      "items": ["Riz Casimir", "Risotto", "Gebratener Reis"],
-      "subcategories": [
-        {
-          "id": "risotto",
-          "label": "Risotto",
-          "title": "Risotto Optionen",
-          "items": [],
-          "subcategories": [
-            {
-              "id": "safranrisotto",
-              "label": "Safranrisotto",
-              "title": "Safranrisotto",
-              "displayType": "recipe",
-              "recipeName": "Safranrisotto",
-              "items": [
-                "1.5 EL Butter",
-                "1.5 Zwiebel, fein gehackt",
-                "3 Knoblauchzehen, gepresst",
-                "450 g Risottoreis (zB. Carnaroli)",
-                "3 dl Weisswein",
-                "3 Briefchen Safran",
-                "13.5 dl Gemüsebouillon",
-                "120 g Parmesan am Stück, gerieben",
-                "30 g Butter"
-              ],
-              "steps": []
-            },
-            {
-              "id": "pilzrisotto",
-              "label": "Pilzrisotto",
-              "title": "Pilzrisotto Optionen",
-              "items": []
-            },
-            {
-              "id": "tomatenrisotto",
-              "label": "Tomatenrisotto",
-              "title": "Tomatenrisotto Optionen",
-              "items": []
-            }
-          ]
-        },
-        {
-          "id": "jasminreis",
-          "label": "Jasminreis",
-          "title": "Jasminreis Optionen",
-          "items": []
-        }
-      ]
-    },
-    {
-      "id": "nudeln",
-      "label": "Nudeln",
-      "title": "Nudeln Optionen",
-      "backgroundColor": "",
-      "textColor": "",
-      "imageUrl": "",
-      "stepBackgroundImageUrl": "",
-      "items": ["Poulet-Pilz-Teigwaren", "Pasta Bolognese", "Nudelsuppe"]
+    "webgl": {
+        "animationSpeed": 0.55,
+        "waveStrength": 0.8,
+        "glowStrength": 0.28
     }
-  ],
-  "theme": {
-    "accentColor": "#00d4ff",
-    "textColor": "#ffffff",
-    "backgroundColor": "#02040a",
-    "overlayColor": "#080c14",
-    "overlayOpacity": 0.75,
-    "landingBackgroundImageUrl": "",
-    "categoryBackgroundImageUrl": "",
-    "buttonFontFamily": "Arial, Helvetica, sans-serif",
-    "buttonFontWeight": 700,
-    "buttonBorderRadius": 1,
-    "buttonFontSize": 1.65
-  },
-  "webgl": {
-    "animationSpeed": 0.55,
-    "waveStrength": 0.8,
-    "glowStrength": 0.28
-  }
 }
