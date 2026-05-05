@@ -145,8 +145,22 @@
                         {
                             "id": "pilzrisotto",
                             "label": "Pilzrisotto",
-                            "title": "Pilzrisotto Optionen",
-                            "items": []
+                            "title": "Pilzrisotto",
+                            "displayType": "recipe",
+                            "recipeName": "Pilzrisotto",
+                            "items": [
+                                "3 EL Bratbutter",
+                                "375 g Champignons oder gemischte Pilze, geviertelt",
+                                "1.5 Zwiebel, fein gehackt",
+                                "1.5 Knoblauch, fein gehackt",
+                                "450 g Risottoreis",
+                                "4,5 dl Weisswein oder Bouillon",
+                                "6,75 dl Bouillon",
+                                "3,75 dl Rahm",
+                                "4.5 EL Butter",
+                                "150 g Sbrinz AOP"
+                            ],
+                            "steps": []
                         },
                         {
                             "id": "tomatenrisotto",
