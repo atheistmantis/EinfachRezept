@@ -95,7 +95,54 @@
       "textColor": "",
       "imageUrl": "",
       "stepBackgroundImageUrl": "",
-      "items": ["Riz Casimir", "Risotto", "Gebratener Reis"]
+      "items": ["Riz Casimir", "Risotto", "Gebratener Reis"],
+      "subcategories": [
+        {
+          "id": "risotto",
+          "label": "Risotto",
+          "title": "Risotto Optionen",
+          "items": [],
+          "subcategories": [
+            {
+              "id": "safranrisotto",
+              "label": "Safranrisotto",
+              "title": "Safranrisotto",
+              "displayType": "recipe",
+              "recipeName": "Safranrisotto",
+              "items": [
+                "1.5 EL Butter",
+                "1.5 Zwiebel, fein gehackt",
+                "3 Knoblauchzehen, gepresst",
+                "450 g Risottoreis (zB. Carnaroli)",
+                "3 dl Weisswein",
+                "3 Briefchen Safran",
+                "13.5 dl Gemüsebouillon",
+                "120 g Parmesan am Stück, gerieben",
+                "30 g Butter"
+              ],
+              "steps": []
+            },
+            {
+              "id": "pilzrisotto",
+              "label": "Pilzrisotto",
+              "title": "Pilzrisotto Optionen",
+              "items": []
+            },
+            {
+              "id": "tomatenrisotto",
+              "label": "Tomatenrisotto",
+              "title": "Tomatenrisotto Optionen",
+              "items": []
+            }
+          ]
+        },
+        {
+          "id": "jasminreis",
+          "label": "Jasminreis",
+          "title": "Jasminreis Optionen",
+          "items": []
+        }
+      ]
     },
     {
       "id": "nudeln",
