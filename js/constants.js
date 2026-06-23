@@ -124,6 +124,16 @@ export const DEFAULT_SITE_CONFIG = {
       items: ["Gemüsepfanne", "Gemüsesuppe", "Geröstetes Gemüse"],
     },
     {
+      id: "getreide",
+      label: "Getreide",
+      title: "Getreide Optionen",
+      backgroundColor: "",
+      textColor: "",
+      imageUrl: "https://images.pexels.com/photos/5632481/pexels-photo-5632481.jpeg?auto=compress&cs=tinysrgb&w=800",
+      stepBackgroundImageUrl: "",
+      items: ["Haferflocken", "Müsli", "Getreideporridge"],
+    },
+    {
       id: "fleisch",
       label: "Fleisch",
       title: "Fleisch Optionen",
