@@ -199,6 +199,13 @@
                     "title": "Jasminreis Optionen",
                     "imageUrl": "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
                     "items": []
+                },
+                {
+                    "id": "milchreis",
+                    "label": "Milchreis",
+                    "title": "Milchreis Optionen",
+                    "imageUrl": "https://images.pexels.com/photos/8951266/pexels-photo-8951266.jpeg?auto=compress&cs=tinysrgb&w=800",
+                    "items": []
                 }
             ]
         },
