@@ -198,7 +198,23 @@
                     "label": "Jasminreis",
                     "title": "Jasminreis Optionen",
                     "imageUrl": "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
-                    "items": []
+                    "items": [],
+                    "subcategories": [
+                        {
+                            "id": "gemuesereis",
+                            "label": "Gemüsereis",
+                            "title": "Gemüsereis",
+                            "imageUrl": "https://github.com/user-attachments/assets/ba8cece3-a60d-454d-9a1b-35f42c7a7aac",
+                            "items": []
+                        },
+                        {
+                            "id": "riz-casimir-jasmin",
+                            "label": "Riz Casimir",
+                            "title": "Riz Casimir",
+                            "imageUrl": "https://github.com/user-attachments/assets/8cd5e1ae-2ec1-4941-ae47-25c00598744f",
+                            "items": []
+                        }
+                    ]
                 },
                 {
                     "id": "milchreis",
