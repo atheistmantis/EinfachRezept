@@ -283,7 +283,18 @@
                             "label": "Flammkuchen mit Gemüse",
                             "title": "Flammkuchen mit Gemüse",
                             "imageUrl": "https://github.com/user-attachments/assets/c05e4a2f-a93b-4d3f-9c8e-abc88b2edac5",
-                            "items": []
+                            "displayType": "recipe",
+                            "recipeName": "Flammkuchen mit Gemüse",
+                            "items": [
+                                "2 Pkg. Flammkuchenteig",
+                                "300 g Crème fraiche",
+                                "800 g gemischtes Saisongemüse, z.B. Fenchel, Zucchini, Zwiebeln, fein gehobelt",
+                                "400 g Cherrytomaten, evtl. halbiert",
+                                "4 - 8 Knoblauchzehen, in Scheiben",
+                                "Salz, Pfeffer",
+                                "200 g geriebener Gruyère AOP"
+                            ],
+                            "steps": []
                         }
                     ]
                 }
