@@ -234,7 +234,21 @@
                     "label": "Cafe Complet",
                     "title": "Cafe Complet Optionen",
                     "imageUrl": "https://github.com/user-attachments/assets/275164ce-0d4a-4d94-84c6-ce370b34a273",
-                    "items": []
+                    "displayType": "recipe",
+                    "recipeName": "Cafe Complet (für 6 Personen)",
+                    "items": [
+                        "Je nach Gusto:",
+                        "1 Brot",
+                        "1 Butter",
+                        "Konfitüre",
+                        "Nutella",
+                        "Aufschnitt",
+                        "Käse",
+                        "Eier",
+                        "Früchte",
+                        "Joghurt"
+                    ],
+                    "steps": []
                 },
                 {
                     "id": "wienerli-im-teig",
