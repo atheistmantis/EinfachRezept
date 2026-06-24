@@ -220,6 +220,16 @@
             ]
         },
         {
+            "id": "getreide",
+            "label": "Getreide",
+            "title": "Getreide Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "https://github.com/user-attachments/assets/f0a8d06e-cbd2-4c26-ad4e-e75cbae3ed21",
+            "stepBackgroundImageUrl": "",
+            "items": []
+        },
+        {
             "id": "nudeln",
             "label": "Nudeln",
             "title": "Nudeln Optionen",
