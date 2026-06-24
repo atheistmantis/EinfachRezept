@@ -227,7 +227,37 @@
             "textColor": "",
             "imageUrl": "https://github.com/user-attachments/assets/f0a8d06e-cbd2-4c26-ad4e-e75cbae3ed21",
             "stepBackgroundImageUrl": "",
-            "items": []
+            "items": [],
+            "subcategories": [
+                {
+                    "id": "cafe-complet",
+                    "label": "Cafe Complet",
+                    "title": "Cafe Complet Optionen",
+                    "imageUrl": "https://github.com/user-attachments/assets/275164ce-0d4a-4d94-84c6-ce370b34a273",
+                    "items": []
+                },
+                {
+                    "id": "wienerli-im-teig",
+                    "label": "Wienerli im Teig",
+                    "title": "Wienerli im Teig Optionen",
+                    "imageUrl": "https://github.com/user-attachments/assets/5b149579-c760-4c07-bf05-a78674d01f38",
+                    "items": []
+                },
+                {
+                    "id": "waehe",
+                    "label": "Wähe",
+                    "title": "Wähe Optionen",
+                    "imageUrl": "https://github.com/user-attachments/assets/7ff6f371-4789-4e19-8631-96ef8b2caed6",
+                    "items": []
+                },
+                {
+                    "id": "flammkuchen",
+                    "label": "Flammkuchen",
+                    "title": "Flammkuchen Optionen",
+                    "imageUrl": "https://github.com/user-attachments/assets/e3673bb1-4499-4aad-a0dd-b54d9c88a684",
+                    "items": []
+                }
+            ]
         },
         {
             "id": "nudeln",
