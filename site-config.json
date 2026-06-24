@@ -269,7 +269,23 @@
                     "label": "Flammkuchen",
                     "title": "Flammkuchen Optionen",
                     "imageUrl": "https://github.com/user-attachments/assets/e3673bb1-4499-4aad-a0dd-b54d9c88a684",
-                    "items": []
+                    "items": [],
+                    "subcategories": [
+                        {
+                            "id": "flammkuchen-mit-speck",
+                            "label": "Flammkuchen mit Speck",
+                            "title": "Flammkuchen mit Speck",
+                            "imageUrl": "https://github.com/user-attachments/assets/917d26fc-0a81-4d08-8352-43789e392532",
+                            "items": []
+                        },
+                        {
+                            "id": "flammkuchen-mit-gemuese",
+                            "label": "Flammkuchen mit Gemüse",
+                            "title": "Flammkuchen mit Gemüse",
+                            "imageUrl": "https://github.com/user-attachments/assets/c05e4a2f-a93b-4d3f-9c8e-abc88b2edac5",
+                            "items": []
+                        }
+                    ]
                 }
             ]
         },
