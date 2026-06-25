@@ -73,7 +73,20 @@
                     "label": "Grüner Salat",
                     "title": "Grüner Salat",
                     "imageUrl": "https://github.com/user-attachments/assets/f6605d76-2d0a-49a3-941f-1202e13ff5c3",
-                    "items": []
+                    "displayType": "recipe",
+                    "recipeName": "Grüner Salat (für 6 Personen)",
+                    "items": [
+                        "1 Eisberg- oder Kopfsalat",
+                        "Französische Sauce:",
+                        "1 Zwiebel",
+                        "1 Bund Petersilie",
+                        "4 EL Weissweinessig",
+                        "2 TL Senf",
+                        "2 EL Mayonnaise",
+                        "8 EL Sonnenblumen- oder Rapsöl",
+                        "Salz",
+                        "Pfeffer"
+                    ]
                 },
                 {
                     "id": "gemischter-salat",
