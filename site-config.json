@@ -409,7 +409,23 @@
                     "label": "Wähe",
                     "title": "Wähe Optionen",
                     "imageUrl": "https://github.com/user-attachments/assets/7ff6f371-4789-4e19-8631-96ef8b2caed6",
-                    "items": []
+                    "items": [],
+                    "subcategories": [
+                        {
+                            "id": "gemuesewaehe",
+                            "label": "Gemüsewähe",
+                            "title": "Gemüsewähe Optionen",
+                            "imageUrl": "https://github.com/user-attachments/assets/ac2e0de2-869b-466c-b3b3-eedca5e251de",
+                            "items": []
+                        },
+                        {
+                            "id": "kaesewaehe",
+                            "label": "Käsewähe",
+                            "title": "Käsewähe Optionen",
+                            "imageUrl": "https://github.com/user-attachments/assets/96207186-243e-442f-86e8-248c33fb7007",
+                            "items": []
+                        }
+                    ]
                 },
                 {
                     "id": "flammkuchen",
