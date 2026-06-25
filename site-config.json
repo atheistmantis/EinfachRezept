@@ -276,7 +276,16 @@
                             "label": "Flammkuchen mit Speck",
                             "title": "Flammkuchen mit Speck",
                             "imageUrl": "https://github.com/user-attachments/assets/917d26fc-0a81-4d08-8352-43789e392532",
-                            "items": []
+                            "displayType": "recipe",
+                            "recipeName": "Flammkuchen mit Speck (für 6 Personen)",
+                            "items": [
+                                "2 Pkg. Flammkuchenteig",
+                                "250 g Crème fraiche",
+                                "180 g Speckwürfel",
+                                "1-2 Zwiebel(n)",
+                                "Salz und Pfeffer"
+                            ],
+                            "steps": []
                         },
                         {
                             "id": "flammkuchen-mit-gemuese",
