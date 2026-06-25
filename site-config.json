@@ -5,6 +5,146 @@
     "categoryLabel": "Wähle eine Basis",
     "buttons": [
         {
+            "id": "salat",
+            "label": "Salat",
+            "title": "Salat Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "https://github.com/user-attachments/assets/72d03205-cb73-432e-bbb8-eb425851e00d",
+            "stepBackgroundImageUrl": "",
+            "items": [],
+            "subcategories": [
+                {
+                    "id": "randensalat",
+                    "label": "Randensalat",
+                    "title": "Randensalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/ae7da173-4742-43c9-ba32-9434c5bcbb2e",
+                    "displayType": "recipe",
+                    "recipeName": "Randensalat (für 6 Personen)",
+                    "items": [
+                        "1 kg Randen, gekocht, in kleinen Würfeln",
+                        "4 EL Baumnüsse, gehackt",
+                        "1 Fetakäse (Bei Bedarf)",
+                        "Salz",
+                        "Pfeffer",
+                        "Sauce:",
+                        "6 EL Apfelessig",
+                        "8 EL Rapsöl",
+                        "2 TL Honig",
+                        "2 TL Senf"
+                    ],
+                    "steps": []
+                },
+                {
+                    "id": "rueeblisalat",
+                    "label": "Rüeblisalat",
+                    "title": "Rüeblisalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/1d59975d-9526-4499-b4e5-624216981f9f",
+                    "displayType": "recipe",
+                    "recipeName": "Rüeblisalat (für 6 Personen)",
+                    "items": [
+                        "1 kg Randen, gekocht, in kleinen Würfeln",
+                        "4 EL Baumnüsse, gehackt",
+                        "1 Fetakäse (Bei Bedarf)",
+                        "Salz",
+                        "Pfeffer",
+                        "Sauce:",
+                        "6 EL Apfelessig",
+                        "8 EL Rapsöl",
+                        "2 TL Honig",
+                        "2 TL Senf"
+                    ],
+                    "steps": []
+                },
+                {
+                    "id": "maissalat",
+                    "label": "Maissalat",
+                    "title": "Maissalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/1c16f242-3a35-46f0-9be2-ed9a008961d3",
+                    "displayType": "recipe",
+                    "recipeName": "Maissalat (für 6 Personen)",
+                    "items": [
+                        "3 Dosen Mais (je ca. 340 g)",
+                        "1.5 rote Chilis",
+                        "0.75 Bund Koriander",
+                        "Sauce:",
+                        "1.5 Limette",
+                        "4.5 EL Rapsöl",
+                        "150 g saurer Halbrahm",
+                        "Salz",
+                        "Pfeffer"
+                    ],
+                    "steps": []
+                },
+                {
+                    "id": "gurkensalat",
+                    "label": "Gurkensalat",
+                    "title": "Gurkensalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/ee5b998d-ccdf-445e-be81-79380ae79675",
+                    "displayType": "recipe",
+                    "recipeName": "Gurkensalat (für 6 Personen)",
+                    "items": [
+                        "3 Salatgurken",
+                        "Sauce:",
+                        "6 EL Joghurt nature",
+                        "1.5 TL Honig",
+                        "2.5 EL Essig",
+                        "0.75 TL Senf",
+                        "Salz",
+                        "Pfeffer"
+                    ],
+                    "steps": []
+                },
+                {
+                    "id": "gruener-salat",
+                    "label": "Grüner Salat",
+                    "title": "Grüner Salat",
+                    "imageUrl": "https://github.com/user-attachments/assets/f6605d76-2d0a-49a3-941f-1202e13ff5c3",
+                    "displayType": "recipe",
+                    "recipeName": "Grüner Salat (für 6 Personen)",
+                    "items": [
+                        "1 Eisberg- oder Kopfsalat",
+                        "Französische Sauce:",
+                        "1 Zwiebel",
+                        "1 Bund Petersilie",
+                        "4 EL Weissweinessig",
+                        "2 TL Senf",
+                        "2 EL Mayonnaise",
+                        "8 EL Sonnenblumen- oder Rapsöl",
+                        "Salz",
+                        "Pfeffer"
+                    ]
+                },
+                {
+                    "id": "gemischter-salat",
+                    "label": "Gemischter Salat",
+                    "title": "Gemischter Salat",
+                    "imageUrl": "https://github.com/user-attachments/assets/68ddc70e-27c1-461c-b861-33ff3ccb6f77",
+                    "displayType": "recipe",
+                    "recipeName": "Gemischter Salat (für 6 Personen)",
+                    "items": [
+                        "300 g Grüner Salat",
+                        "1 Salatgurke",
+                        "230 g Kirschtomaten",
+                        "12 Radiesschen",
+                        "1-2 rote Zwiebeln",
+                        "120 g Mais",
+                        "120 g Feta",
+                        "1.5 Beet Kresse",
+                        "Italienische Sauce:",
+                        "¼ Bund Oregano",
+                        "¼ Bund Basilikum",
+                        "2 EL Aceto balsamico",
+                        "1 Knoblauchzehe",
+                        "4 EL Olivenöl",
+                        "Salz",
+                        "Pfeffer"
+                    ],
+                    "steps": []
+                }
+            ]
+        },
+        {
             "id": "gemuese",
             "label": "Gemüse",
             "title": "Gemüse Optionen",
@@ -86,7 +226,9 @@
                     "items": [
                         "Rindersteak",
                         "Hamburger",
-                        "Rindergulasch"
+                        "Rindergulasch",
+                        "Chili con Carne",
+                        "Spaghetti Bolognese"
                     ]
                 }
             ]
@@ -253,9 +395,16 @@
                 {
                     "id": "wienerli-im-teig",
                     "label": "Wienerli im Teig",
-                    "title": "Wienerli im Teig Optionen",
+                    "title": "Wienerli im Teig",
                     "imageUrl": "https://github.com/user-attachments/assets/5b149579-c760-4c07-bf05-a78674d01f38",
-                    "items": []
+                    "displayType": "recipe",
+                    "recipeName": "Wienerli im Teig (für 6 Personen)",
+                    "items": [
+                        "2-3 rechteckig ausgewallter Butterblätterteig à ca. 320 g",
+                        "10-12 Wienerli",
+                        "1 Ei zum Bestreichen"
+                    ],
+                    "steps": []
                 },
                 {
                     "id": "waehe",
@@ -265,10 +414,10 @@
                     "items": [],
                     "subcategories": [
                         {
-                            "id": "gemuesewähe",
+                            "id": "gemuesewaehe",
                             "label": "Gemüsewähe",
                             "title": "Gemüsewähe",
-                            "imageUrl": "https://github.com/user-attachments/assets/7ff6f371-4789-4e19-8631-96ef8b2caed6",
+                            "imageUrl": "https://github.com/user-attachments/assets/ac2e0de2-869b-466c-b3b3-eedca5e251de",
                             "displayType": "recipe",
                             "recipeName": "Gemüsewähe (für 6 Personen)",
                             "items": [
@@ -293,6 +442,13 @@
                                 "Muskat"
                             ],
                             "steps": []
+                        },
+                        {
+                            "id": "kaesewaehe",
+                            "label": "Käsewähe",
+                            "title": "Käsewähe Optionen",
+                            "imageUrl": "https://github.com/user-attachments/assets/96207186-243e-442f-86e8-248c33fb7007",
+                            "items": []
                         }
                     ]
                 },
