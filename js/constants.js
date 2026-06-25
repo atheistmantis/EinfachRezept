@@ -128,7 +128,21 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Randensalat",
           title: "Randensalat",
           imageUrl: "https://github.com/user-attachments/assets/ae7da173-4742-43c9-ba32-9434c5bcbb2e",
-          items: [],
+          displayType: "recipe",
+          recipeName: "Randensalat (für 6 Personen)",
+          items: [
+            "1 kg Randen, gekocht, in kleinen Würfeln",
+            "4 EL Baumnüsse, gehackt",
+            "1 Fetakäse (Bei Bedarf)",
+            "Salz",
+            "Pfeffer",
+            "Sauce:",
+            "6 EL Apfelessig",
+            "8 EL Rapsöl",
+            "2 TL Honig",
+            "2 TL Senf"
+          ],
+          steps: [],
         },
         {
           id: "rueeblisalat",
