@@ -47,7 +47,20 @@
                     "label": "Maissalat",
                     "title": "Maissalat",
                     "imageUrl": "https://github.com/user-attachments/assets/1c16f242-3a35-46f0-9be2-ed9a008961d3",
-                    "items": []
+                    "displayType": "recipe",
+                    "recipeName": "Maissalat (für 6 Personen)",
+                    "items": [
+                        "3 Dosen Mais (je ca. 340 g)",
+                        "1.5 rote Chilis",
+                        "0.75 Bund Koriander",
+                        "Sauce:",
+                        "1.5 Limette",
+                        "4.5 EL Rapsöl",
+                        "150 g saurer Halbrahm",
+                        "Salz",
+                        "Pfeffer"
+                    ],
+                    "steps": []
                 },
                 {
                     "id": "gurkensalat",
