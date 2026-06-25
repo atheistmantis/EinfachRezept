@@ -12,7 +12,37 @@
             "textColor": "",
             "imageUrl": "https://github.com/user-attachments/assets/72d03205-cb73-432e-bbb8-eb425851e00d",
             "stepBackgroundImageUrl": "",
-            "items": []
+            "items": [],
+            "subcategories": [
+                {
+                    "id": "randensalat",
+                    "label": "Randensalat",
+                    "title": "Randensalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/ae7da173-4742-43c9-ba32-9434c5bcbb2e",
+                    "items": []
+                },
+                {
+                    "id": "rueeblisalat",
+                    "label": "Rüeblisalat",
+                    "title": "Rüeblisalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/1d59975d-9526-4499-b4e5-624216981f9f",
+                    "items": []
+                },
+                {
+                    "id": "maissalat",
+                    "label": "Maissalat",
+                    "title": "Maissalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/1c16f242-3a35-46f0-9be2-ed9a008961d3",
+                    "items": []
+                },
+                {
+                    "id": "gurkensalat",
+                    "label": "Gurkensalat",
+                    "title": "Gurkensalat",
+                    "imageUrl": "https://github.com/user-attachments/assets/ee5b998d-ccdf-445e-be81-79380ae79675",
+                    "items": []
+                }
+            ]
         },
         {
             "id": "gemuese",
