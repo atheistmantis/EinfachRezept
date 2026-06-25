@@ -146,7 +146,7 @@ export const DEFAULT_SITE_CONFIG = {
           recipeName: "Maissalat (für 6 Personen)",
           items: [
             "3 Dosen Mais (je ca. 340 g)",
-            "1.5 roter chili",
+            "1.5 roter Chili",
             "0.75 Bund Koriander",
             "Sauce:",
             "1.5 Limette",
