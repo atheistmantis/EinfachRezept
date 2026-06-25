@@ -253,9 +253,16 @@
                 {
                     "id": "wienerli-im-teig",
                     "label": "Wienerli im Teig",
-                    "title": "Wienerli im Teig Optionen",
+                    "title": "Wienerli im Teig",
                     "imageUrl": "https://github.com/user-attachments/assets/5b149579-c760-4c07-bf05-a78674d01f38",
-                    "items": []
+                    "displayType": "recipe",
+                    "recipeName": "Wienerli im Teig (für 6 Personen)",
+                    "items": [
+                        "2-3 rechteckig ausgewallter Butterblätterteig à ca. 320 g",
+                        "10-12 Wienerli",
+                        "1 Ei zum Bestreichen"
+                    ],
+                    "steps": []
                 },
                 {
                     "id": "waehe",
