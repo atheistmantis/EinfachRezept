@@ -136,7 +136,7 @@ export const DEFAULT_SITE_CONFIG = {
           title: "Rüeblisalat",
           imageUrl: "https://github.com/user-attachments/assets/1d59975d-9526-4499-b4e5-624216981f9f",
           displayType: "recipe",
-          recipeName: "Randensalat (für 6 Personen)",
+          recipeName: "Rüeblisalat (für 6 Personen)",
           items: [
             "1 kg Randen, gekocht, in kleinen Würfeln",
             "4 EL Baumnüsse, gehackt",
