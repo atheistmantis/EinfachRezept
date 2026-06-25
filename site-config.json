@@ -5,6 +5,16 @@
     "categoryLabel": "Wähle eine Basis",
     "buttons": [
         {
+            "id": "salat",
+            "label": "Salat",
+            "title": "Salat Optionen",
+            "backgroundColor": "",
+            "textColor": "",
+            "imageUrl": "https://github.com/user-attachments/assets/72d03205-cb73-432e-bbb8-eb425851e00d",
+            "stepBackgroundImageUrl": "",
+            "items": []
+        },
+        {
             "id": "gemuese",
             "label": "Gemüse",
             "title": "Gemüse Optionen",
