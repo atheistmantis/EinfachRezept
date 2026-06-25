@@ -151,6 +151,20 @@ export const DEFAULT_SITE_CONFIG = {
           imageUrl: "https://github.com/user-attachments/assets/ee5b998d-ccdf-445e-be81-79380ae79675",
           items: [],
         },
+        {
+          id: "gruener-salat",
+          label: "Grüner Salat",
+          title: "Grüner Salat",
+          imageUrl: "https://github.com/user-attachments/assets/f6605d76-2d0a-49a3-941f-1202e13ff5c3",
+          items: [],
+        },
+        {
+          id: "gemischter-salat",
+          label: "Gemischter Salat",
+          title: "Gemischter Salat",
+          imageUrl: "https://github.com/user-attachments/assets/68ddc70e-27c1-461c-b861-33ff3ccb6f77",
+          items: [],
+        },
       ],
     },
     {
