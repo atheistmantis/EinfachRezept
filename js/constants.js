@@ -153,7 +153,7 @@ export const DEFAULT_SITE_CONFIG = {
             "4.5 EL Rapsöl",
             "150 g saurer Halbrahm",
             "Salz",
-            "Pfeffer",
+            "Pfeffer"
           ],
           steps: [],
         },
