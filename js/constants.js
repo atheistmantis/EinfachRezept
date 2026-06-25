@@ -164,7 +164,7 @@ export const DEFAULT_SITE_CONFIG = {
           title: "Gemischter Salat",
           imageUrl: "https://github.com/user-attachments/assets/68ddc70e-27c1-461c-b861-33ff3ccb6f77",
           displayType: "recipe",
-          recipeName: "Gemischtersalat (für 6 Personen)",
+          recipeName: "Gemischter Salat (für 6 Personen)",
           items: [
             "300 g Grüner Salat",
             "1 Salatgurke",
@@ -181,7 +181,7 @@ export const DEFAULT_SITE_CONFIG = {
             "1 Knoblauchzehe",
             "4 EL Olivenöl",
             "Salz",
-            "Pfeffer",
+            "Pfeffer"
           ],
           steps: [],
         },
