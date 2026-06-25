@@ -40,7 +40,21 @@
                     "label": "Rüeblisalat",
                     "title": "Rüeblisalat",
                     "imageUrl": "https://github.com/user-attachments/assets/1d59975d-9526-4499-b4e5-624216981f9f",
-                    "items": []
+                    "displayType": "recipe",
+                    "recipeName": "Rüeblisalat (für 6 Personen)",
+                    "items": [
+                        "1 kg Randen, gekocht, in kleinen Würfeln",
+                        "4 EL Baumnüsse, gehackt",
+                        "1 Fetakäse (Bei Bedarf)",
+                        "Salz",
+                        "Pfeffer",
+                        "Sauce:",
+                        "6 EL Apfelessig",
+                        "8 EL Rapsöl",
+                        "2 TL Honig",
+                        "2 TL Senf"
+                    ],
+                    "steps": []
                 },
                 {
                     "id": "maissalat",
