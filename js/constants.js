@@ -455,7 +455,7 @@ export const DEFAULT_SITE_CONFIG = {
                 "4.5 dl Fleischbouillon",
                 "1.5 dl Halbrahm",
                 "6 EL Schnittlauch",
-                "360 g Teigwaren",
+                "360 g Teigwaren"
               ],
               steps: [],
             },
