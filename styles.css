@@ -83,7 +83,7 @@ h3 {
 .action-button {
   border: 3px solid transparent;
   border-radius: var(--btn-border-radius);
-  padding: 0.64em 1.47em;
+  padding: 0.65em 1.5em;
   margin: 0.5rem;
   font-size: var(--btn-font-size);
   font-family: var(--btn-font-family);
@@ -105,7 +105,7 @@ h3 {
 
 .action-button.small {
   min-width: 0;
-  padding: 0.72rem 1.1rem;
+  padding: 0.7rem 1.1rem;
   font-size: 1.15rem;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
