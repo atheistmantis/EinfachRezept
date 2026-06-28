@@ -380,7 +380,29 @@ export const DEFAULT_SITE_CONFIG = {
             },
           ],
         },
-        { id: "schwein", label: "Schwein", title: "Schwein Optionen", imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png", items: ["Schweinefilet", "Schnitzel", "Spareribs"] },
+        {
+          id: "schwein",
+          label: "Schwein",
+          title: "Schwein Optionen",
+          imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png",
+          items: ["Schweinefilet", "Schnitzel", "Spareribs"],
+          subcategories: [
+            {
+              id: "flammkuchen",
+              label: "Flammkuchen",
+              title: "Flammkuchen",
+              imageUrl: "https://github.com/user-attachments/assets/fcb7e5a1-4b04-4c42-b78f-0a6d7b14538b",
+              items: [],
+            },
+            {
+              id: "wienerli-im-teig",
+              label: "Wienerli im Teig",
+              title: "Wienerli im Teig",
+              imageUrl: "https://github.com/user-attachments/assets/9377c439-dbbf-4560-9bd5-b59daa558256",
+              items: [],
+            },
+          ],
+        },
         {
           id: "kuh",
           label: "Kuh",
