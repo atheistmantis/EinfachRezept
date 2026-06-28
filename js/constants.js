@@ -606,7 +606,7 @@ export const DEFAULT_SITE_CONFIG = {
               displayType: "recipe",
               recipeName: "Spaghetti Carbonara (für 6 Personen)",
               items: [
-                "800gr Spaghetti",
+                "800 g Spaghetti",
                 "150 g Speck- oder Schinkenwürfeli",
                 "5 Eier",
                 "3dl Rahm",
@@ -631,7 +631,7 @@ export const DEFAULT_SITE_CONFIG = {
                 "2,25 dl Fleischbouillon",
                 "Salz, Pfeffer",
                 "3 EL Peterli, gehackt",
-                "800gr Spaghetti",
+                "800 g Spaghetti",
               ],
               steps: [],
             },
