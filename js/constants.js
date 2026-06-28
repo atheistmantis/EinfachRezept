@@ -388,9 +388,6 @@ export const DEFAULT_SITE_CONFIG = {
           imageUrl: "https://rinderhaltung.org/wp-content/uploads/vorstellung_fleckvieh_kuh_steckbrief-678x509.png",
           items: [],
           subcategories: [
-            { id: "rindersteak",        label: "Rindersteak",        title: "Rindersteak",        items: [] },
-            { id: "hamburger",          label: "Hamburger",          title: "Hamburger",          items: [] },
-            { id: "rindergulasch",      label: "Rindergulasch",      title: "Rindergulasch",      items: [] },
             { id: "chili-con-carne",    label: "Chili con Carne",    title: "Chili con Carne",    imageUrl: "https://github.com/user-attachments/assets/99bd11f1-02d2-4f20-9b9e-7cc316d20be7", items: [] },
             { id: "spaghetti-bolognese", label: "Spaghetti Bolognese", title: "Spaghetti Bolognese", imageUrl: "https://github.com/user-attachments/assets/d70ff8a7-194c-4286-9c8f-b275082d95df", items: [] },
           ],

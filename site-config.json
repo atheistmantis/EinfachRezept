@@ -226,24 +226,6 @@
           "items": [],
           "subcategories": [
             {
-              "id": "rindersteak",
-              "label": "Rindersteak",
-              "title": "Rindersteak",
-              "items": []
-            },
-            {
-              "id": "hamburger",
-              "label": "Hamburger",
-              "title": "Hamburger",
-              "items": []
-            },
-            {
-              "id": "rindergulasch",
-              "label": "Rindergulasch",
-              "title": "Rindergulasch",
-              "items": []
-            },
-            {
               "id": "chili-con-carne",
               "label": "Chili con Carne",
               "title": "Chili con Carne",
