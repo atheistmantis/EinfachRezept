@@ -4,11 +4,11 @@
   --text: #ffffff;
   --accent: #00d4ff;
   --accent-rgb: 0, 212, 255;   /* RGB channels of --accent for use in rgba() */
-  --accent-contrast: #00111a;
+  --accent-contrast: #000000;
   --background: #02040a;
   --panel-bg-image: none;
   --btn-border-radius: 1rem;
-  --btn-font-size: 1.65rem;
+  --btn-font-size: 1.8rem;
   --btn-font-family: Arial, Helvetica, sans-serif;
   --btn-font-weight: 700;
 }
@@ -83,7 +83,7 @@ h3 {
 .action-button {
   border: 3px solid transparent;
   border-radius: var(--btn-border-radius);
-  padding: 0.7em 1.6em;
+  padding: 0.64em 1.47em;
   margin: 0.5rem;
   font-size: var(--btn-font-size);
   font-family: var(--btn-font-family);
@@ -105,8 +105,8 @@ h3 {
 
 .action-button.small {
   min-width: 0;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
+  padding: 0.72rem 1.1rem;
+  font-size: 1.15rem;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   border-radius: 1rem;
@@ -146,7 +146,7 @@ h3 {
 
 .option-button.has-image {
   color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9);
   min-height: 6rem;
   display: flex;
   align-items: center;
@@ -159,7 +159,7 @@ h3 {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .option-button.has-image > span {
