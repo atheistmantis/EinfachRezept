@@ -558,7 +558,28 @@
           "label": "Milchreis",
           "title": "Milchreis Optionen",
           "imageUrl": "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
-          "items": []
+          "items": [],
+          "subcategories": [
+            {
+              "id": "milchreis-klassisch",
+              "label": "Milchreis",
+              "title": "Milchreis",
+              "imageUrl": "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
+              "displayType": "recipe",
+              "recipeName": "Milchreis (für 6 Personen)",
+              "items": [
+                "1.5 L Milch",
+                "1.5 EL Zucker",
+                "1.5 TL Vanilleextrakt",
+                "1.5 Prisen Salz",
+                "375 g Milchreis",
+                "Topping:",
+                "6 EL Zucker",
+                "3 TL Zimt"
+              ],
+              "steps": []
+            }
+          ]
         }
       ]
     },
