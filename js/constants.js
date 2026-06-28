@@ -392,7 +392,16 @@ export const DEFAULT_SITE_CONFIG = {
               label: "Flammkuchen",
               title: "Flammkuchen",
               imageUrl: "https://github.com/user-attachments/assets/fcb7e5a1-4b04-4c42-b78f-0a6d7b14538b",
-              items: [],
+              displayType: "recipe",
+              recipeName: "Flammkuchen mit Speck (für 6 Personen)",
+              items: [
+                "2 Pkg. Flammkuchenteig",
+                "250 g Crème fraiche",
+                "180 g Speckwürfel",
+                "1-2 Zwiebel(n)",
+                "Salz und Pfeffer",
+              ],
+              steps: [],
             },
             {
               id: "wienerli-im-teig",
