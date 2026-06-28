@@ -262,6 +262,22 @@ export const DEFAULT_SITE_CONFIG = {
       imageUrl: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
       items: ["Gemüsepfanne", "Gemüsesuppe", "Geröstetes Gemüse"],
+      subcategories: [
+        {
+          id: "kartoffel",
+          label: "Kartoffel",
+          title: "Kartoffel Optionen",
+          imageUrl: "https://github.com/user-attachments/assets/b619f538-e840-4699-9692-b06a4531dec2",
+          items: [],
+        },
+        {
+          id: "gemischtes-gemuese",
+          label: "Gemischtes Gemüse",
+          title: "Gemischtes Gemüse Optionen",
+          imageUrl: "https://github.com/user-attachments/assets/f1a40308-8789-4cc3-a13d-839bfd6e612c",
+          items: [],
+        },
+      ],
     },
     {
       id: "getreide",
