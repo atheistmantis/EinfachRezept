@@ -163,7 +163,49 @@
           "label": "Kartoffel",
           "title": "Kartoffel Optionen",
           "imageUrl": "https://github.com/user-attachments/assets/b619f538-e840-4699-9692-b06a4531dec2",
-          "items": []
+          "items": [],
+          "subcategories": [
+            {
+              "id": "kartoffel-karotten-pfanne",
+              "label": "Kartoffel-Karotten-Pfanne",
+              "title": "Kartoffel-Karotten-Pfanne",
+              "imageUrl": "https://github.com/user-attachments/assets/3b6b1dbb-45e6-4bd4-9211-ced557461f9b",
+              "displayType": "recipe",
+              "recipeName": "Kartoffel-Karotten-Pfanne (für 6 Personen)",
+              "items": [
+                "1500 g Kartoffeln (festkochend)",
+                "Prise Salz",
+                "7-8 Karotten",
+                "3 Zwiebeln, gelb",
+                "30 g Petersilie, frisch",
+                "6 EL Öl",
+                "Prise Pfeffer, schwarz gemahlen",
+                "Prise Muskatnuss, gemahlen",
+                "300 ml Sahne"
+              ],
+              "steps": []
+            },
+            {
+              "id": "kartoffelgratin",
+              "label": "Kartoffelgratin",
+              "title": "Kartoffelgratin",
+              "imageUrl": "https://github.com/user-attachments/assets/899c378e-9948-456c-9dbe-0783f74681c4",
+              "displayType": "recipe",
+              "recipeName": "Kartoffelgratin (für 6 Personen)",
+              "items": [
+                "1200 g Kartoffeln (festkochend)",
+                "300 ml Kochsahne",
+                "150 g Französischer Kräuterfrischkäse",
+                "150 g Geriebener Emmentaler (oder Comté/Gruyère)",
+                "30 g Butter (in Flöckchen)",
+                "1½ TL Butter für die Form",
+                "1½ TL Salz",
+                "¾ TL Frisch geriebene Muskatnuss",
+                "¾ TL Schwarzer Pfeffer, gemahlen"
+              ],
+              "steps": []
+            }
+          ]
         },
         {
           "id": "gemischtes-gemuese",
