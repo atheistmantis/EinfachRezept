@@ -1,533 +1,551 @@
 {
-    "title": "EinfachRezept",
-    "subtitle": "Einfach. Schnell. Gut lesbar.",
-    "startLabel": "START",
-    "categoryLabel": "Wähle eine Basis",
-    "buttons": [
+  "title": "EinfachRezept",
+  "subtitle": "Einfach. Schnell. Gut lesbar.",
+  "startLabel": "START",
+  "categoryLabel": "Wähle eine Basis",
+  "buttons": [
+    {
+      "id": "salat",
+      "label": "Salat",
+      "title": "Salat Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "https://github.com/user-attachments/assets/72d03205-cb73-432e-bbb8-eb425851e00d",
+      "stepBackgroundImageUrl": "",
+      "items": [],
+      "subcategories": [
         {
-            "id": "salat",
-            "label": "Salat",
-            "title": "Salat Optionen",
-            "backgroundColor": "",
-            "textColor": "",
-            "imageUrl": "https://github.com/user-attachments/assets/72d03205-cb73-432e-bbb8-eb425851e00d",
-            "stepBackgroundImageUrl": "",
-            "items": [],
-            "subcategories": [
-                {
-                    "id": "randensalat",
-                    "label": "Randensalat",
-                    "title": "Randensalat",
-                    "imageUrl": "https://github.com/user-attachments/assets/ae7da173-4742-43c9-ba32-9434c5bcbb2e",
-                    "displayType": "recipe",
-                    "recipeName": "Randensalat (für 6 Personen)",
-                    "items": [
-                        "1 kg Randen, gekocht, in kleinen Würfeln",
-                        "4 EL Baumnüsse, gehackt",
-                        "1 Fetakäse (Bei Bedarf)",
-                        "Salz",
-                        "Pfeffer",
-                        "Sauce:",
-                        "6 EL Apfelessig",
-                        "8 EL Rapsöl",
-                        "2 TL Honig",
-                        "2 TL Senf"
-                    ],
-                    "steps": []
-                },
-                {
-                    "id": "rueeblisalat",
-                    "label": "Rüeblisalat",
-                    "title": "Rüeblisalat",
-                    "imageUrl": "https://github.com/user-attachments/assets/1d59975d-9526-4499-b4e5-624216981f9f",
-                    "displayType": "recipe",
-                    "recipeName": "Rüeblisalat (für 6 Personen)",
-                    "items": [
-                        "1 kg Randen, gekocht, in kleinen Würfeln",
-                        "4 EL Baumnüsse, gehackt",
-                        "1 Fetakäse (Bei Bedarf)",
-                        "Salz",
-                        "Pfeffer",
-                        "Sauce:",
-                        "6 EL Apfelessig",
-                        "8 EL Rapsöl",
-                        "2 TL Honig",
-                        "2 TL Senf"
-                    ],
-                    "steps": []
-                },
-                {
-                    "id": "maissalat",
-                    "label": "Maissalat",
-                    "title": "Maissalat",
-                    "imageUrl": "https://github.com/user-attachments/assets/1c16f242-3a35-46f0-9be2-ed9a008961d3",
-                    "displayType": "recipe",
-                    "recipeName": "Maissalat (für 6 Personen)",
-                    "items": [
-                        "3 Dosen Mais (je ca. 340 g)",
-                        "1.5 rote Chilis",
-                        "0.75 Bund Koriander",
-                        "Sauce:",
-                        "1.5 Limette",
-                        "4.5 EL Rapsöl",
-                        "150 g saurer Halbrahm",
-                        "Salz",
-                        "Pfeffer"
-                    ],
-                    "steps": []
-                },
-                {
-                    "id": "gurkensalat",
-                    "label": "Gurkensalat",
-                    "title": "Gurkensalat",
-                    "imageUrl": "https://github.com/user-attachments/assets/ee5b998d-ccdf-445e-be81-79380ae79675",
-                    "displayType": "recipe",
-                    "recipeName": "Gurkensalat (für 6 Personen)",
-                    "items": [
-                        "3 Salatgurken",
-                        "Sauce:",
-                        "6 EL Joghurt nature",
-                        "1.5 TL Honig",
-                        "2.5 EL Essig",
-                        "0.75 TL Senf",
-                        "Salz",
-                        "Pfeffer"
-                    ],
-                    "steps": []
-                },
-                {
-                    "id": "gruener-salat",
-                    "label": "Grüner Salat",
-                    "title": "Grüner Salat",
-                    "imageUrl": "https://github.com/user-attachments/assets/f6605d76-2d0a-49a3-941f-1202e13ff5c3",
-                    "displayType": "recipe",
-                    "recipeName": "Grüner Salat (für 6 Personen)",
-                    "items": [
-                        "1 Eisberg- oder Kopfsalat",
-                        "Französische Sauce:",
-                        "1 Zwiebel",
-                        "1 Bund Petersilie",
-                        "4 EL Weissweinessig",
-                        "2 TL Senf",
-                        "2 EL Mayonnaise",
-                        "8 EL Sonnenblumen- oder Rapsöl",
-                        "Salz",
-                        "Pfeffer"
-                    ]
-                },
-                {
-                    "id": "gemischter-salat",
-                    "label": "Gemischter Salat",
-                    "title": "Gemischter Salat",
-                    "imageUrl": "https://github.com/user-attachments/assets/68ddc70e-27c1-461c-b861-33ff3ccb6f77",
-                    "displayType": "recipe",
-                    "recipeName": "Gemischter Salat (für 6 Personen)",
-                    "items": [
-                        "300 g Grüner Salat",
-                        "1 Salatgurke",
-                        "230 g Kirschtomaten",
-                        "12 Radiesschen",
-                        "1-2 rote Zwiebeln",
-                        "120 g Mais",
-                        "120 g Feta",
-                        "1.5 Beet Kresse",
-                        "Italienische Sauce:",
-                        "¼ Bund Oregano",
-                        "¼ Bund Basilikum",
-                        "2 EL Aceto balsamico",
-                        "1 Knoblauchzehe",
-                        "4 EL Olivenöl",
-                        "Salz",
-                        "Pfeffer"
-                    ],
-                    "steps": []
-                }
-            ]
+          "id": "randensalat",
+          "label": "Randensalat",
+          "title": "Randensalat",
+          "imageUrl": "https://github.com/user-attachments/assets/ae7da173-4742-43c9-ba32-9434c5bcbb2e",
+          "displayType": "recipe",
+          "recipeName": "Randensalat (für 6 Personen)",
+          "items": [
+            "1 kg Randen, gekocht, in kleinen Würfeln",
+            "4 EL Baumnüsse, gehackt",
+            "1 Fetakäse (Bei Bedarf)",
+            "Salz",
+            "Pfeffer",
+            "Sauce:",
+            "6 EL Apfelessig",
+            "8 EL Rapsöl",
+            "2 TL Honig",
+            "2 TL Senf"
+          ],
+          "steps": []
         },
         {
-            "id": "gemuese",
-            "label": "Gemüse",
-            "title": "Gemüse Optionen",
-            "backgroundColor": "",
-            "textColor": "",
-            "imageUrl": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "stepBackgroundImageUrl": "",
-            "items": [
-                "Gemüsepfanne",
-                "Gemüsesuppe",
-                "Geröstetes Gemüse"
-            ]
+          "id": "rueeblisalat",
+          "label": "Rüeblisalat",
+          "title": "Rüeblisalat",
+          "imageUrl": "https://github.com/user-attachments/assets/1d59975d-9526-4499-b4e5-624216981f9f",
+          "displayType": "recipe",
+          "recipeName": "Rüeblisalat (für 6 Personen)",
+          "items": [
+            "1 kg Randen, gekocht, in kleinen Würfeln",
+            "4 EL Baumnüsse, gehackt",
+            "1 Fetakäse (Bei Bedarf)",
+            "Salz",
+            "Pfeffer",
+            "Sauce:",
+            "6 EL Apfelessig",
+            "8 EL Rapsöl",
+            "2 TL Honig",
+            "2 TL Senf"
+          ],
+          "steps": []
         },
         {
-            "id": "fleisch",
-            "label": "Fleisch",
-            "title": "Fleisch Optionen",
-            "backgroundColor": "",
-            "textColor": "",
-            "imageUrl": "https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "stepBackgroundImageUrl": "",
-            "items": [
-                "Hähnchenpfanne",
-                "Rindersteak",
-                "Schweinefilet"
-            ],
-            "subcategories": [
-                {
-                    "id": "huhn",
-                    "label": "Huhn",
-                    "title": "Huhn Optionen",
-                    "imageUrl": "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
-                    "backgroundSize": "contain",
-                    "items": [],
-                    "subcategories": [
-                        {
-                            "id": "nudeln",
-                            "label": "Nudeln",
-                            "imageUrl": "images/nudeln.svg",
-                            "title": "Nudeln Optionen",
-                            "displayType": "recipe",
-                            "recipeName": "Poulet-Pilz-Teigwaren",
-                            "items": [
-                                "3 EL Olivenöl",
-                                "600 g geschnetzeltes Pouletfleisch",
-                                "Salz",
-                                "Pfeffer",
-                                "3 Zwiebeln",
-                                "750 g Champignons",
-                                "450 g Shiitake-Pilz",
-                                "3 TL Mehl",
-                                "6 EL Weisswein",
-                                "4.5 dl Fleischbouillon",
-                                "1.5 dl Halbrahm",
-                                "6 EL Schnittlauch",
-                                "360 g Teigwaren"
-                            ],
-                            "steps": []
-                        }
-                    ]
-                },
-                {
-                    "id": "schwein",
-                    "label": "Schwein",
-                    "title": "Schwein Optionen",
-                    "imageUrl": "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
-                    "items": [
-                        "Schweinefilet",
-                        "Schnitzel",
-                        "Spareribs"
-                    ]
-                },
-                {
-                    "id": "kuh",
-                    "label": "Kuh",
-                    "title": "Kuh Optionen",
-                    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
-                    "backgroundSize": "contain",
-                    "items": [
-                        "Rindersteak",
-                        "Hamburger",
-                        "Rindergulasch",
-                        "Chili con Carne",
-                        "Spaghetti Bolognese"
-                    ]
-                }
-            ]
+          "id": "maissalat",
+          "label": "Maissalat",
+          "title": "Maissalat",
+          "imageUrl": "https://github.com/user-attachments/assets/1c16f242-3a35-46f0-9be2-ed9a008961d3",
+          "displayType": "recipe",
+          "recipeName": "Maissalat (für 6 Personen)",
+          "items": [
+            "3 Dosen Mais (je ca. 340 g)",
+            "1.5 rote Chilis",
+            "0.75 Bund Koriander",
+            "Sauce:",
+            "1.5 Limette",
+            "4.5 EL Rapsöl",
+            "150 g saurer Halbrahm",
+            "Salz",
+            "Pfeffer"
+          ],
+          "steps": []
         },
         {
-            "id": "reis",
-            "label": "Reis",
-            "title": "Reis Optionen",
-            "backgroundColor": "",
-            "textColor": "",
-            "imageUrl": "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "stepBackgroundImageUrl": "",
-            "items": [
-                "Riz Casimir",
-                "Risotto",
-                "Gebratener Reis"
-            ],
-            "subcategories": [
-                {
-                    "id": "risotto",
-                    "label": "Risotto",
-                    "title": "Risotto Optionen",
-                    "imageUrl": "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
-                    "items": [],
-                    "subcategories": [
-                        {
-                            "id": "safranrisotto",
-                            "label": "Safranrisotto",
-                            "title": "Safranrisotto",
-                            "imageUrl": "https://images.pexels.com/photos/4518803/pexels-photo-4518803.jpeg?auto=compress&cs=tinysrgb&w=800",
-                            "displayType": "recipe",
-                            "recipeName": "Safranrisotto",
-                            "items": [
-                                "1.5 EL Butter",
-                                "1.5 Zwiebel, fein gehackt",
-                                "3 Knoblauchzehen, gepresst",
-                                "450 g Risottoreis (zB. Carnaroli)",
-                                "3 dl Weisswein",
-                                "3 Briefchen Safran",
-                                "13.5 dl Gemüsebouillon",
-                                "120 g Parmesan am Stück, gerieben",
-                                "30 g Butter"
-                            ],
-                            "steps": []
-                        },
-                        {
-                            "id": "pilzrisotto",
-                            "label": "Pilzrisotto",
-                            "title": "Pilzrisotto",
-                            "imageUrl": "https://snikandtasty.de/wp-content/uploads/2020/10/IMG_20200328_185510_621.jpg",
-                            "displayType": "recipe",
-                            "recipeName": "Pilzrisotto",
-                            "items": [
-                                "3 EL Bratbutter",
-                                "375 g Champignons oder gemischte Pilze, geviertelt",
-                                "1.5 Zwiebel, fein gehackt",
-                                "1.5 Knoblauch, fein gehackt",
-                                "450 g Risottoreis",
-                                "4,5 dl Weisswein oder Bouillon",
-                                "6,75 dl Bouillon",
-                                "3,75 dl Rahm",
-                                "4.5 EL Butter",
-                                "150 g Sbrinz AOP"
-                            ],
-                            "steps": []
-                        },
-                        {
-                            "id": "tomatenrisotto",
-                            "label": "Tomatenrisotto",
-                            "title": "Tomatenrisotto",
-                            "imageUrl": "https://www.volg.ch/fileadmin/_processed_/9/7/csm_recipe_4315_322edd10dd.jpg",
-                            "items": [
-                                "1.5 EL Olivenöl",
-                                "1.5 Zwiebel, fein gehackt",
-                                "600 g Risottoreis (z.B. Arborio)",
-                                "3 EL Tomatenpüree",
-                                "1.5 dl Weisswein",
-                                "1.5 L Gemüsebouillon, heiss",
-                                "225 g Cherry-Tomaten, halbiert",
-                                "150 g geriebener Parmesan"
-                            ],
-                            "displayType": "recipe",
-                            "recipeName": "Tomatenrisotto",
-                            "steps": []
-                        }
-                    ]
-                },
-                {
-                    "id": "jasminreis",
-                    "label": "Jasminreis",
-                    "title": "Jasminreis Optionen",
-                    "imageUrl": "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
-                    "items": [],
-                    "subcategories": [
-                        {
-                            "id": "gemuesereis",
-                            "label": "Gemüsereis",
-                            "title": "Gemüsereis",
-                            "imageUrl": "https://github.com/user-attachments/assets/ba8cece3-a60d-454d-9a1b-35f42c7a7aac",
-                            "items": []
-                        },
-                        {
-                            "id": "riz-casimir-jasmin",
-                            "label": "Riz Casimir",
-                            "title": "Riz Casimir",
-                            "imageUrl": "https://github.com/user-attachments/assets/8cd5e1ae-2ec1-4941-ae47-25c00598744f",
-                            "displayType": "recipe",
-                            "recipeName": "Riz Casimir (6 Personen)",
-                            "items": [
-                                "375 g Langkornreis",
-                                "750 g Pouletbrust",
-                                "Salz",
-                                "Pfeffer",
-                                "1.5 EL Bratbutter",
-                                "1-2 Früchtekonserven-Dosen",
-                                "1.5 EL Curry",
-                                "3.75 dl Gemüsebouillon",
-                                "3 dl Halbrahm"
-                            ],
-                            "steps": []
-                        }
-                    ]
-                },
-                {
-                    "id": "milchreis",
-                    "label": "Milchreis",
-                    "title": "Milchreis Optionen",
-                    "imageUrl": "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
-                    "items": []
-                }
-            ]
+          "id": "gurkensalat",
+          "label": "Gurkensalat",
+          "title": "Gurkensalat",
+          "imageUrl": "https://github.com/user-attachments/assets/ee5b998d-ccdf-445e-be81-79380ae79675",
+          "displayType": "recipe",
+          "recipeName": "Gurkensalat (für 6 Personen)",
+          "items": [
+            "3 Salatgurken",
+            "Sauce:",
+            "6 EL Joghurt nature",
+            "1.5 TL Honig",
+            "2.5 EL Essig",
+            "0.75 TL Senf",
+            "Salz",
+            "Pfeffer"
+          ],
+          "steps": []
         },
         {
-            "id": "getreide",
-            "label": "Getreide",
-            "title": "Getreide Optionen",
-            "backgroundColor": "",
-            "textColor": "",
-            "imageUrl": "https://github.com/user-attachments/assets/f0a8d06e-cbd2-4c26-ad4e-e75cbae3ed21",
-            "stepBackgroundImageUrl": "",
-            "items": [],
-            "subcategories": [
-                {
-                    "id": "cafe-complet",
-                    "label": "Cafe Complet",
-                    "title": "Cafe Complet Optionen",
-                    "imageUrl": "https://github.com/user-attachments/assets/275164ce-0d4a-4d94-84c6-ce370b34a273",
-                    "displayType": "recipe",
-                    "recipeName": "Cafe Complet (für 6 Personen)",
-                    "items": [
-                        "Je nach Gusto:",
-                        "1 Brot",
-                        "1 Butter",
-                        "Konfitüre",
-                        "Nutella",
-                        "Aufschnitt",
-                        "Käse",
-                        "Eier",
-                        "Früchte",
-                        "Joghurt"
-                    ],
-                    "steps": []
-                },
-                {
-                    "id": "wienerli-im-teig",
-                    "label": "Wienerli im Teig",
-                    "title": "Wienerli im Teig",
-                    "imageUrl": "https://github.com/user-attachments/assets/5b149579-c760-4c07-bf05-a78674d01f38",
-                    "displayType": "recipe",
-                    "recipeName": "Wienerli im Teig (für 6 Personen)",
-                    "items": [
-                        "2-3 rechteckig ausgewallter Butterblätterteig à ca. 320 g",
-                        "10-12 Wienerli",
-                        "1 Ei zum Bestreichen"
-                    ],
-                    "steps": []
-                },
-                {
-                    "id": "waehe",
-                    "label": "Wähe",
-                    "title": "Wähe Optionen",
-                    "imageUrl": "https://github.com/user-attachments/assets/7ff6f371-4789-4e19-8631-96ef8b2caed6",
-                    "items": [],
-                    "subcategories": [
-                        {
-                            "id": "gemuesewaehe",
-                            "label": "Gemüsewähe",
-                            "title": "Gemüsewähe",
-                            "imageUrl": "https://github.com/user-attachments/assets/ac2e0de2-869b-466c-b3b3-eedca5e251de",
-                            "displayType": "recipe",
-                            "recipeName": "Gemüsewähe (für 6 Personen)",
-                            "items": [
-                                "Teig:",
-                                "250 g Mehl",
-                                "½ TL Salz",
-                                "100 g Butter, kalt, in Stückchen",
-                                "60 - 70 g Wasser",
-                                "1 EL Essig (oder Fertig-Butterkuchenteig)",
-                                "Belag:",
-                                "50 - 80 g geriebener Gruyère AOP",
-                                "1 - 2 Knoblauchzehen, fein gehackt",
-                                "140 g Maiskörner aus der Dose, abgetropft",
-                                "400 g Zucchini, an der Röstiraffel gerieben",
-                                "1 - 2 EL Mehl",
-                                "1 kleine Tomate, in feinen Spalten",
-                                "Guss:",
-                                "3 Eier (verquirlt)",
-                                "2 dl Milch",
-                                "1 - 1½ TL Salz",
-                                "Pfeffer",
-                                "Muskat"
-                            ],
-                            "steps": []
-                        },
-                        {
-                            "id": "kaesewaehe",
-                            "label": "Käsewähe",
-                            "title": "Käsewähe Optionen",
-                            "imageUrl": "https://github.com/user-attachments/assets/96207186-243e-442f-86e8-248c33fb7007",
-                            "items": []
-                        }
-                    ]
-                },
-                {
-                    "id": "flammkuchen",
-                    "label": "Flammkuchen",
-                    "title": "Flammkuchen Optionen",
-                    "imageUrl": "https://github.com/user-attachments/assets/e3673bb1-4499-4aad-a0dd-b54d9c88a684",
-                    "items": [],
-                    "subcategories": [
-                        {
-                            "id": "flammkuchen-mit-speck",
-                            "label": "Flammkuchen mit Speck",
-                            "title": "Flammkuchen mit Speck",
-                            "imageUrl": "https://github.com/user-attachments/assets/917d26fc-0a81-4d08-8352-43789e392532",
-                            "displayType": "recipe",
-                            "recipeName": "Flammkuchen mit Speck (für 6 Personen)",
-                            "items": [
-                                "2 Pkg. Flammkuchenteig",
-                                "250 g Crème fraiche",
-                                "180 g Speckwürfel",
-                                "1-2 Zwiebel(n)",
-                                "Salz und Pfeffer"
-                            ],
-                            "steps": []
-                        },
-                        {
-                            "id": "flammkuchen-mit-gemuese",
-                            "label": "Flammkuchen mit Gemüse",
-                            "title": "Flammkuchen mit Gemüse",
-                            "imageUrl": "https://github.com/user-attachments/assets/c05e4a2f-a93b-4d3f-9c8e-abc88b2edac5",
-                            "displayType": "recipe",
-                            "recipeName": "Flammkuchen mit Gemüse",
-                            "items": [
-                                "2 Pkg. Flammkuchenteig",
-                                "300 g Crème fraiche",
-                                "800 g gemischtes Saisongemüse, z.B. Fenchel, Zucchini, Zwiebeln, fein gehobelt",
-                                "400 g Cherrytomaten, evtl. halbiert",
-                                "4 - 8 Knoblauchzehen, in Scheiben",
-                                "Salz, Pfeffer",
-                                "200 g geriebener Gruyère AOP"
-                            ],
-                            "steps": []
-                        }
-                    ]
-                }
-            ]
+          "id": "gruener-salat",
+          "label": "Grüner Salat",
+          "title": "Grüner Salat",
+          "imageUrl": "https://github.com/user-attachments/assets/f6605d76-2d0a-49a3-941f-1202e13ff5c3",
+          "displayType": "recipe",
+          "recipeName": "Grüner Salat (für 6 Personen)",
+          "items": [
+            "1 Eisberg- oder Kopfsalat",
+            "Französische Sauce:",
+            "1 Zwiebel",
+            "1 Bund Petersilie",
+            "4 EL Weissweinessig",
+            "2 TL Senf",
+            "2 EL Mayonnaise",
+            "8 EL Sonnenblumen- oder Rapsöl",
+            "Salz",
+            "Pfeffer"
+          ]
         },
         {
-            "id": "nudeln",
-            "label": "Nudeln",
-            "title": "Nudeln Optionen",
-            "backgroundColor": "",
-            "textColor": "",
-            "imageUrl": "https://images.pexels.com/photos/2703468/pexels-photo-2703468.jpeg?auto=compress&cs=tinysrgb&w=800",
-            "stepBackgroundImageUrl": "",
-            "items": [
-                "Poulet-Pilz-Teigwaren",
-                "Pasta Bolognese",
-                "Nudelsuppe"
-            ]
+          "id": "gemischter-salat",
+          "label": "Gemischter Salat",
+          "title": "Gemischter Salat",
+          "imageUrl": "https://github.com/user-attachments/assets/68ddc70e-27c1-461c-b861-33ff3ccb6f77",
+          "displayType": "recipe",
+          "recipeName": "Gemischter Salat (für 6 Personen)",
+          "items": [
+            "300 g Grüner Salat",
+            "1 Salatgurke",
+            "230 g Kirschtomaten",
+            "12 Radiesschen",
+            "1-2 rote Zwiebeln",
+            "120 g Mais",
+            "120 g Feta",
+            "1.5 Beet Kresse",
+            "Italienische Sauce:",
+            "¼ Bund Oregano",
+            "¼ Bund Basilikum",
+            "2 EL Aceto balsamico",
+            "1 Knoblauchzehe",
+            "4 EL Olivenöl",
+            "Salz",
+            "Pfeffer"
+          ],
+          "steps": []
         }
-    ],
-    "theme": {
-        "accentColor": "#00d4ff",
-        "textColor": "#ffffff",
-        "backgroundColor": "#02040a",
-        "overlayColor": "#080c14",
-        "overlayOpacity": 0.75,
-        "landingBackgroundImageUrl": "",
-        "categoryBackgroundImageUrl": "",
-        "buttonFontFamily": "Arial, Helvetica, sans-serif",
-        "buttonFontWeight": 700,
-        "buttonBorderRadius": 1,
-        "buttonFontSize": 1.65
+      ]
     },
-    "webgl": {
-        "animationSpeed": 0.55,
-        "waveStrength": 0.8,
-        "glowStrength": 0.28
+    {
+      "id": "gemuese",
+      "label": "Gemüse",
+      "title": "Gemüse Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "stepBackgroundImageUrl": "",
+      "items": [
+        "Gemüsepfanne",
+        "Gemüsesuppe",
+        "Geröstetes Gemüse"
+      ]
+    },
+    {
+      "id": "fleisch",
+      "label": "Fleisch",
+      "title": "Fleisch Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "stepBackgroundImageUrl": "",
+      "items": [
+        "Hähnchenpfanne",
+        "Rindersteak",
+        "Schweinefilet"
+      ],
+      "subcategories": [
+        {
+          "id": "huhn",
+          "label": "Huhn",
+          "title": "Huhn Optionen",
+          "imageUrl": "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
+          "backgroundSize": "contain",
+          "items": [],
+          "subcategories": [
+            {
+              "id": "nudeln",
+              "label": "Nudeln",
+              "imageUrl": "images/nudeln.svg",
+              "title": "Nudeln Optionen",
+              "displayType": "recipe",
+              "recipeName": "Poulet-Pilz-Teigwaren",
+              "items": [
+                "3 EL Olivenöl",
+                "600 g geschnetzeltes Pouletfleisch",
+                "Salz",
+                "Pfeffer",
+                "3 Zwiebeln",
+                "750 g Champignons",
+                "450 g Shiitake-Pilz",
+                "3 TL Mehl",
+                "6 EL Weisswein",
+                "4.5 dl Fleischbouillon",
+                "1.5 dl Halbrahm",
+                "6 EL Schnittlauch",
+                "360 g Teigwaren"
+              ],
+              "steps": []
+            }
+          ]
+        },
+        {
+          "id": "schwein",
+          "label": "Schwein",
+          "title": "Schwein Optionen",
+          "imageUrl": "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
+          "items": [
+            "Schweinefilet",
+            "Schnitzel",
+            "Spareribs"
+          ]
+        },
+        {
+          "id": "kuh",
+          "label": "Kuh",
+          "title": "Kuh Optionen",
+          "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
+          "backgroundSize": "contain",
+          "items": [
+            "Rindersteak",
+            "Hamburger",
+            "Rindergulasch",
+            "Chili con Carne",
+            "Spaghetti Bolognese"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reis",
+      "label": "Reis",
+      "title": "Reis Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "stepBackgroundImageUrl": "",
+      "items": [
+        "Riz Casimir",
+        "Risotto",
+        "Gebratener Reis"
+      ],
+      "subcategories": [
+        {
+          "id": "risotto",
+          "label": "Risotto",
+          "title": "Risotto Optionen",
+          "imageUrl": "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
+          "items": [],
+          "subcategories": [
+            {
+              "id": "safranrisotto",
+              "label": "Safranrisotto",
+              "title": "Safranrisotto",
+              "imageUrl": "https://images.pexels.com/photos/4518803/pexels-photo-4518803.jpeg?auto=compress&cs=tinysrgb&w=800",
+              "displayType": "recipe",
+              "recipeName": "Safranrisotto",
+              "items": [
+                "1.5 EL Butter",
+                "1.5 Zwiebel, fein gehackt",
+                "3 Knoblauchzehen, gepresst",
+                "450 g Risottoreis (zB. Carnaroli)",
+                "3 dl Weisswein",
+                "3 Briefchen Safran",
+                "13.5 dl Gemüsebouillon",
+                "120 g Parmesan am Stück, gerieben",
+                "30 g Butter"
+              ],
+              "steps": []
+            },
+            {
+              "id": "pilzrisotto",
+              "label": "Pilzrisotto",
+              "title": "Pilzrisotto",
+              "imageUrl": "https://snikandtasty.de/wp-content/uploads/2020/10/IMG_20200328_185510_621.jpg",
+              "displayType": "recipe",
+              "recipeName": "Pilzrisotto",
+              "items": [
+                "3 EL Bratbutter",
+                "375 g Champignons oder gemischte Pilze, geviertelt",
+                "1.5 Zwiebel, fein gehackt",
+                "1.5 Knoblauch, fein gehackt",
+                "450 g Risottoreis",
+                "4,5 dl Weisswein oder Bouillon",
+                "6,75 dl Bouillon",
+                "3,75 dl Rahm",
+                "4.5 EL Butter",
+                "150 g Sbrinz AOP"
+              ],
+              "steps": []
+            },
+            {
+              "id": "tomatenrisotto",
+              "label": "Tomatenrisotto",
+              "title": "Tomatenrisotto",
+              "imageUrl": "https://www.volg.ch/fileadmin/_processed_/9/7/csm_recipe_4315_322edd10dd.jpg",
+              "items": [
+                "1.5 EL Olivenöl",
+                "1.5 Zwiebel, fein gehackt",
+                "600 g Risottoreis (z.B. Arborio)",
+                "3 EL Tomatenpüree",
+                "1.5 dl Weisswein",
+                "1.5 L Gemüsebouillon, heiss",
+                "225 g Cherry-Tomaten, halbiert",
+                "150 g geriebener Parmesan"
+              ],
+              "displayType": "recipe",
+              "recipeName": "Tomatenrisotto",
+              "steps": []
+            }
+          ]
+        },
+        {
+          "id": "jasminreis",
+          "label": "Jasminreis",
+          "title": "Jasminreis Optionen",
+          "imageUrl": "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
+          "items": [],
+          "subcategories": [
+            {
+              "id": "gemuesereis",
+              "label": "Gemüsereis",
+              "title": "Gemüsereis",
+              "imageUrl": "https://github.com/user-attachments/assets/ba8cece3-a60d-454d-9a1b-35f42c7a7aac",
+              "items": []
+            },
+            {
+              "id": "riz-casimir-jasmin",
+              "label": "Riz Casimir",
+              "title": "Riz Casimir",
+              "imageUrl": "https://github.com/user-attachments/assets/8cd5e1ae-2ec1-4941-ae47-25c00598744f",
+              "displayType": "recipe",
+              "recipeName": "Riz Casimir (6 Personen)",
+              "items": [
+                "375 g Langkornreis",
+                "750 g Pouletbrust",
+                "Salz",
+                "Pfeffer",
+                "1.5 EL Bratbutter",
+                "1-2 Früchtekonserven-Dosen",
+                "1.5 EL Curry",
+                "3.75 dl Gemüsebouillon",
+                "3 dl Halbrahm"
+              ],
+              "steps": []
+            }
+          ]
+        },
+        {
+          "id": "milchreis",
+          "label": "Milchreis",
+          "title": "Milchreis Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
+          "items": []
+        }
+      ]
+    },
+    {
+      "id": "getreide",
+      "label": "Getreide",
+      "title": "Getreide Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "https://github.com/user-attachments/assets/f0a8d06e-cbd2-4c26-ad4e-e75cbae3ed21",
+      "stepBackgroundImageUrl": "",
+      "items": [],
+      "subcategories": [
+        {
+          "id": "cafe-complet",
+          "label": "Cafe Complet",
+          "title": "Cafe Complet Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/275164ce-0d4a-4d94-84c6-ce370b34a273",
+          "displayType": "recipe",
+          "recipeName": "Cafe Complet (für 6 Personen)",
+          "items": [
+            "Je nach Gusto:",
+            "1 Brot",
+            "1 Butter",
+            "Konfitüre",
+            "Nutella",
+            "Aufschnitt",
+            "Käse",
+            "Eier",
+            "Früchte",
+            "Joghurt"
+          ],
+          "steps": []
+        },
+        {
+          "id": "wienerli-im-teig",
+          "label": "Wienerli im Teig",
+          "title": "Wienerli im Teig",
+          "imageUrl": "https://github.com/user-attachments/assets/5b149579-c760-4c07-bf05-a78674d01f38",
+          "displayType": "recipe",
+          "recipeName": "Wienerli im Teig (für 6 Personen)",
+          "items": [
+            "2-3 rechteckig ausgewallter Butterblätterteig à ca. 320 g",
+            "10-12 Wienerli",
+            "1 Ei zum Bestreichen"
+          ],
+          "steps": []
+        },
+        {
+          "id": "waehe",
+          "label": "Wähe",
+          "title": "Wähe Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/7ff6f371-4789-4e19-8631-96ef8b2caed6",
+          "items": [],
+          "subcategories": [
+            {
+              "id": "gemuesewaehe",
+              "label": "Gemüsewähe",
+              "title": "Gemüsewähe",
+              "imageUrl": "https://github.com/user-attachments/assets/ac2e0de2-869b-466c-b3b3-eedca5e251de",
+              "displayType": "recipe",
+              "recipeName": "Gemüsewähe (für 6 Personen)",
+              "items": [
+                "Teig:",
+                "250 g Mehl",
+                "½ TL Salz",
+                "100 g Butter, kalt, in Stückchen",
+                "60 - 70 g Wasser",
+                "1 EL Essig (oder Fertig-Butterkuchenteig)",
+                "Belag:",
+                "50 - 80 g geriebener Gruyère AOP",
+                "1 - 2 Knoblauchzehen, fein gehackt",
+                "140 g Maiskörner aus der Dose, abgetropft",
+                "400 g Zucchini, an der Röstiraffel gerieben",
+                "1 - 2 EL Mehl",
+                "1 kleine Tomate, in feinen Spalten",
+                "Guss:",
+                "3 Eier (verquirlt)",
+                "2 dl Milch",
+                "1 - 1½ TL Salz",
+                "Pfeffer",
+                "Muskat"
+              ],
+              "steps": []
+            },
+            {
+              "id": "kaesewaehe",
+              "label": "Käsewähe",
+              "title": "Käsewähe Optionen",
+              "imageUrl": "https://github.com/user-attachments/assets/96207186-243e-442f-86e8-248c33fb7007",
+              "items": [
+                "Blitzteig:",
+                "80 g Butter",
+                "0,75 dl Wasser",
+                "¼ TL Salz",
+                "200 g Mehl",
+                "(oder Fertig-Butterkuchenteig)",
+                "Belag:",
+                "150 g Gruyère AOP, gerieben",
+                "150 g Emmentaler AOP, gerieben",
+                "1,5 dl Milch",
+                "2,5 dl Rahm",
+                "3 Eier, verquirlt",
+                "½ TL Salz",
+                "Pfeffer, Muskatnuss, Paprika"
+              ],
+              "displayType": "recipe",
+              "recipeName": "Käsewähe",
+              "steps": []
+            }
+          ]
+        },
+        {
+          "id": "flammkuchen",
+          "label": "Flammkuchen",
+          "title": "Flammkuchen Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/e3673bb1-4499-4aad-a0dd-b54d9c88a684",
+          "items": [],
+          "subcategories": [
+            {
+              "id": "flammkuchen-mit-speck",
+              "label": "Flammkuchen mit Speck",
+              "title": "Flammkuchen mit Speck",
+              "imageUrl": "https://github.com/user-attachments/assets/917d26fc-0a81-4d08-8352-43789e392532",
+              "displayType": "recipe",
+              "recipeName": "Flammkuchen mit Speck (für 6 Personen)",
+              "items": [
+                "2 Pkg. Flammkuchenteig",
+                "250 g Crème fraiche",
+                "180 g Speckwürfel",
+                "1-2 Zwiebel(n)",
+                "Salz und Pfeffer"
+              ],
+              "steps": []
+            },
+            {
+              "id": "flammkuchen-mit-gemuese",
+              "label": "Flammkuchen mit Gemüse",
+              "title": "Flammkuchen mit Gemüse",
+              "imageUrl": "https://github.com/user-attachments/assets/c05e4a2f-a93b-4d3f-9c8e-abc88b2edac5",
+              "displayType": "recipe",
+              "recipeName": "Flammkuchen mit Gemüse",
+              "items": [
+                "2 Pkg. Flammkuchenteig",
+                "300 g Crème fraiche",
+                "800 g gemischtes Saisongemüse, z.B. Fenchel, Zucchini, Zwiebeln, fein gehobelt",
+                "400 g Cherrytomaten, evtl. halbiert",
+                "4 - 8 Knoblauchzehen, in Scheiben",
+                "Salz, Pfeffer",
+                "200 g geriebener Gruyère AOP"
+              ],
+              "steps": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nudeln",
+      "label": "Nudeln",
+      "title": "Nudeln Optionen",
+      "backgroundColor": "",
+      "textColor": "",
+      "imageUrl": "https://images.pexels.com/photos/2703468/pexels-photo-2703468.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "stepBackgroundImageUrl": "",
+      "items": [
+        "Poulet-Pilz-Teigwaren",
+        "Pasta Bolognese",
+        "Nudelsuppe"
+      ]
     }
+  ],
+  "theme": {
+    "accentColor": "#00d4ff",
+    "textColor": "#ffffff",
+    "backgroundColor": "#02040a",
+    "overlayColor": "#080c14",
+    "overlayOpacity": 0.75,
+    "landingBackgroundImageUrl": "",
+    "categoryBackgroundImageUrl": "",
+    "buttonFontFamily": "Arial, Helvetica, sans-serif",
+    "buttonFontWeight": 700,
+    "buttonBorderRadius": 1,
+    "buttonFontSize": 1.65
+  },
+  "webgl": {
+    "animationSpeed": 0.55,
+    "waveStrength": 0.8,
+    "glowStrength": 0.28
+  }
 }
