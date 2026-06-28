@@ -257,7 +257,21 @@
               "label": "Spaghetti Bolognese",
               "title": "Spaghetti Bolognese",
               "imageUrl": "https://github.com/user-attachments/assets/d70ff8a7-194c-4286-9c8f-b275082d95df",
-              "items": []
+              "displayType": "recipe",
+              "recipeName": "Spaghetti Bolognese (für 6 Personen)",
+              "items": [
+                "600 g gemischtes Hackfleisch (Rind und Schwein)",
+                "Bratbutter oder Bratcrème",
+                "100 g Knollensellerie, an der Bircherraffel gerieben",
+                "1 Rüebli, gerüstet, fein gewürfelt",
+                "3 EL Tomatenpüree",
+                "750 g Pelati oder Tomatensauce aus dem Glas",
+                "2,25 dl Fleischbouillon",
+                "Salz, Pfeffer",
+                "3 EL Peterli, gehackt",
+                "800 g Spaghetti"
+              ],
+              "steps": []
             }
           ]
         }
