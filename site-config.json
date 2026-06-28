@@ -223,12 +223,22 @@
           "title": "Kuh Optionen",
           "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
           "backgroundSize": "contain",
-          "items": [
-            "Rindersteak",
-            "Hamburger",
-            "Rindergulasch",
-            "Chili con Carne",
-            "Spaghetti Bolognese"
+          "items": [],
+          "subcategories": [
+            {
+              "id": "chili-con-carne",
+              "label": "Chili con Carne",
+              "title": "Chili con Carne",
+              "imageUrl": "https://github.com/user-attachments/assets/99bd11f1-02d2-4f20-9b9e-7cc316d20be7",
+              "items": []
+            },
+            {
+              "id": "spaghetti-bolognese",
+              "label": "Spaghetti Bolognese",
+              "title": "Spaghetti Bolognese",
+              "imageUrl": "https://github.com/user-attachments/assets/d70ff8a7-194c-4286-9c8f-b275082d95df",
+              "items": []
+            }
           ]
         }
       ]
