@@ -230,7 +230,27 @@
               "label": "Chili con Carne",
               "title": "Chili con Carne",
               "imageUrl": "https://github.com/user-attachments/assets/99bd11f1-02d2-4f20-9b9e-7cc316d20be7",
-              "items": []
+              "displayType": "recipe",
+              "recipeName": "Chili con Carne (für 6 Personen)",
+              "items": [
+                "1200 g Rinderhackfleisch",
+                "3 m.-grosse Zwiebel(n)",
+                "4.5 Zehe/n Knoblauch",
+                "3 EL Öl zum Braten",
+                "1.5 Paprikaschote(n), orange",
+                "3 EL Tomatenmark (2-fach konzentriert)",
+                "800 g Tomaten, stückige",
+                "480 g Kidneybohnen",
+                "200 g Mais",
+                "750 ml Brühe",
+                "Cayennepfeffer",
+                "Paprikapulver",
+                "Chilipulver",
+                "Salz und Pfeffer",
+                "Zucker",
+                "Tabasco"
+              ],
+              "steps": []
             },
             {
               "id": "spaghetti-bolognese",
