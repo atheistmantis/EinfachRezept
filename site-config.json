@@ -416,9 +416,32 @@
                         {
                             "id": "gemuesewaehe",
                             "label": "Gemüsewähe",
-                            "title": "Gemüsewähe Optionen",
+                            "title": "Gemüsewähe",
                             "imageUrl": "https://github.com/user-attachments/assets/ac2e0de2-869b-466c-b3b3-eedca5e251de",
-                            "items": []
+                            "displayType": "recipe",
+                            "recipeName": "Gemüsewähe (für 6 Personen)",
+                            "items": [
+                                "Teig:",
+                                "250 g Mehl",
+                                "½ TL Salz",
+                                "100 g Butter, kalt, in Stückchen",
+                                "60 - 70 g Wasser",
+                                "1 EL Essig (oder Fertig-Butterkuchenteig)",
+                                "Belag:",
+                                "50 - 80 g geriebener Gruyère AOP",
+                                "1 - 2 Knoblauchzehen, fein gehackt",
+                                "140 g Maiskörner aus der Dose, abgetropft",
+                                "400 g Zucchini, an der Röstiraffel gerieben",
+                                "1 - 2 EL Mehl",
+                                "1 kleine Tomate, in feinen Spalten",
+                                "Guss:",
+                                "3 Eier (verquirlt)",
+                                "2 dl Milch",
+                                "1 - 1½ TL Salz",
+                                "Pfeffer",
+                                "Muskat"
+                            ],
+                            "steps": []
                         },
                         {
                             "id": "kaesewaehe",
