@@ -743,12 +743,35 @@
       "title": "Nudeln Optionen",
       "backgroundColor": "",
       "textColor": "",
-      "imageUrl": "https://images.pexels.com/photos/2703468/pexels-photo-2703468.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "imageUrl": "https://github.com/user-attachments/assets/25a7b9c6-5bcb-4f63-a5ea-026ef306369b",
       "stepBackgroundImageUrl": "",
       "items": [
         "Poulet-Pilz-Teigwaren",
         "Pasta Bolognese",
         "Nudelsuppe"
+      ],
+      "subcategories": [
+        {
+          "id": "nudeln",
+          "label": "Nudeln",
+          "title": "Nudeln Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/25a7b9c6-5bcb-4f63-a5ea-026ef306369b",
+          "items": []
+        },
+        {
+          "id": "penne",
+          "label": "Penne",
+          "title": "Penne Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/00adeb2d-7bb6-4067-aec9-341559638eaf",
+          "items": []
+        },
+        {
+          "id": "spaghetti",
+          "label": "Spaghetti",
+          "title": "Spaghetti Optionen",
+          "imageUrl": "https://github.com/user-attachments/assets/5d23b67e-c065-40c7-83c8-3b6a6881fe62",
+          "items": []
+        }
       ]
     }
   ],
