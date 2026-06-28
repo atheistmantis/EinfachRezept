@@ -203,6 +203,26 @@
                 "360 g Teigwaren"
               ],
               "steps": []
+            },
+            {
+              "id": "reis",
+              "label": "Reis",
+              "imageUrl": "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
+              "title": "Riz Casimir",
+              "displayType": "recipe",
+              "recipeName": "Riz Casimir (für 6 Personen)",
+              "items": [
+                "375 g Langkornreis",
+                "750 g Pouletbrust",
+                "Salz",
+                "Pfeffer",
+                "1.5 EL Bratbutter",
+                "1-2 Früchtekonserven-Dosen",
+                "1.5 EL Curry",
+                "3.75 dl Gemüsebouillon",
+                "3 dl Halbrahm"
+              ],
+              "steps": []
             }
           ]
         },
