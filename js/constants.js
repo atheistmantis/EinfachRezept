@@ -599,7 +599,7 @@ export const DEFAULT_SITE_CONFIG = {
               imageUrl: "https://github.com/user-attachments/assets/b1ccecb9-5768-41f1-9d47-29b0afbb59db",
               displayType: "recipe",
               recipeName: "Pasta Pesto (für 6 Personen)",
-              items: ["1 kg Pasta", "1 Grüner Pesto oder roter Pesto", "1 Pack geriebener Käse"],
+              items: ["1 kg Pasta", "1 grüner Pesto oder roter Pesto", "1 Pack geriebener Käse"],
               steps: [],
             },
             {
