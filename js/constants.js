@@ -413,7 +413,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Huhn",
           title: "Huhn Optionen",
           imageUrl: "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
-          backgroundSize: "106% 88%",
+          backgroundSize: "contain",
           items: [],
           subcategories: [
             {
@@ -467,7 +467,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Schwein",
           title: "Schwein Optionen",
           imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png",
-          backgroundSize: "contain",
+          backgroundSize: "106% 88%",
           items: [],
           subcategories: [
             {
