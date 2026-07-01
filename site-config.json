@@ -371,14 +371,30 @@
               "label": "Flammkuchen",
               "title": "Flammkuchen",
               "imageUrl": "https://github.com/user-attachments/assets/fcb7e5a1-4b04-4c42-b78f-0a6d7b14538b",
-              "items": []
+              "displayType": "recipe",
+              "recipeName": "Flammkuchen mit Speck (für 6 Personen)",
+              "items": [
+                "2 Pkg. Flammkuchenteig",
+                "250 g Crème fraiche",
+                "180 g Speckwürfel",
+                "1-2 Zwiebel(n)",
+                "Salz und Pfeffer"
+              ],
+              "steps": []
             },
             {
               "id": "wienerli-im-teig",
               "label": "Wienerli im Teig",
               "title": "Wienerli im Teig",
               "imageUrl": "https://github.com/user-attachments/assets/9377c439-dbbf-4560-9bd5-b59daa558256",
-              "items": []
+              "displayType": "recipe",
+              "recipeName": "Wienerli im Teig (für 6 Personen)",
+              "items": [
+                "2-3 rechteckig ausgewallter Butterblätterteig à ca. 320 g",
+                "10-12 Wienerli",
+                "1 Ei zum Bestreichen"
+              ],
+              "steps": []
             }
           ]
         },
