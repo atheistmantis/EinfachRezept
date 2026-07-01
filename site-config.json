@@ -152,11 +152,7 @@
       "textColor": "",
       "imageUrl": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
       "stepBackgroundImageUrl": "",
-      "items": [
-        "Gemüsepfanne",
-        "Gemüsesuppe",
-        "Geröstetes Gemüse"
-      ],
+      "items": [],
       "subcategories": [
         {
           "id": "kartoffel",
@@ -295,11 +291,7 @@
       "textColor": "",
       "imageUrl": "https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=800",
       "stepBackgroundImageUrl": "",
-      "items": [
-        "Hähnchenpfanne",
-        "Rindersteak",
-        "Schweinefilet"
-      ],
+      "items": [],
       "subcategories": [
         {
           "id": "huhn",
@@ -360,11 +352,7 @@
           "label": "Schwein",
           "title": "Schwein Optionen",
           "imageUrl": "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
-          "items": [
-            "Schweinefilet",
-            "Schnitzel",
-            "Spareribs"
-          ],
+          "items": [],
           "subcategories": [
             {
               "id": "flammkuchen",
@@ -429,11 +417,7 @@
       "textColor": "",
       "imageUrl": "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
       "stepBackgroundImageUrl": "",
-      "items": [
-        "Riz Casimir",
-        "Risotto",
-        "Gebratener Reis"
-      ],
+      "items": [],
       "subcategories": [
         {
           "id": "risotto",
@@ -745,11 +729,7 @@
       "textColor": "",
       "imageUrl": "https://github.com/user-attachments/assets/25a7b9c6-5bcb-4f63-a5ea-026ef306369b",
       "stepBackgroundImageUrl": "",
-      "items": [
-        "Pouletgeschnetzeltes mit Nudeln",
-        "Pasta Bolognese",
-        "Nudelsuppe"
-      ],
+      "items": [],
       "subcategories": [
         {
           "id": "nudeln",
