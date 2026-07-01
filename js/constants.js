@@ -261,7 +261,7 @@ export const DEFAULT_SITE_CONFIG = {
       textColor: "",
       imageUrl: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
-      items: ["Gemüsepfanne", "Gemüsesuppe", "Geröstetes Gemüse"],
+      items: [],
       subcategories: [
         {
           id: "kartoffel",
@@ -406,7 +406,7 @@ export const DEFAULT_SITE_CONFIG = {
       textColor: "",
       imageUrl: "https://images.pexels.com/photos/769289/pexels-photo-769289.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
-      items: ["Hähnchenpfanne", "Rindersteak", "Schweinefilet"],
+      items: [],
       subcategories: [
         {
           id: "huhn",
@@ -466,7 +466,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Schwein",
           title: "Schwein Optionen",
           imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png",
-          items: ["Schweinefilet", "Schnitzel", "Spareribs"],
+          items: [],
           subcategories: [
             {
               id: "flammkuchen",
@@ -520,7 +520,7 @@ export const DEFAULT_SITE_CONFIG = {
       textColor: "",
       imageUrl: "https://images.pexels.com/photos/4187615/pexels-photo-4187615.jpeg?auto=compress&cs=tinysrgb&w=800",
       stepBackgroundImageUrl: "",
-      items: ["Riz Casimir", "Risotto", "Gebratener Reis"],
+      items: [],
       subcategories: [
         {
           id: "risotto",
@@ -582,7 +582,7 @@ export const DEFAULT_SITE_CONFIG = {
       textColor: "",
       imageUrl: "https://github.com/user-attachments/assets/25a7b9c6-5bcb-4f63-a5ea-026ef306369b",
       stepBackgroundImageUrl: "",
-      items: ["Pouletgeschnetzeltes mit Nudeln", "Pasta Bolognese", "Nudelsuppe"],
+      items: [],
       subcategories: [
         {
           id: "nudeln",
