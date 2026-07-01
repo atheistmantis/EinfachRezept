@@ -2,7 +2,6 @@
   "title": "EinfachRezept",
   "subtitle": "Einfach. Schnell. Gut lesbar.",
   "startLabel": "START",
-  "categoryLabel": "Wähle eine Basis",
   "buttons": [
     {
       "id": "salat",
