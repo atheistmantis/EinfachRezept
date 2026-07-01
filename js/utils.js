@@ -91,6 +91,23 @@ export function sanitizeColor(colorValue, fallback = "") {
 }
 
 /**
+ * Validates a CSS `background-size` value made of one or two safe size tokens.
+ * Supports keywords (`auto`, `cover`, `contain`) and positive CSS lengths /
+ * percentages such as `106% 88%` or `1.5rem`.
+ *
+ * @param {unknown} value
+ * @param {string} [fallback=""]
+ * @returns {string}
+ */
+export function sanitizeBackgroundSize(value, fallback = "") {
+  const cleaned = String(value ?? "").trim().replace(/\s+/g, " ");
+  const fallbackSize = String(fallback ?? "").trim().replace(/\s+/g, " ");
+  const safeFallback = _isSafeBackgroundSize(fallbackSize) ? fallbackSize : "";
+  if (!cleaned) return safeFallback;
+  return _isSafeBackgroundSize(cleaned) ? cleaned : safeFallback;
+}
+
+/**
  * Clamps a numeric value to the `[min, max]` range.
  * Returns `fallback` when the parsed value is not a finite number.
  *
@@ -211,4 +228,17 @@ export function slugify(value) {
  */
 export function cssUrlValue(url) {
   return `url("${String(url).replace(/["\\\n\r\f]/g, "\\$&")}")`;
+}
+
+/**
+ * Checks whether a CSS `background-size` string contains only safe tokens.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+function _isSafeBackgroundSize(value) {
+  if (!value) return false;
+  const sizeToken = /^(?:auto|cover|contain|(?:\d+(?:\.\d+)?|\.\d+)(?:%|px|rem|em|vw|vh|vmin|vmax|ch|ex|cm|mm|in|pt|pc))$/;
+  const tokens = value.split(" ");
+  return tokens.length <= 2 && tokens.every((token) => sizeToken.test(token));
 }

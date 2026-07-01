@@ -17,6 +17,7 @@ import {
   cssUrlValue,
   deepClone,
   hexToRgb,
+  sanitizeBackgroundSize,
   sanitizeColor,
   sanitizeImageUrl,
   sanitizeString,
@@ -65,6 +66,7 @@ export function normalizeButtons(rawButtons) {
       backgroundColor: sanitizeColor(entry?.backgroundColor, ""),
       textColor: sanitizeColor(entry?.textColor, ""),
       imageUrl: sanitizeImageUrl(entry?.imageUrl),
+      backgroundSize: sanitizeBackgroundSize(entry?.backgroundSize, fallbackSource.backgroundSize || ""),
       // Support the legacy field name "sectionBackgroundImageUrl".
       stepBackgroundImageUrl: sanitizeImageUrl(
         entry?.stepBackgroundImageUrl || entry?.sectionBackgroundImageUrl || "",
@@ -112,6 +114,7 @@ export function normalizeSiteConfig(rawConfig) {
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
+      backgroundSize: "",
       stepBackgroundImageUrl: "",
       items:
         Array.isArray(rawConfig.riceItems) && rawConfig.riceItems.length
@@ -125,6 +128,7 @@ export function normalizeSiteConfig(rawConfig) {
       backgroundColor: "",
       textColor: "",
       imageUrl: "",
+      backgroundSize: "",
       stepBackgroundImageUrl: "",
       items:
         Array.isArray(rawConfig.pastaItems) && rawConfig.pastaItems.length
@@ -214,6 +218,7 @@ function _normalizeSubcategories(rawSubcategories, fallback) {
 
   const usedIds = new Set();
   const normalized = rawSubcategories.map((entry, index) => {
+    const fallbackSource = Array.isArray(fallback) ? fallback[index] || {} : {};
     const label = sanitizeString(entry?.label, `Unterkategorie ${index + 1}`);
     const title = sanitizeString(entry?.title, `${label} Optionen`);
     const idBase = sanitizeString(entry?.id, slugify(label) || `sub-${index + 1}`);
@@ -231,7 +236,7 @@ function _normalizeSubcategories(rawSubcategories, fallback) {
       label,
       title,
       imageUrl: sanitizeImageUrl(entry?.imageUrl || ""),
-      backgroundSize: sanitizeString(entry?.backgroundSize, ""),
+      backgroundSize: sanitizeBackgroundSize(entry?.backgroundSize, fallbackSource.backgroundSize || ""),
       displayType: sanitizeString(entry?.displayType, ""),
       recipeName: sanitizeString(entry?.recipeName, ""),
       items:
@@ -366,13 +371,7 @@ function _rebuildCategoryButtons(config) {
       button.dataset.target = `options-${buttonConfig.id || index + 1}`;
       button.style.backgroundColor = sanitizeColor(buttonConfig.backgroundColor, "");
       button.style.color = sanitizeColor(buttonConfig.textColor, "");
-
-      if (buttonConfig.imageUrl) {
-        button.classList.add("has-image");
-        button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
-      } else {
-        button.style.backgroundImage = "";
-      }
+      _applyButtonImage(button, buttonConfig);
 
       const label = document.createElement("span");
       label.textContent = buttonConfig.label;
@@ -419,10 +418,7 @@ function _rebuildOptionSections(config) {
           subButton.type = "button";
           subButton.className = "action-button option-button";
           subButton.dataset.target = `suboptions-${buttonConfig.id}-${subcat.id}`;
-          if (subcat.imageUrl) {
-            subButton.classList.add("has-image");
-            subButton.style.backgroundImage = cssUrlValue(subcat.imageUrl);
-          }
+          _applyButtonImage(subButton, subcat);
           const subLabel = document.createElement("span");
           subLabel.textContent = subcat.label;
           subButton.append(subLabel);
@@ -457,10 +453,7 @@ function _rebuildOptionSections(config) {
               subSubButton.type = "button";
               subSubButton.className = "action-button option-button";
               subSubButton.dataset.target = `suboptions-${buttonConfig.id}-${subcat.id}-${subSubcat.id}`;
-              if (subSubcat.imageUrl) {
-                subSubButton.classList.add("has-image");
-                subSubButton.style.backgroundImage = cssUrlValue(subSubcat.imageUrl);
-              }
+              _applyButtonImage(subSubButton, subSubcat);
               const subSubLabel = document.createElement("span");
               subSubLabel.textContent = subSubcat.label;
               subSubButton.append(subSubLabel);
@@ -542,6 +535,28 @@ function _rebuildOptionSections(config) {
       return [section];
     }),
   );
+}
+
+/**
+ * Applies image-related button styles from config.
+ *
+ * @param {HTMLButtonElement} button
+ * @param {{ imageUrl?: string, backgroundSize?: string }} buttonConfig
+ */
+function _applyButtonImage(button, buttonConfig) {
+  if (buttonConfig.imageUrl) {
+    button.classList.add("has-image");
+    button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
+  } else {
+    button.classList.remove("has-image");
+    button.style.backgroundImage = "";
+  }
+
+  if (buttonConfig.backgroundSize) {
+    button.style.setProperty("--button-background-size", buttonConfig.backgroundSize);
+  } else {
+    button.style.removeProperty("--button-background-size");
+  }
 }
 
 /**
