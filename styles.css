@@ -152,7 +152,7 @@ h3 {
   align-items: center;
   justify-content: center;
   padding: 0;
-  background-size: cover;
+  background-size: var(--button-background-size, 108% 100%);
   background-position: center;
   background-repeat: no-repeat;
 }

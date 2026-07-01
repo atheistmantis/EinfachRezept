@@ -297,7 +297,7 @@
           "label": "Huhn",
           "title": "Huhn Optionen",
           "imageUrl": "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
-          "backgroundSize": "contain",
+          "backgroundSize": "106% 88%",
           "items": [],
           "subcategories": [
             {
@@ -351,6 +351,7 @@
           "label": "Schwein",
           "title": "Schwein Optionen",
           "imageUrl": "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
+          "backgroundSize": "106% 88%",
           "items": [],
           "subcategories": [
             {
@@ -390,7 +391,7 @@
           "label": "Kuh",
           "title": "Kuh Optionen",
           "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
-          "backgroundSize": "contain",
+          "backgroundSize": "106% 88%",
           "items": [],
           "subcategories": [
             {
