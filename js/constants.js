@@ -466,7 +466,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "schwein",
           label: "Schwein",
           title: "Schwein Optionen",
-          imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png",
+          imageUrl: "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
           backgroundSize: "contain",
           items: [],
           subcategories: [
