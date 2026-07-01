@@ -506,7 +506,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "kuh",
           label: "Kuh",
           title: "Kuh Optionen",
-          imageUrl: "https://rinderhaltung.org/wp-content/uploads/vorstellung_fleckvieh_kuh_steckbrief-678x509.png",
+          imageUrl: "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
           backgroundSize: "contain",
           items: [],
           subcategories: [
