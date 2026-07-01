@@ -350,7 +350,7 @@
           "label": "Schwein",
           "title": "Schwein Optionen",
           "imageUrl": "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
-          "backgroundSize": "145%",
+          "backgroundSize": "cover",
           "items": [],
           "subcategories": [
             {
@@ -390,7 +390,7 @@
           "label": "Kuh",
           "title": "Kuh Optionen",
           "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
-          "backgroundSize": "cover",
+          "backgroundSize": "145%",
           "items": [],
           "subcategories": [
             {
