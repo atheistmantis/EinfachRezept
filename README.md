@@ -9,3 +9,4 @@ Open `./index.html` in a browser.
 
 config.json-Datei anpassen für Content management.
 
+Base erstellt in VSCode - weitere Inhalte stetig ergänzt (manuell und per GitHub Copilot für Effienz)
