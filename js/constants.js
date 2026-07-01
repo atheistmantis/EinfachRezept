@@ -413,7 +413,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Huhn",
           title: "Huhn Optionen",
           imageUrl: "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
-          backgroundSize: "130%",
+          backgroundSize: "contain",
           items: [],
           subcategories: [
             {
@@ -466,8 +466,8 @@ export const DEFAULT_SITE_CONFIG = {
           id: "schwein",
           label: "Schwein",
           title: "Schwein Optionen",
-          imageUrl: "https://schweinehaltung.org/wp-content/uploads/vorstellung_duroc_schwein_steckbrief-678x509.png",
-          backgroundSize: "106% 88%",
+          imageUrl: "https://wholestonefarms.com/wp-content/uploads/2021/09/LWD-Pig-1024x723.png",
+          backgroundSize: "contain",
           items: [],
           subcategories: [
             {
@@ -507,7 +507,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Kuh",
           title: "Kuh Optionen",
           imageUrl: "https://static.vecteezy.com/system/resources/thumbnails/058/087/798/small/black-and-white-dairy-cow-isolated-png.png",
-          backgroundSize: "145%",
+          backgroundSize: "contain",
           items: [],
           subcategories: [
             { id: "chili-con-carne",    label: "Chili con Carne",    title: "Chili con Carne",    imageUrl: "https://github.com/user-attachments/assets/99bd11f1-02d2-4f20-9b9e-7cc316d20be7", items: [] },
