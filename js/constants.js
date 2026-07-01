@@ -529,7 +529,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "risotto",
           label: "Risotto",
           title: "Risotto Optionen",
-          imageUrl: "https://github.com/user-attachments/assets/e2b1437a-a9ae-40d7-bc5d-dd59034fcd3b",
+          imageUrl: "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
           items: [],
           subcategories: [
             {
@@ -574,6 +574,34 @@ export const DEFAULT_SITE_CONFIG = {
           title: "Jasminreis Optionen",
           imageUrl: "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
           items: [],
+        },
+        {
+          id: "milchreis",
+          label: "Milchreis",
+          title: "Milchreis Optionen",
+          imageUrl: "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
+          items: [],
+          subcategories: [
+            {
+              id: "milchreis-klassisch",
+              label: "Milchreis",
+              title: "Milchreis",
+              imageUrl: "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
+              displayType: "recipe",
+              recipeName: "Milchreis (für 6 Personen)",
+              items: [
+                "1.5 L Milch",
+                "1.5 EL Zucker",
+                "1.5 TL Vanilleextrakt",
+                "1.5 Prisen Salz",
+                "375 g Milchreis",
+                "Topping:",
+                "6 EL Zucker",
+                "3 TL Zimt",
+              ],
+              steps: [],
+            },
+          ],
         },
       ],
     },

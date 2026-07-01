@@ -541,15 +541,11 @@ function _applyButtonImage(button, buttonConfig) {
   if (buttonConfig.imageUrl) {
     button.classList.add("has-image");
     button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
+    button.style.backgroundSize = buttonConfig.backgroundSize || "cover";
   } else {
     button.classList.remove("has-image");
     button.style.backgroundImage = "";
-  }
-
-  if (buttonConfig.backgroundSize) {
-    button.style.setProperty("--button-background-size", buttonConfig.backgroundSize);
-  } else {
-    button.style.removeProperty("--button-background-size");
+    button.style.backgroundSize = "";
   }
 }
 
