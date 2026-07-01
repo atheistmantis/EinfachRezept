@@ -310,7 +310,7 @@ function _buildRecipeCard(recipeConfig) {
 
 /**
  * Updates the text content of the title, subtitle, and start-button,
- * and keeps the category section label in sync for accessibility.
+ * and sets the category section label for accessibility.
  *
  * @param {import('./constants.js').SiteConfig} config
  */
