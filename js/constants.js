@@ -529,7 +529,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "risotto",
           label: "Risotto",
           title: "Risotto Optionen",
-          imageUrl: "https://github.com/user-attachments/assets/e2b1437a-a9ae-40d7-bc5d-dd59034fcd3b",
+          imageUrl: "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
           backgroundSize: "cover",
           items: [],
           subcategories: [
