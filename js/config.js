@@ -547,12 +547,6 @@ function _applyButtonImage(button, buttonConfig) {
     button.style.backgroundImage = "";
     button.style.backgroundSize = "";
   }
-
-  if (buttonConfig.backgroundSize) {
-    button.style.setProperty("--button-background-size", buttonConfig.backgroundSize);
-  } else {
-    button.style.removeProperty("--button-background-size");
-  }
 }
 
 /**
