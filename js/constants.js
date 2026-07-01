@@ -530,6 +530,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Risotto",
           title: "Risotto Optionen",
           imageUrl: "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
+          backgroundSize: "cover",
           items: [],
           subcategories: [
             {
@@ -573,6 +574,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Jasminreis",
           title: "Jasminreis Optionen",
           imageUrl: "https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?auto=compress&cs=tinysrgb&w=800",
+          backgroundSize: "cover",
           items: [],
         },
         {
@@ -580,6 +582,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Milchreis",
           title: "Milchreis Optionen",
           imageUrl: "https://github.com/user-attachments/assets/55401d56-f083-4a2d-bda5-12317c88234b",
+          backgroundSize: "cover",
           items: [],
           subcategories: [
             {
