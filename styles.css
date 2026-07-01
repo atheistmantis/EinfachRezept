@@ -76,6 +76,11 @@ h3 {
   font-size: clamp(2rem, 5vw, 3.4rem);
 }
 
+#category-title,
+.options > h3 {
+  display: none;
+}
+
 .subtitle {
   margin: 0 0 2rem;
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);
