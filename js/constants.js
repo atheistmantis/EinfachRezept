@@ -109,7 +109,7 @@ export const GITHUB_CONFIG_PATH = "site-config.json";
 /** @type {SiteConfig} */
 export const DEFAULT_SITE_CONFIG = {
   title: "EinfachRezept",
-  subtitle: "Einfach. Schnell. Gut lesbar.",
+  subtitle: "",
   startLabel: "START",
   categoryLabel: "Wähle eine Basis",
   buttons: [
