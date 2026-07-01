@@ -309,8 +309,8 @@ function _buildRecipeCard(recipeConfig) {
 }
 
 /**
- * Updates the text content of the title, subtitle, start-button,
- * and category-heading elements.
+ * Updates the text content of the title, subtitle, and start-button,
+ * and keeps the category section label in sync for accessibility.
  *
  * @param {import('./constants.js').SiteConfig} config
  */
@@ -318,12 +318,12 @@ function _applyTextContent(config) {
   const title = document.getElementById("site-title");
   const subtitle = document.getElementById("subtitle");
   const startButton = document.getElementById("start-button");
-  const categoryTitle = document.getElementById("category-title");
+  const categorySection = document.getElementById("category");
 
   if (title) title.textContent = config.title;
   if (subtitle) subtitle.textContent = config.subtitle;
   if (startButton) startButton.textContent = config.startLabel;
-  if (categoryTitle) categoryTitle.textContent = config.categoryLabel;
+  if (categorySection) categorySection.setAttribute("aria-label", config.categoryLabel);
 }
 
 /**
@@ -396,6 +396,7 @@ function _rebuildOptionSections(config) {
       const section = document.createElement("section");
       section.className = "panel options";
       section.id = `options-${buttonConfig.id || index + 1}`;
+      section.setAttribute("aria-label", buttonConfig.title);
       section.style.setProperty(
         "--section-bg-image",
         buttonConfig.stepBackgroundImageUrl
@@ -404,9 +405,6 @@ function _rebuildOptionSections(config) {
             ? cssUrlValue(config.theme.categoryBackgroundImageUrl)
             : "none",
       );
-
-      const heading = document.createElement("h3");
-      heading.textContent = buttonConfig.title;
 
       if (buttonConfig.subcategories && buttonConfig.subcategories.length) {
         // Render subcategory buttons instead of a flat item list.
@@ -425,7 +423,7 @@ function _rebuildOptionSections(config) {
           subcatGrid.append(subButton);
         });
 
-        section.append(heading, subcatGrid);
+        section.append(subcatGrid);
 
         const bgValue = buttonConfig.stepBackgroundImageUrl
           ? cssUrlValue(buttonConfig.stepBackgroundImageUrl)
@@ -438,10 +436,8 @@ function _rebuildOptionSections(config) {
           const subSection = document.createElement("section");
           subSection.className = "panel options sub-options";
           subSection.id = `suboptions-${buttonConfig.id}-${subcat.id}`;
+          subSection.setAttribute("aria-label", subcat.title);
           subSection.style.setProperty("--section-bg-image", bgValue);
-
-          const subHeading = document.createElement("h3");
-          subHeading.textContent = subcat.title;
 
           // Subcategory has its own nested subcategories → render as buttons.
           if (subcat.subcategories && subcat.subcategories.length) {
@@ -460,20 +456,18 @@ function _rebuildOptionSections(config) {
               subSubcatGrid.append(subSubButton);
             });
 
-            subSection.append(subHeading, subSubcatGrid);
+            subSection.append(subSubcatGrid);
 
             // Build a recipe/list section for each nested subcategory.
             const subSubSections = subcat.subcategories.map((subSubcat) => {
               const subSubSection = document.createElement("section");
               subSubSection.className = "panel options sub-options";
               subSubSection.id = `suboptions-${buttonConfig.id}-${subcat.id}-${subSubcat.id}`;
+              subSubSection.setAttribute("aria-label", subSubcat.title);
               subSubSection.style.setProperty("--section-bg-image", bgValue);
 
-              const subSubHeading = document.createElement("h3");
-              subSubHeading.textContent = subSubcat.title;
-
               if (subSubcat.displayType === "recipe") {
-                subSubSection.append(subSubHeading, _buildRecipeCard(subSubcat));
+                subSubSection.append(_buildRecipeCard(subSubcat));
               } else {
                 const list = document.createElement("ul");
                 list.replaceChildren(
@@ -483,7 +477,7 @@ function _rebuildOptionSections(config) {
                     return item;
                   }),
                 );
-                subSubSection.append(subSubHeading, list);
+                subSubSection.append(list);
               }
 
               return subSubSection;
@@ -494,7 +488,7 @@ function _rebuildOptionSections(config) {
 
           // Subcategory is itself a recipe card.
           if (subcat.displayType === "recipe") {
-            subSection.append(subHeading, _buildRecipeCard(subcat));
+            subSection.append(_buildRecipeCard(subcat));
             return [subSection];
           }
 
@@ -508,7 +502,7 @@ function _rebuildOptionSections(config) {
             }),
           );
 
-          subSection.append(subHeading, list);
+          subSection.append(list);
           return [subSection];
         });
 
@@ -517,7 +511,7 @@ function _rebuildOptionSections(config) {
 
       // Recipe box: render items as ingredients and optionally steps.
       if (buttonConfig.displayType === "recipe") {
-        section.append(heading, _buildRecipeCard(buttonConfig));
+        section.append(_buildRecipeCard(buttonConfig));
         return [section];
       }
 
@@ -531,7 +525,7 @@ function _rebuildOptionSections(config) {
         }),
       );
 
-      section.append(heading, list);
+      section.append(list);
       return [section];
     }),
   );
