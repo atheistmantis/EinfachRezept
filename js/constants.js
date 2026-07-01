@@ -379,7 +379,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "wienerli-im-teig",
           label: "Wienerli im Teig",
           title: "Wienerli im Teig Optionen",
-          imageUrl: "https://github.com/user-attachments/assets/5b149579-c760-4c07-bf05-a78674d01f38",
+          imageUrl: "https://github.com/user-attachments/assets/6bc7c632-2e85-44d5-afff-e1652e2f980c",
           items: [],
         },
         {
@@ -490,7 +490,7 @@ export const DEFAULT_SITE_CONFIG = {
               id: "wienerli-im-teig",
               label: "Wienerli im Teig",
               title: "Wienerli im Teig",
-              imageUrl: "https://github.com/user-attachments/assets/9377c439-dbbf-4560-9bd5-b59daa558256",
+              imageUrl: "https://github.com/user-attachments/assets/6bc7c632-2e85-44d5-afff-e1652e2f980c",
               displayType: "recipe",
               recipeName: "Wienerli im Teig (für 6 Personen)",
               items: [
@@ -529,7 +529,7 @@ export const DEFAULT_SITE_CONFIG = {
           id: "risotto",
           label: "Risotto",
           title: "Risotto Optionen",
-          imageUrl: "https://images.pexels.com/photos/6406460/pexels-photo-6406460.jpeg?auto=compress&cs=tinysrgb&w=800",
+          imageUrl: "https://github.com/user-attachments/assets/620dfda7-d3d9-4f42-8f79-326965e1c177",
           items: [],
           subcategories: [
             {
