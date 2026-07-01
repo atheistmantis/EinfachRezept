@@ -370,9 +370,7 @@ function _rebuildCategoryButtons(config) {
       if (buttonConfig.imageUrl) {
         button.classList.add("has-image");
         button.style.backgroundImage = cssUrlValue(buttonConfig.imageUrl);
-        if (buttonConfig.backgroundSize) {
-          button.style.backgroundSize = buttonConfig.backgroundSize;
-        }
+        button.style.backgroundSize = "cover";
       } else {
         button.style.backgroundImage = "";
       }
@@ -425,9 +423,7 @@ function _rebuildOptionSections(config) {
           if (subcat.imageUrl) {
             subButton.classList.add("has-image");
             subButton.style.backgroundImage = cssUrlValue(subcat.imageUrl);
-            if (subcat.backgroundSize) {
-              subButton.style.backgroundSize = subcat.backgroundSize;
-            }
+            subButton.style.backgroundSize = "cover";
           }
           const subLabel = document.createElement("span");
           subLabel.textContent = subcat.label;
@@ -466,9 +462,7 @@ function _rebuildOptionSections(config) {
               if (subSubcat.imageUrl) {
                 subSubButton.classList.add("has-image");
                 subSubButton.style.backgroundImage = cssUrlValue(subSubcat.imageUrl);
-                if (subSubcat.backgroundSize) {
-                  subSubButton.style.backgroundSize = subSubcat.backgroundSize;
-                }
+                subSubButton.style.backgroundSize = "cover";
               }
               const subSubLabel = document.createElement("span");
               subSubLabel.textContent = subSubcat.label;
