@@ -413,7 +413,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Huhn",
           title: "Huhn Optionen",
           imageUrl: "https://huehnerhaltung.org/wp-content/uploads/vorstellung_sussex_huhn_steckbrief-678x509.png",
-          backgroundSize: "contain",
+          backgroundSize: "106% 88%",
           items: [],
           subcategories: [
             {
@@ -507,7 +507,7 @@ export const DEFAULT_SITE_CONFIG = {
           label: "Kuh",
           title: "Kuh Optionen",
           imageUrl: "https://rinderhaltung.org/wp-content/uploads/vorstellung_fleckvieh_kuh_steckbrief-678x509.png",
-          backgroundSize: "106% 88%",
+          backgroundSize: "contain",
           items: [],
           subcategories: [
             { id: "chili-con-carne",    label: "Chili con Carne",    title: "Chili con Carne",    imageUrl: "https://github.com/user-attachments/assets/99bd11f1-02d2-4f20-9b9e-7cc316d20be7", items: [] },
