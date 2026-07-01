@@ -139,7 +139,7 @@ h3 {
 }
 
 .option-button {
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
@@ -153,7 +153,7 @@ h3 {
   align-items: center;
   justify-content: center;
   padding: 0;
-  background-size: var(--button-background-size, contain);
+  background-size: var(--button-background-size, cover);
   background-position: center;
   background-repeat: no-repeat;
 }
