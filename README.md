@@ -2,6 +2,7 @@
 
 Niederschwellige überschaubare Landingpage + Website für Einkaufslisten und Rezeptideen.
 
+*Da Experiment und erstmaliges Projekt dieser Art, kann dieses Projekt noch überflüssige Spuren vorheriger Versionen erhalten. Alte Userinnen-Logins, Spider Content Map, SSH-Key(s) und ähnliches wurde entfernt.
 
 Open `./index.html` in a browser.
 
